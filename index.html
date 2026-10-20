@@ -7,15 +7,14 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
-            /* Новая палитра: Шалфейный, кремовый, мягкий серый */
-            --bg: var(--tg-theme-bg-color, #f8f9fa);
-            --text: var(--tg-theme-text-color, #2c3e50);
-            --hint: var(--tg-theme-hint-color, #95a5a6);
-            --primary: #6b8e78; /* Мягкий шалфейный зеленый */
+            --bg: var(--tg-theme-bg-color, #f4f6f5);
+            --text: var(--tg-theme-text-color, #1e2d24);
+            --hint: var(--tg-theme-hint-color, #8e9d95);
+            --primary: #3a5a40; /* Глубокий шалфейный */
             --primary-text: #ffffff;
-            --secondary: #e9ecef;
+            --secondary: #e6eae7;
             --card: var(--tg-theme-secondary-bg-color, #ffffff);
-            --border-radius: 16px;
+            --border-radius: 20px;
             --ai-bg: #eef2f5;
         }
 
@@ -35,7 +34,7 @@
         #welcome-screen {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(160deg, #f8f9fa 0%, #e2e8e4 100%);
+            background: linear-gradient(160deg, #f4f6f5 0%, #dce4df 100%);
             z-index: 9999;
             display: flex;
             flex-direction: column;
@@ -54,7 +53,7 @@
         .welcome-title {
             font-size: 34px;
             font-weight: 800;
-            color: #2c3e50;
+            color: #1e2d24;
             margin-bottom: 12px;
             text-align: center;
             letter-spacing: -0.5px;
@@ -65,7 +64,7 @@
 
         .welcome-subtitle {
             font-size: 17px;
-            color: #6b8e78;
+            color: #3a5a40;
             margin-bottom: 60px;
             text-align: center;
             opacity: 0;
@@ -78,12 +77,12 @@
             background-color: var(--primary);
             color: white;
             border: none;
-            padding: 22px 40px;
-            border-radius: 100px; /* Овальная кнопка */
-            font-size: 18px;
+            padding: 22px 30px;
+            border-radius: 100px;
+            font-size: 17px;
             font-weight: 700;
             cursor: pointer;
-            box-shadow: 0 10px 25px rgba(107, 142, 120, 0.4);
+            box-shadow: 0 10px 25px rgba(58, 90, 64, 0.3);
             opacity: 0;
             transform: translateY(20px);
             animation: slideUpFade 0.8s ease forwards 0.6s;
@@ -94,7 +93,7 @@
 
         .welcome-btn:active {
             transform: scale(0.96);
-            box-shadow: 0 5px 15px rgba(107, 142, 120, 0.3);
+            box-shadow: 0 5px 15px rgba(58, 90, 64, 0.2);
         }
 
         @keyframes slideUpFade {
@@ -127,7 +126,7 @@
         .title { font-size: 20px; font-weight: 700; margin-bottom: 6px; color: var(--text); }
         .subtitle { font-size: 15px; color: var(--hint); margin-bottom: 24px; line-height: 1.5; }
 
-        /* НОВЫЕ КНОПКИ (Плашки) */
+        /* НОВЫЕ КНОПКИ */
         .action-btn {
             background-color: var(--primary); color: var(--primary-text); 
             border: none; padding: 20px; border-radius: 16px; 
@@ -136,7 +135,7 @@
             display: flex; align-items: center; justify-content: center; gap: 10px;
             transition: all 0.2s ease;
         }
-        .action-btn:active { transform: scale(0.98); background-color: #5a7a65; }
+        .action-btn:active { transform: scale(0.98); background-color: #2d4733; }
 
         .secondary-grid {
             display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;
@@ -163,7 +162,7 @@
         /* Эмодзи */
         .emoji-row { display: flex; justify-content: space-between; margin-bottom: 20px; }
         .emoji-btn { font-size: 36px; background: none; border: 3px solid transparent; border-radius: 50%; padding: 8px; cursor: pointer; transition: all 0.2s ease; }
-        .emoji-btn.selected { border-color: var(--primary); background: rgba(107, 142, 120, 0.1); transform: scale(1.1); }
+        .emoji-btn.selected { border-color: var(--primary); background: rgba(58, 90, 64, 0.1); transform: scale(1.1); }
 
         /* Дыхание */
         .breath-container { display: flex; flex-direction: column; align-items: center; margin: 20px 0 30px 0; }
@@ -173,14 +172,14 @@
             transition: transform 4s linear; 
             display: flex; align-items: center; justify-content: center;
             color: white; font-weight: 700; font-size: 48px;
-            box-shadow: 0 10px 30px rgba(107, 142, 120, 0.3);
+            box-shadow: 0 10px 30px rgba(58, 90, 64, 0.2);
         }
         .breath-text { font-size: 18px; font-weight: 700; margin-top: 20px; color: var(--text);}
 
         /* --- ПАРЯЩЕЕ НИЖНЕЕ МЕНЮ --- */
         .bottom-nav {
             position: fixed; bottom: 20px; left: 20px; right: 20px; width: auto; 
-            background-color: rgba(255, 255, 255, 0.9);
+            background-color: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
             border-radius: 100px; 
             display: flex; justify-content: space-around;
@@ -202,8 +201,8 @@
             border-radius: var(--border-radius); padding: 20px; margin-top: 20px; 
             display: none; animation: fadeIn 0.5s ease;
         }
-        .ai-title { font-size: 16px; font-weight: 700; color: #2c3e50; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-        .ai-text { font-size: 15px; line-height: 1.6; color: #34495e; }
+        .ai-title { font-size: 16px; font-weight: 700; color: #1e2d24; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .ai-text { font-size: 15px; line-height: 1.6; color: #2c3e50; }
         
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .status-msg { text-align: center; color: var(--primary); font-weight: 600; margin-top: 10px; font-size: 15px; }
