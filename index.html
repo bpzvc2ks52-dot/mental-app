@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Остров безопасности</title>
+    <title>Мой Остров</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
-            --bg: var(--tg-theme-bg-color, #f4f6f5);
-            --text: var(--tg-theme-text-color, #1e2d24);
-            --hint: var(--tg-theme-hint-color, #8e9d95);
-            --primary: #3a5a40; /* Глубокий шалфейный */
-            --primary-text: #ffffff;
-            --secondary: #e6eae7;
+            --bg: var(--tg-theme-bg-color, #f8f9fc);
+            --text: var(--tg-theme-text-color, #1a1c29);
+            --hint: var(--tg-theme-hint-color, #8b8d98);
+            --primary: #4A55A2; /* Глубокий синий */
+            --primary-light: #e8ebf7;
+            --accent: #A084E8; /* Лавандовый акцент */
             --card: var(--tg-theme-secondary-bg-color, #ffffff);
-            --border-radius: 20px;
-            --ai-bg: #eef2f5;
+            --border-radius: 16px;
+            --ai-bg: #f3f0ff;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -34,7 +34,7 @@
         #welcome-screen {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(160deg, #f4f6f5 0%, #dce4df 100%);
+            background: #1a1c29; /* Темный фон при входе */
             z-index: 9999;
             display: flex;
             flex-direction: column;
@@ -51,161 +51,188 @@
         }
 
         .welcome-title {
-            font-size: 34px;
+            font-size: 36px;
             font-weight: 800;
-            color: #1e2d24;
-            margin-bottom: 12px;
+            color: #ffffff;
+            margin-bottom: 10px;
             text-align: center;
-            letter-spacing: -0.5px;
+            letter-spacing: -1px;
             opacity: 0;
             transform: translateY(20px);
             animation: slideUpFade 0.8s ease forwards 0.2s;
         }
 
         .welcome-subtitle {
-            font-size: 17px;
-            color: #3a5a40;
-            margin-bottom: 60px;
+            font-size: 16px;
+            color: #8b8d98;
+            margin-bottom: 50px;
             text-align: center;
             opacity: 0;
             transform: translateY(20px);
             animation: slideUpFade 0.8s ease forwards 0.4s;
-            font-weight: 500;
         }
 
         .welcome-btn {
-            background-color: var(--primary);
+            background-color: var(--accent);
             color: white;
             border: none;
-            padding: 22px 30px;
+            padding: 20px 40px;
             border-radius: 100px;
             font-size: 17px;
             font-weight: 700;
             cursor: pointer;
-            box-shadow: 0 10px 25px rgba(58, 90, 64, 0.3);
+            box-shadow: 0 10px 30px rgba(160, 132, 232, 0.4);
             opacity: 0;
             transform: translateY(20px);
             animation: slideUpFade 0.8s ease forwards 0.6s;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: transform 0.2s ease;
             width: 90%;
             max-width: 350px;
         }
 
-        .welcome-btn:active {
-            transform: scale(0.96);
-            box-shadow: 0 5px 15px rgba(58, 90, 64, 0.2);
-        }
+        .welcome-btn:active { transform: scale(0.96); }
 
         @keyframes slideUpFade {
             to { opacity: 1; transform: translateY(0); }
         }
 
         /* --- ОСНОВНОЙ ИНТЕРФЕЙС --- */
-        .header {
-            padding: 24px 20px 10px 20px; 
-            font-size: 26px; 
-            font-weight: 800;
-            letter-spacing: -0.5px; 
-            background-color: var(--bg); 
+        /* Верхняя навигация (вместо нижней) */
+        .top-nav {
+            display: flex;
+            background-color: var(--card);
+            padding: 10px 15px;
+            border-bottom-left-radius: 24px;
+            border-bottom-right-radius: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
             z-index: 10;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .content { flex: 1; overflow-y: auto; padding: 10px 20px 120px 20px; }
+        .nav-logo {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: -0.5px;
+        }
 
-        .tab-pane { display: none; animation: slideUp 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .nav-tabs {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-tab {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--hint);
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 12px;
+            transition: all 0.2s;
+        }
+
+        .nav-tab.active {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .content { flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 40px; }
+
+        .tab-pane { display: none; animation: fadeIn 0.3s ease; }
         .tab-pane.active { display: block; }
 
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
+        /* Карточки-плитки на главной */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .tile {
+            background-color: var(--card);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            cursor: pointer;
+            transition: transform 0.2s;
+            height: 120px;
+        }
+
+        .tile:active { transform: scale(0.97); }
+        .tile-icon { font-size: 28px; margin-bottom: 10px; }
+        .tile-title { font-size: 16px; font-weight: 700; }
+
+        /* Кнопка дыхания на главной */
+        .main-breath-card {
+            background: linear-gradient(135deg, var(--primary) 0%, #3a4380 100%);
+            color: white;
+            border-radius: 24px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(74, 85, 162, 0.3);
+        }
+
+        .breath-circle {
+            width: 140px; height: 140px; border-radius: 50%; 
+            background: rgba(255,255,255,0.1);
+            border: 4px solid var(--accent);
+            margin: 20px auto; 
+            transition: transform 4s linear; 
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: 700; font-size: 40px;
+        }
+
+        /* Внутренние формы */
         .card {
             background-color: var(--card); border-radius: var(--border-radius);
-            padding: 24px; margin-bottom: 20px; 
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            padding: 20px; margin-bottom: 20px;
         }
-
-        .title { font-size: 20px; font-weight: 700; margin-bottom: 6px; color: var(--text); }
-        .subtitle { font-size: 15px; color: var(--hint); margin-bottom: 24px; line-height: 1.5; }
-
-        /* НОВЫЕ КНОПКИ */
-        .action-btn {
-            background-color: var(--primary); color: var(--primary-text); 
-            border: none; padding: 20px; border-radius: 16px; 
-            font-size: 17px; font-weight: 600; width: 100%;
-            margin-bottom: 12px; cursor: pointer; 
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-            transition: all 0.2s ease;
+        .title { font-size: 20px; font-weight: 700; margin-bottom: 15px; }
+        .btn {
+            background-color: var(--primary); color: white; border: none; 
+            padding: 16px; border-radius: 12px; font-size: 16px; font-weight: 600; 
+            width: 100%; margin-bottom: 12px; cursor: pointer; transition: 0.2s;
         }
-        .action-btn:active { transform: scale(0.98); background-color: #2d4733; }
-
-        .secondary-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;
-        }
-        .secondary-btn {
-            background-color: var(--card); color: var(--text);
-            border: 1px solid var(--secondary); padding: 16px;
-            border-radius: 16px; font-size: 15px; font-weight: 600;
-            cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px;
-            transition: all 0.2s ease;
-        }
-        .secondary-btn:active { background-color: var(--secondary); transform: scale(0.98); }
-        .secondary-btn .icon { font-size: 24px; }
+        .btn:active { transform: scale(0.98); }
+        .btn-secondary { background-color: var(--primary-light); color: var(--primary); }
 
         input, textarea {
             width: 100%; padding: 16px; border-radius: 12px; 
-            border: 1px solid var(--secondary); 
-            background-color: var(--bg); color: var(--text); 
-            font-size: 16px; margin-bottom: 16px; font-family: inherit;
-            transition: border 0.2s;
+            border: 1px solid rgba(0,0,0,0.05); background-color: var(--bg); 
+            color: var(--text); font-size: 15px; margin-bottom: 16px; font-family: inherit;
         }
         input:focus, textarea:focus { outline: none; border-color: var(--primary); background-color: var(--card); }
 
-        /* Эмодзи */
-        .emoji-row { display: flex; justify-content: space-between; margin-bottom: 20px; }
-        .emoji-btn { font-size: 36px; background: none; border: 3px solid transparent; border-radius: 50%; padding: 8px; cursor: pointer; transition: all 0.2s ease; }
-        .emoji-btn.selected { border-color: var(--primary); background: rgba(58, 90, 64, 0.1); transform: scale(1.1); }
-
-        /* Дыхание */
-        .breath-container { display: flex; flex-direction: column; align-items: center; margin: 20px 0 30px 0; }
-        .breath-circle {
-            width: 160px; height: 160px; border-radius: 50%; 
-            background: var(--primary);
-            transition: transform 4s linear; 
+        /* --- ПРОФИЛЬ --- */
+        .profile-header {
+            display: flex; align-items: center; gap: 15px; margin-bottom: 30px;
+            background-color: var(--card); padding: 20px; border-radius: var(--border-radius);
+        }
+        .avatar {
+            width: 60px; height: 60px; border-radius: 50%;
+            background-color: var(--primary-light); color: var(--primary);
             display: flex; align-items: center; justify-content: center;
-            color: white; font-weight: 700; font-size: 48px;
-            box-shadow: 0 10px 30px rgba(58, 90, 64, 0.2);
+            font-size: 24px; font-weight: 700;
         }
-        .breath-text { font-size: 18px; font-weight: 700; margin-top: 20px; color: var(--text);}
+        .profile-info h2 { margin: 0; font-size: 20px; }
+        .profile-info p { margin: 4px 0 0 0; color: var(--hint); font-size: 14px; }
 
-        /* --- ПАРЯЩЕЕ НИЖНЕЕ МЕНЮ --- */
-        .bottom-nav {
-            position: fixed; bottom: 20px; left: 20px; right: 20px; width: auto; 
-            background-color: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border-radius: 100px; 
-            display: flex; justify-content: space-around;
-            padding: 12px 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            z-index: 100; border: 1px solid rgba(255,255,255,0.6);
-        }
-        
-        .nav-item { 
-            display: flex; flex-direction: column; align-items: center; 
-            font-size: 10px; font-weight: 600; color: var(--hint); 
-            cursor: pointer; width: 25%; transition: color 0.2s, transform 0.2s;
-        }
-        .nav-item.active { color: var(--primary); transform: translateY(-3px); }
-        .nav-icon { font-size: 22px; margin-bottom: 2px; }
-
-        /* Блок ИИ */
         .ai-card {
-            background-color: var(--ai-bg); border: 1px solid #d1dbe3; 
+            background-color: var(--ai-bg); border: 1px solid #e0d7ff; 
             border-radius: var(--border-radius); padding: 20px; margin-top: 20px; 
             display: none; animation: fadeIn 0.5s ease;
         }
-        .ai-title { font-size: 16px; font-weight: 700; color: #1e2d24; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-        .ai-text { font-size: 15px; line-height: 1.6; color: #2c3e50; }
-        
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .status-msg { text-align: center; color: var(--primary); font-weight: 600; margin-top: 10px; font-size: 15px; }
+        .ai-title { font-size: 16px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
+        .ai-text { font-size: 15px; line-height: 1.6; }
+        .status-msg { text-align: center; color: var(--primary); font-weight: 600; margin-top: 10px; }
         .hidden { display: none; }
     </style>
 </head>
@@ -213,88 +240,97 @@
 
     <!-- ПРИВЕТСТВЕННЫЙ ЭКРАН -->
     <div id="welcome-screen">
-        <div class="welcome-title" id="welcome-title">Привет!</div>
-        <div class="welcome-subtitle">Твой личный остров спокойствия.<br>Здесь можно выдохнуть.</div>
+        <div class="welcome-title" id="welcome-title">Привет</div>
+        <div class="welcome-subtitle">Добро пожаловать в твое безопасное место.</div>
         <button class="welcome-btn" onclick="enterApp()">Пройти на остров безопасности</button>
     </div>
 
-    <div class="header" id="header-title">Остров</div>
+    <!-- ВЕРХНЯЯ НАВИГАЦИЯ -->
+    <div class="top-nav">
+        <div class="nav-logo">Остров</div>
+        <div class="nav-tabs">
+            <div class="nav-tab active" onclick="switchTab('dashboard', this)">Главная</div>
+            <div class="nav-tab" onclick="switchTab('tools', this)">Практики</div>
+            <div class="nav-tab" onclick="switchTab('profile', this)">Профиль</div>
+        </div>
+    </div>
 
     <div class="content">
-        <!-- ВКЛАДКА 1: Главная -->
-        <div id="tab-home" class="tab-pane active">
-            <div class="card" style="text-align: center;">
-                <div class="title">Квадратное дыхание</div>
-                <div class="subtitle">Техника 4-4-4-4 для снятия стресса.</div>
-                
-                <div class="breath-container">
-                    <div class="breath-circle" id="breath-circle">4</div>
-                    <div class="breath-text" id="breath-text">Готов?</div>
+        <!-- ВКЛАДКА 1: ДАШБОРД -->
+        <div id="tab-dashboard" class="tab-pane active">
+            <div class="main-breath-card">
+                <div style="font-size: 20px; font-weight: 700; margin-bottom: 5px;">Дыхание 4-4-4-4</div>
+                <div style="font-size: 14px; opacity: 0.8;">Сними стресс за 2 минуты</div>
+                <div class="breath-circle" id="breath-circle">4</div>
+                <div id="breath-text" style="font-weight: 600; height: 20px;">Готов?</div>
+                <button class="btn" style="background: white; color: var(--primary); margin-top: 15px;" id="breath-btn" onclick="startBreathing()">Начать</button>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="tile" onclick="switchTab('tools', document.querySelectorAll('.nav-tab')[1])">
+                    <div class="tile-icon">📖</div>
+                    <div class="tile-title">Дневник</div>
                 </div>
-                
-                <button class="action-btn" id="breath-btn" onclick="startBreathing()">Начать дыхание</button>
-                
-                <div id="breath-ai-block" class="ai-card">
-                    <div class="ai-title">✨ Совет от ИИ</div>
-                    <div id="breath-ai-text" class="ai-text"></div>
+                <div class="tile" onclick="switchTab('tools', document.querySelectorAll('.nav-tab')[1])">
+                    <div class="tile-icon">🧠</div>
+                    <div class="tile-title">КПТ-анализ</div>
+                </div>
+                <div class="tile" onclick="switchTab('tools', document.querySelectorAll('.nav-tab')[1])">
+                    <div class="tile-icon">📊</div>
+                    <div class="tile-title">Настроение</div>
+                </div>
+                <div class="tile" onclick="switchTab('tools', document.querySelectorAll('.nav-tab')[1])">
+                    <div class="tile-icon">✨</div>
+                    <div class="tile-title">Совет ИИ</div>
                 </div>
             </div>
         </div>
 
-        <!-- ВКЛАДКА 2: Дневник -->
-        <div id="tab-journal" class="tab-pane">
-            <div class="card">
-                <div class="title">Как ты сейчас?</div>
-                <div class="emoji-row">
-                    <button class="emoji-btn" onclick="selectMood(1, '😭')">😭</button>
-                    <button class="emoji-btn" onclick="selectMood(2, '😕')">😕</button>
-                    <button class="emoji-btn" onclick="selectMood(3, '😐')">😐</button>
-                    <button class="emoji-btn" onclick="selectMood(4, '🙂')">🙂</button>
-                    <button class="emoji-btn" onclick="selectMood(5, '😄')">😄</button>
-                </div>
-                <div id="trigger-section" class="hidden">
-                    <div class="subtitle">Что повлияло?</div>
-                    <div class="secondary-grid">
-                        <button class="secondary-btn" onclick="saveMood('Работа')"><span class="icon">💼</span>Работа</button>
-                        <button class="secondary-btn" onclick="saveMood('Люди')"><span class="icon">👥</span>Люди</button>
-                        <button class="secondary-btn" onclick="saveMood('Сон')"><span class="icon">😴</span>Сон</button>
-                        <button class="secondary-btn" onclick="saveMood('Без причины')"><span class="icon">🤷‍♂️</span>Без причины</button>
-                    </div>
-                </div>
-                <div id="mood-status" class="status-msg"></div>
-            </div>
-
+        <!-- ВКЛАДКА 2: ПРАКТИКИ (Формы) -->
+        <div id="tab-tools" class="tab-pane">
+            <!-- Дневник -->
             <div class="card">
                 <div class="title">Дневник</div>
-                <div class="subtitle">Выплесни эмоции, чтобы они не копились.</div>
-                <textarea id="diary-input" rows="6" placeholder="Что тебя тревожит?"></textarea>
-                <button class="action-btn" id="diary-btn" onclick="saveDiary()">Сохранить запись</button>
+                <textarea id="diary-input" rows="4" placeholder="Что тебя тревожит?"></textarea>
+                <button class="btn" id="diary-btn" onclick="saveDiary()">Сохранить</button>
                 <div id="diary-status" class="status-msg"></div>
-                
                 <div id="diary-ai-block" class="ai-card">
                     <div class="ai-title">✨ Мягкий совет от ИИ</div>
                     <div id="diary-ai-text" class="ai-text"></div>
                 </div>
             </div>
-        </div>
 
-        <!-- ВКЛАДКА 3: Разум -->
-        <div id="tab-mind" class="tab-pane">
+            <!-- Настроение -->
+            <div class="card">
+                <div class="title">Настроение</div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                    <button class="emoji-btn" style="font-size:32px; background:none; border:none;" onclick="selectMood(1, '😭')">😭</button>
+                    <button class="emoji-btn" style="font-size:32px; background:none; border:none;" onclick="selectMood(2, '😕')">😕</button>
+                    <button class="emoji-btn" style="font-size:32px; background:none; border:none;" onclick="selectMood(3, '😐')">😐</button>
+                    <button class="emoji-btn" style="font-size:32px; background:none; border:none;" onclick="selectMood(4, '🙂')">🙂</button>
+                    <button class="emoji-btn" style="font-size:32px; background:none; border:none;" onclick="selectMood(5, '😄')">😄</button>
+                </div>
+                <div id="trigger-section" class="hidden">
+                    <button class="btn btn-secondary" onclick="saveMood('Работа')">Работа</button>
+                    <button class="btn btn-secondary" onclick="saveMood('Сон')">Сон</button>
+                </div>
+                <div id="mood-status" class="status-msg"></div>
+            </div>
+
+            <!-- КПТ -->
             <div class="card">
                 <div class="title">КПТ-анализ</div>
-                <div class="subtitle">Разбери мысль по фактам.</div>
-                <input type="text" id="cbt-thought" placeholder="Тревожная мысль">
+                <input type="text" id="cbt-thought" placeholder="Мысль">
                 <input type="text" id="cbt-for" placeholder="Факты ЗА">
                 <input type="text" id="cbt-against" placeholder="Факты ПРОТИВ">
-                <input type="text" id="cbt-advice" placeholder="Совет другу">
-                <button class="action-btn" onclick="saveCBT()">Записать</button>
+                <button class="btn" onclick="saveCBT()">Записать</button>
                 <div id="cbt-status" class="status-msg"></div>
             </div>
 
+            <!-- Тест ИИ -->
             <div class="card">
-                <div class="title">Тест ИИ (GigaChat)</div>
-                <div class="subtitle">Проверь связь с нейросетью.</div>
-                <button class="action-btn" style="background-color: var(--secondary); color: var(--text);" onclick="testAI()">🤖 Запросить совет</button>
+                <div class="title">Тест ИИ</div>
+                <button class="btn btn-secondary" onclick="testAI()">🤖 Запросить совет</button>
                 <div id="test-ai-block" class="ai-card" style="margin-top: 10px;">
                     <div class="ai-title">✨ Ответ ИИ</div>
                     <div id="test-ai-text" class="ai-text"></div>
@@ -302,35 +338,26 @@
             </div>
         </div>
 
-        <!-- ВКЛАДКА 4: Профиль -->
+        <!-- ВКЛАДКА 3: ПРОФИЛЬ -->
         <div id="tab-profile" class="tab-pane">
-            <div class="card">
-                <div class="title">Статистика</div>
-                <div id="stats-content" style="color: var(--hint); line-height: 1.8;">Загрузка...</div>
+            <div class="profile-header">
+                <div class="avatar" id="avatar-initial">U</div>
+                <div class="profile-info">
+                    <h2 id="profile-name">Пользователь</h2>
+                    <p id="profile-id">ID: ...</p>
+                </div>
             </div>
+
             <div class="card">
-                <div class="title">Мои записи</div>
-                <button class="action-btn" style="background-color: var(--secondary); color: var(--text);" onclick="loadNotes()">Показать записи</button>
-                <div id="notes-content" style="margin-top: 20px; font-size: 15px; white-space: pre-wrap; color: var(--hint); line-height: 1.5;"></div>
+                <div class="title">Данные аккаунта</div>
+                <p style="color: var(--hint); font-size: 14px; line-height: 1.5; margin-bottom: 20px;">
+                    Вы вошли через Telegram. Ваши данные надежно защищены и хранятся только на вашем сервере.
+                </p>
+                <button class="btn btn-secondary" onclick="loadStats()">📊 Посмотреть статистику</button>
+                <div id="stats-content" style="margin-top: 15px; font-weight: 600;"></div>
             </div>
         </div>
 
-    </div>
-
-    <!-- ПАРЯЩЕЕ НИЖНЕЕ МЕНЮ -->
-    <div class="bottom-nav">
-        <div class="nav-item active" onclick="switchTab('home', this, 'Остров')">
-            <div class="nav-icon">🌿</div><div>Главная</div>
-        </div>
-        <div class="nav-item" onclick="switchTab('journal', this, 'Дневник')">
-            <div class="nav-icon">📖</div><div>Дневник</div>
-        </div>
-        <div class="nav-item" onclick="switchTab('mind', this, 'Разум')">
-            <div class="nav-icon">🧠</div><div>Разум</div>
-        </div>
-        <div class="nav-item" onclick="switchTab('profile', this, 'Профиль')">
-            <div class="nav-icon">👤</div><div>Профиль</div>
-        </div>
     </div>
 
     <script>
@@ -343,6 +370,11 @@
         // --- ПРИВЕТСТВИЕ ---
         document.getElementById('welcome-title').innerText = `Привет, ${userName}!`;
         
+        // Заполняем профиль
+        document.getElementById('profile-name').innerText = userName;
+        document.getElementById('profile-id').innerText = `ID: ${userId}`;
+        document.getElementById('avatar-initial').innerText = userName.charAt(0).toUpperCase();
+
         const lastVisit = localStorage.getItem('lastVisit');
         const today = new Date().toDateString();
         
@@ -351,19 +383,16 @@
         }
 
         function enterApp() {
-            const screen = document.getElementById('welcome-screen');
-            screen.classList.add('hidden');
+            document.getElementById('welcome-screen').classList.add('hidden');
             localStorage.setItem('lastVisit', new Date().toDateString());
             tg.HapticFeedback.impactOccurred('light');
         }
 
-        function switchTab(tabName, navElement, title) {
+        function switchTab(tabName, navElement) {
             document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
             document.getElementById(`tab-${tabName}`).classList.add('active');
             navElement.classList.add('active');
-            document.getElementById('header-title').innerText = title;
-            if (tabName === 'profile') loadStats();
         }
 
         // --- ДЫХАНИЕ ---
@@ -376,7 +405,7 @@
             const text = document.getElementById('breath-text');
             const circle = document.getElementById('breath-circle');
             btn.style.display = 'none';
-            document.getElementById('breath-ai-block').style.display = 'none'; 
+            document.getElementById('diary-ai-block').style.display = 'none'; 
             
             const sleep = ms => new Promise(r => setTimeout(r, ms));
             
@@ -390,10 +419,10 @@
             }
 
             for (let i = 1; i <= 4; i++) {
-                await breathPhase(`Круг ${i}/4: Вдох`, 4, 1.4);
-                await breathPhase(`Круг ${i}/4: Задержка`, 4, 1.4);
-                await breathPhase(`Круг ${i}/4: Выдох`, 4, 1.0);
-                await breathPhase(`Круг ${i}/4: Задержка`, 4, 1.0);
+                await breathPhase(`Вдох`, 4, 1.4);
+                await breathPhase(`Задержка`, 4, 1.4);
+                await breathPhase(`Выдох`, 4, 1.0);
+                await breathPhase(`Задержка`, 4, 1.0);
             }
             
             text.innerText = "Молодец!";
@@ -402,11 +431,9 @@
             btn.innerText = "Начать заново";
             isBreathing = false;
             tg.HapticFeedback.notificationOccurred('success');
-
-            fetchAIAdvice("Пользователь только что закончил 4 круга квадратного дыхания.", "breath-ai-block", "breath-ai-text");
         }
 
-        // --- ЗАПРОС К ИИ ---
+        // --- ФУНКЦИИ ДЛЯ API ---
         async function fetchAIAdvice(contextText, blockId, textId) {
             const block = document.getElementById(blockId);
             const textEl = document.getElementById(textId);
@@ -443,7 +470,6 @@
             }
         }
 
-        // --- ДНЕВНИК ---
         async function saveDiary() {
             const text = document.getElementById('diary-input').value;
             if (!text) return;
@@ -453,10 +479,8 @@
             const aiBlock = document.getElementById('diary-ai-block');
             const aiText = document.getElementById('diary-ai-text');
             
-            btn.disabled = true;
-            btn.innerText = "Сохранение...";
-            statusEl.innerText = "";
-            aiBlock.style.display = 'none';
+            btn.disabled = true; btn.innerText = "Сохранение...";
+            statusEl.innerText = ""; aiBlock.style.display = 'none';
             
             try {
                 const response = await fetch(`${API_URL}/api/diary`, {
@@ -478,15 +502,11 @@
             } catch (e) {
                 statusEl.innerText = "⚠️ Ошибка сети";
             } finally {
-                btn.disabled = false;
-                btn.innerText = "Сохранить запись";
+                btn.disabled = false; btn.innerText = "Сохранить";
             }
         }
 
-        // --- ОСТАЛЬНЫЕ ФУНКЦИИ ---
         function selectMood(score, emoji) {
-            document.querySelectorAll('.emoji-btn').forEach(btn => btn.classList.remove('selected'));
-            event.target.classList.add('selected');
             document.getElementById('trigger-section').classList.remove('hidden');
             tg.HapticFeedback.impactOccurred('light');
             window.tempMood = { score, emoji };
@@ -527,7 +547,7 @@
                     })
                 });
                 statusEl.innerText = "✅ Сохранено!";
-                document.querySelectorAll('#tab-mind input').forEach(i => i.value = "");
+                document.querySelectorAll('#tab-tools input').forEach(i => i.value = "");
             } catch (e) {
                 statusEl.innerText = "⚠️ Ошибка сети";
             }
@@ -546,16 +566,6 @@
                 });
                 statsEl.innerHTML = html;
             } catch (e) { statsEl.innerText = "Ошибка загрузки."; }
-        }
-
-        async function loadNotes() {
-            const notesEl = document.getElementById('notes-content');
-            notesEl.innerText = "Загрузка...";
-            try {
-                const response = await fetch(`${API_URL}/api/notes?user_id=${userId}`);
-                const json = await response.json();
-                notesEl.innerText = json.data;
-            } catch (e) { notesEl.innerText = "Ошибка загрузки."; }
         }
     </script>
 </body>
