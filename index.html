@@ -7,14 +7,14 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
-            /* Теплая, уютная палитра */
             --bg: var(--tg-theme-bg-color, #fffbf5);
             --text: var(--tg-theme-text-color, #333333);
             --hint: var(--tg-theme-hint-color, #999999);
-            --btn: #ff9f43; /* Теплый персиковый */
+            --btn: #ff9f43;
             --btn-text: #ffffff;
             --card: var(--tg-theme-secondary-bg-color, #ffffff);
             --border-radius: 20px;
+            --ai-bg: #f0f7ff;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -28,122 +28,77 @@
             overflow: hidden;
         }
 
-        /* Верхняя панель */
         .header {
-            padding: 20px 16px;
-            text-align: center;
-            font-size: 22px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            background-color: var(--bg);
-            z-index: 10;
+            padding: 20px 16px; text-align: center; font-size: 22px; font-weight: 800;
+            letter-spacing: -0.5px; background-color: var(--bg); z-index: 10;
         }
 
-        /* Контент */
-        .content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 0 20px 110px 20px; /* Большой отступ снизу для меню */
-        }
+        .content { flex: 1; overflow-y: auto; padding: 0 20px 110px 20px; }
 
         .tab-pane { display: none; animation: slideUp 0.35s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .tab-pane.active { display: block; }
 
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Карточки (стали более воздушными) */
         .card {
-            background-color: var(--card);
-            border-radius: var(--border-radius);
-            padding: 24px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03); /* Мягкая тень */
+            background-color: var(--card); border-radius: var(--border-radius);
+            padding: 24px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
             border: 1px solid rgba(0,0,0,0.02);
         }
 
         .title { font-size: 19px; font-weight: 700; margin-bottom: 8px; color: var(--text); }
         .subtitle { font-size: 15px; color: var(--hint); margin-bottom: 20px; line-height: 1.5; }
 
-        /* Кнопки (стали выше и с отступами) */
         .btn {
-            background-color: var(--btn); 
-            color: var(--btn-text);
-            border: none; 
-            padding: 18px 20px; /* Кнопки стали выше */
-            border-radius: 16px;
-            font-size: 16px; 
-            font-weight: 600; 
-            width: 100%;
-            margin-bottom: 16px; /* Отступ между кнопками */
-            cursor: pointer; 
-            transition: all 0.2s ease;
-            box-shadow: 0 6px 16px rgba(255, 159, 67, 0.25); /* Теплая тень от кнопки */
+            background-color: var(--btn); color: var(--btn-text); border: none; 
+            padding: 18px 20px; border-radius: 16px; font-size: 16px; font-weight: 600; 
+            width: 100%; margin-bottom: 16px; cursor: pointer; transition: all 0.2s ease;
+            box-shadow: 0 6px 16px rgba(255, 159, 67, 0.25);
         }
         .btn:active { transform: translateY(2px) scale(0.98); box-shadow: 0 2px 8px rgba(255, 159, 67, 0.2); }
-        
-        .btn-secondary { 
-            background-color: var(--bg); 
-            color: var(--text); 
-            border: 1.5px solid rgba(0,0,0,0.1); 
-            box-shadow: none;
-        }
-        .btn-secondary:active { background-color: rgba(0,0,0,0.05); transform: scale(0.98); }
+        .btn-secondary { background-color: var(--bg); color: var(--text); border: 1.5px solid rgba(0,0,0,0.1); box-shadow: none; }
+        .btn:disabled { opacity: 0.6; }
 
-        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
-
-        /* Поля ввода (стали выше и мягче) */
         input, textarea {
-            width: 100%; 
-            padding: 16px; 
-            border-radius: 14px;
-            border: 1.5px solid rgba(0,0,0,0.08); 
-            background-color: var(--bg);
-            color: var(--text); 
-            font-size: 16px; 
-            margin-bottom: 16px; 
-            font-family: inherit;
-            transition: border-color 0.2s;
+            width: 100%; padding: 16px; border-radius: 14px; border: 1.5px solid rgba(0,0,0,0.08); 
+            background-color: var(--bg); color: var(--text); font-size: 16px; margin-bottom: 16px; font-family: inherit;
         }
         input:focus, textarea:focus { outline: none; border-color: var(--btn); background-color: var(--card); }
 
-        /* Эмодзи */
         .emoji-grid { display: flex; justify-content: space-between; margin-bottom: 20px; gap: 8px; }
-        .emoji-btn {
-            font-size: 32px; background: none; border: 2px solid transparent;
-            border-radius: 50%; padding: 10px; cursor: pointer; transition: all 0.2s ease;
-        }
+        .emoji-btn { font-size: 32px; background: none; border: 2px solid transparent; border-radius: 50%; padding: 10px; cursor: pointer; transition: all 0.2s ease; }
         .emoji-btn.selected { border-color: var(--btn); background: rgba(255, 159, 67, 0.1); transform: scale(1.1); }
 
-        /* Дыхание */
+        /* Красивое дыхание с таймером */
+        .breath-container { display: flex; flex-direction: column; align-items: center; margin: 20px 0; }
         .breath-circle {
-            width: 110px; height: 110px; border-radius: 50%;
+            width: 140px; height: 140px; border-radius: 50%; 
             background: linear-gradient(135deg, #ff9f43 0%, #ff7f50 100%);
-            margin: 25px auto;
-            transition: transform 4s linear; 
+            transition: transform 4s linear, background 1s ease; 
             display: flex; align-items: center; justify-content: center;
-            color: white; font-weight: 700; font-size: 24px;
+            color: white; font-weight: 800; font-size: 40px;
             box-shadow: 0 10px 25px rgba(255, 127, 80, 0.3);
         }
+        .breath-text { font-size: 18px; font-weight: 700; margin-top: 15px; height: 25px; color: var(--text);}
 
-        /* Парящее нижнее меню */
         .bottom-nav {
-            position: fixed; bottom: 0; left: 0; width: 100%;
-            background-color: var(--card); 
-            border-radius: 24px 24px 0 0; /* Закругленные углы */
-            display: flex; justify-content: space-around;
-            padding: 14px 0; 
-            padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
-            box-shadow: 0 -4px 30px rgba(0,0,0,0.06);
-            z-index: 100;
+            position: fixed; bottom: 0; left: 0; width: 100%; background-color: var(--card); 
+            border-radius: 24px 24px 0 0; display: flex; justify-content: space-around;
+            padding: 14px 0; padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+            box-shadow: 0 -4px 30px rgba(0,0,0,0.06); z-index: 100;
         }
-        .nav-item {
-            display: flex; flex-direction: column; align-items: center;
-            font-size: 11px; font-weight: 500; color: var(--hint); 
-            cursor: pointer; width: 25%; transition: color 0.2s;
-        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 11px; font-weight: 500; color: var(--hint); cursor: pointer; width: 25%; }
         .nav-item.active { color: var(--btn); }
-        .nav-icon { font-size: 24px; margin-bottom: 4px; transition: transform 0.2s; }
-        .nav-item.active .nav-icon { transform: translateY(-2px); }
+        .nav-icon { font-size: 24px; margin-bottom: 4px; }
+
+        .ai-card {
+            background-color: var(--ai-bg); border: 1px solid #d0e3ff; border-radius: var(--border-radius);
+            padding: 20px; margin-top: 20px; display: none; animation: fadeIn 0.5s ease;
+        }
+        .ai-title { font-size: 16px; font-weight: 700; color: #1e3a8a; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .ai-text { font-size: 15px; line-height: 1.6; color: #334155; }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
         .status-msg { text-align: center; color: #34c759; font-weight: 600; margin-top: 10px; font-size: 15px; }
         .hidden { display: none; }
@@ -154,27 +109,27 @@
     <div class="header" id="header-title">Главная</div>
 
     <div class="content">
-        <!-- ВКЛАДКА 1: Главная (Дыхание, Заземление) -->
+        <!-- ВКЛАДКА 1: Главная -->
         <div id="tab-home" class="tab-pane active">
             <div class="card" style="text-align: center;">
                 <div class="title">Квадратное дыхание</div>
                 <div class="subtitle">Техника 4-4-4-4 для снятия стресса.</div>
-                <div class="breath-circle" id="breath-circle">4</div>
-                <div id="breath-text" style="font-weight: 600; margin-bottom: 15px; font-size: 17px;">Готов?</div>
-                <button class="btn" id="breath-btn" onclick="startBreathing()">Начать</button>
-            </div>
-
-            <div class="card">
-                <div class="title">Заземление 5-4-3-2-1</div>
-                <div class="subtitle">Вернись в момент "здесь и сейчас".</div>
-                <button class="btn btn-secondary" onclick="startGrounding()">Запустить практику</button>
-                <div id="grounding-text" class="hidden" style="margin-top: 20px; font-weight: 600; font-size: 17px; text-align: center;"></div>
-                <input type="text" id="grounding-input" class="hidden" placeholder="Напиши сюда...">
-                <button class="btn hidden" id="grounding-next" onclick="nextGrounding()">Далее</button>
+                
+                <div class="breath-container">
+                    <div class="breath-circle" id="breath-circle">4</div>
+                    <div class="breath-text" id="breath-text">Готов?</div>
+                </div>
+                
+                <button class="btn" id="breath-btn" onclick="startBreathing()">Начать дыхание</button>
+                
+                <div id="breath-ai-block" class="ai-card">
+                    <div class="ai-title">✨ Совет от ИИ</div>
+                    <div id="breath-ai-text" class="ai-text"></div>
+                </div>
             </div>
         </div>
 
-        <!-- ВКЛАДКА 2: Дневник (Настроение, Благодарность, Записи) -->
+        <!-- ВКЛАДКА 2: Дневник -->
         <div id="tab-journal" class="tab-pane">
             <div class="card">
                 <div class="title">Как ты сейчас?</div>
@@ -200,19 +155,17 @@
             <div class="card">
                 <div class="title">Дневник</div>
                 <textarea id="diary-input" rows="5" placeholder="Что тебя тревожит?"></textarea>
-                <button class="btn" onclick="saveDiary()">Сохранить запись</button>
+                <button class="btn" id="diary-btn" onclick="saveDiary()">Сохранить запись</button>
                 <div id="diary-status" class="status-msg"></div>
-            </div>
-
-            <div class="card">
-                <div class="title">Благодарность</div>
-                <textarea id="grat-input" rows="3" placeholder="3 вещи, за которые ты благодарен..."></textarea>
-                <button class="btn" onclick="saveGratitude()">Записать</button>
-                <div id="grat-status" class="status-msg"></div>
+                
+                <div id="diary-ai-block" class="ai-card">
+                    <div class="ai-title">✨ Мягкий совет от ИИ</div>
+                    <div id="diary-ai-text" class="ai-text"></div>
+                </div>
             </div>
         </div>
 
-        <!-- ВКЛАДКА 3: Разум (КПТ, Контроль, Колесо) -->
+        <!-- ВКЛАДКА 3: Разум -->
         <div id="tab-mind" class="tab-pane">
             <div class="card">
                 <div class="title">КПТ-анализ мысли</div>
@@ -224,37 +177,24 @@
                 <div id="cbt-status" class="status-msg"></div>
             </div>
 
+            <!-- Блок для тестирования ИИ -->
             <div class="card">
-                <div class="title">Зона контроля</div>
-                <input type="text" id="ctrl-problem" placeholder="Что беспокоит?">
-                <input type="text" id="ctrl-in" placeholder="Что зависит от тебя?">
-                <input type="text" id="ctrl-out" placeholder="Что НЕ зависит?">
-                <button class="btn" onclick="saveControl()">Записать</button>
-                <div id="ctrl-status" class="status-msg"></div>
-            </div>
-            
-            <div class="card">
-                <div class="title">Время для тревоги</div>
-                <textarea id="worry-input" rows="3" placeholder="Отложи тревогу на 19:00..."></textarea>
-                <button class="btn" onclick="saveWorry()">Отложить</button>
-                <div id="worry-status" class="status-msg"></div>
+                <div class="title">Тест ИИ (GigaChat)</div>
+                <div class="subtitle">Проверь, работает ли нейросеть прямо сейчас.</div>
+                <button class="btn btn-secondary" onclick="testAI()">🤖 Запросить совет</button>
+                <div id="test-ai-block" class="ai-card" style="margin-top: 10px;">
+                    <div class="ai-title">✨ Ответ ИИ</div>
+                    <div id="test-ai-text" class="ai-text"></div>
+                </div>
             </div>
         </div>
 
-        <!-- ВКЛАДКА 4: Профиль (Статистика, Привычки, Записи) -->
+        <!-- ВКЛАДКА 4: Профиль -->
         <div id="tab-profile" class="tab-pane">
             <div class="card">
                 <div class="title">Моя статистика</div>
                 <div id="stats-content" style="color: var(--hint); line-height: 1.8;">Загрузка...</div>
             </div>
-
-            <div class="card">
-                <div class="title">Трекер привычек</div>
-                <div class="subtitle">Отмечай каждый день и копи дофамин.</div>
-                <button class="btn" onclick="markHabit()">✅ Я выполнил привычку</button>
-                <div id="habit-status" class="status-msg"></div>
-            </div>
-
             <div class="card">
                 <div class="title">Мои записи</div>
                 <button class="btn btn-secondary" onclick="loadNotes()">Показать последние записи</button>
@@ -284,8 +224,6 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
         const userId = tg.initDataUnsafe?.user?.id || "unknown";
-        
-        // ВАШ URL СЕРВЕРА НА AMVERA
         const API_URL = "https://mental-bot-v2-maxdikov.mia0.amvera.tech"; 
 
         function switchTab(tabName, navElement, title) {
@@ -294,213 +232,208 @@
             document.getElementById(`tab-${tabName}`).classList.add('active');
             navElement.classList.add('active');
             document.getElementById('header-title').innerText = title;
-            
-            if (tabName === 'profile') {
-                loadStats();
-            }
+            if (tabName === 'profile') loadStats();
         }
 
-        // --- ДЫХАНИЕ ---
+        // --- УЛУЧШЕННОЕ ДЫХАНИЕ С ТАЙМЕРОМ ---
         let isBreathing = false;
         async function startBreathing() {
             if (isBreathing) return;
             isBreathing = true;
+            
             const btn = document.getElementById('breath-btn');
             const text = document.getElementById('breath-text');
             const circle = document.getElementById('breath-circle');
             btn.style.display = 'none';
+            document.getElementById('breath-ai-block').style.display = 'none'; 
+            
             const sleep = ms => new Promise(r => setTimeout(r, ms));
+            
+            // Вспомогательная функция для фазы дыхания (считает 4,3,2,1)
+            async function breathPhase(phaseName, duration, scale) {
+                text.innerText = phaseName;
+                circle.style.transform = `scale(${scale})`;
+                for (let i = duration; i > 0; i--) {
+                    circle.innerText = i;
+                    await sleep(1000);
+                }
+            }
 
             for (let i = 1; i <= 4; i++) {
-                text.innerText = "Вдох";
-                circle.style.transform = "scale(1.4)";
-                circle.innerText = "4"; await sleep(4000);
-                
-                text.innerText = "Задержка";
-                circle.innerText = "4"; await sleep(4000);
-                
-                text.innerText = "Выдох";
-                circle.style.transform = "scale(1)";
-                circle.innerText = "4"; await sleep(4000);
-                
-                text.innerText = "Задержка";
-                circle.innerText = "4"; await sleep(4000);
+                await breathPhase(`Круг ${i}/4: Вдох`, 4, 1.4);
+                await breathPhase(`Круг ${i}/4: Задержка`, 4, 1.4);
+                await breathPhase(`Круг ${i}/4: Выдох`, 4, 1.0);
+                await breathPhase(`Круг ${i}/4: Задержка`, 4, 1.0);
             }
+            
             text.innerText = "Молодец!";
+            circle.innerText = "✅";
             btn.style.display = 'block';
             btn.innerText = "Начать заново";
             isBreathing = false;
+            tg.HapticFeedback.notificationOccurred('success');
+
+            // Запрос к ИИ после дыхания
+            fetchAIAdvice("Пользователь только что закончил 4 круга квадратного дыхания.", "breath-ai-block", "breath-ai-text");
         }
 
-        // --- ЗАЗЕМЛЕНИЕ ---
-        const groundPrompts = [
-            "Назови 5 вещей, которые видишь",
-            "Назови 4 вещи, которые можешь потрогать",
-            "Назови 3 звука, которые слышишь",
-            "Назови 2 запаха, которые чувствуешь",
-            "Назови 1 вкус"
-        ];
-        let groundStep = 0;
-
-        function startGrounding() {
-            groundStep = 0;
-            document.getElementById('grounding-text').classList.remove('hidden');
-            document.getElementById('grounding-input').classList.remove('hidden');
-            document.getElementById('grounding-next').classList.remove('hidden');
-            showGroundPrompt();
-        }
-
-        function showGroundPrompt() {
-            document.getElementById('grounding-text').innerText = groundPrompts[groundStep];
-            document.getElementById('grounding-input').value = "";
-        }
-
-        function nextGrounding() {
-            groundStep++;
-            if (groundStep >= groundPrompts.length) {
-                document.getElementById('grounding-text').innerText = "Отлично! Ты вернулся в момент 'здесь и сейчас'. 🌿";
-                document.getElementById('grounding-input').classList.add('hidden');
-                document.getElementById('grounding-next').classList.add('hidden');
-                tg.HapticFeedback.notificationOccurred('success');
-                setTimeout(() => {
-                    document.getElementById('grounding-text').classList.add('hidden');
-                }, 3000);
-            } else {
-                showGroundPrompt();
+        // --- ЗАПРОС К ИИ ---
+        async function fetchAIAdvice(contextText, blockId, textId) {
+            const block = document.getElementById(blockId);
+            const textEl = document.getElementById(textId);
+            
+            block.style.display = 'block';
+            textEl.innerHTML = "ИИ подбирает слова... ⏳";
+            
+            try {
+                const response = await fetch(`${API_URL}/api/ai_advice`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ context: contextText, text: "" })
+                });
+                const json = await response.json();
+                textEl.innerText = json.advice;
+            } catch (e) {
+                textEl.innerText = "Не удалось загрузить совет. Проверьте сеть.";
             }
         }
 
-        // --- ОТПРАВКА ДАННЫХ НА СЕРВЕР ---
-        async function sendData(endpoint, data, statusId) {
-            const statusEl = document.getElementById(statusId);
-            statusEl.innerText = "Отправка...";
-            statusEl.style.color = "var(--hint)";
+        // --- ТЕСТ ИИ (Кнопка на вкладке Разум) ---
+        async function testAI() {
+            const block = document.getElementById('test-ai-block');
+            const textEl = document.getElementById('test-ai-text');
+            block.style.display = 'block';
+            textEl.innerHTML = "GigaChat думает... ⏳";
+            
             try {
-                const response = await fetch(`${API_URL}${endpoint}`, {
+                const response = await fetch(`${API_URL}/api/ai_advice`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ user_id: userId, ...data })
+                    body: JSON.stringify({ context: "Пользователь тестирует ИИ.", text: "Я чувствую легкую тревогу." })
                 });
-                if (response.ok) {
+                const json = await response.json();
+                textEl.innerText = json.advice;
+            } catch (e) {
+                textEl.innerText = "Ошибка сети. Проверьте, работает ли Amvera.";
+            }
+        }
+
+        // --- ДНЕВНИК ---
+        async function saveDiary() {
+            const text = document.getElementById('diary-input').value;
+            if (!text) return;
+            
+            const btn = document.getElementById('diary-btn');
+            const statusEl = document.getElementById('diary-status');
+            const aiBlock = document.getElementById('diary-ai-block');
+            const aiText = document.getElementById('diary-ai-text');
+            
+            btn.disabled = true;
+            btn.innerText = "Сохранение...";
+            statusEl.innerText = "";
+            aiBlock.style.display = 'none';
+            
+            try {
+                const response = await fetch(`${API_URL}/api/diary`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: userId, text: text })
+                });
+                
+                const json = await response.json();
+                
+                if (json.status === "ok") {
                     statusEl.innerText = "✅ Сохранено!";
                     statusEl.style.color = "#34c759";
+                    document.getElementById('diary-input').value = "";
                     tg.HapticFeedback.notificationOccurred('success');
-                    setTimeout(() => { statusEl.innerText = ""; }, 3000);
+                    
+                    if (json.advice) {
+                        aiBlock.style.display = 'block';
+                        aiText.innerText = json.advice;
+                    }
                 } else {
-                    throw new Error("Server error");
+                    statusEl.innerText = "⚠️ Ошибка сервера";
+                    statusEl.style.color = "#ff3b30";
                 }
+            } catch (e) {
+                statusEl.innerText = "⚠️ Ошибка сети";
+                statusEl.style.color = "#ff3b30";
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Сохранить запись";
+            }
+        }
+
+        // --- ОСТАЛЬНЫЕ ФУНКЦИИ ---
+        function selectMood(score, emoji) {
+            document.querySelectorAll('.emoji-btn').forEach(btn => btn.classList.remove('selected'));
+            event.target.classList.add('selected');
+            document.getElementById('trigger-section').classList.remove('hidden');
+            tg.HapticFeedback.impactOccurred('light');
+            window.tempMood = { score, emoji };
+        }
+
+        async function saveMood(trigger) {
+            if (!window.tempMood) return;
+            const statusEl = document.getElementById('mood-status');
+            statusEl.innerText = "Сохранение...";
+            try {
+                await fetch(`${API_URL}/api/mood`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: userId, mood: window.tempMood.emoji, score: window.tempMood.score, trigger: trigger })
+                });
+                statusEl.innerText = "✅ Настроение сохранено!";
+                statusEl.style.color = "#34c759";
+                document.getElementById('trigger-section').classList.add('hidden');
+                setTimeout(() => { statusEl.innerText = ""; }, 3000);
             } catch (e) {
                 statusEl.innerText = "⚠️ Ошибка сети";
                 statusEl.style.color = "#ff3b30";
             }
         }
 
-        // --- НАСТРОЕНИЕ ---
-        let selScore = 0, selEmoji = "";
-        function selectMood(score, emoji) {
-            selScore = score; selEmoji = emoji;
-            document.querySelectorAll('.emoji-btn').forEach(btn => btn.classList.remove('selected'));
-            event.target.classList.add('selected');
-            document.getElementById('trigger-section').classList.remove('hidden');
-            tg.HapticFeedback.impactOccurred('light');
-        }
-        function saveMood(trigger) {
-            if (!selScore) return;
-            sendData('/api/mood', { mood: selEmoji, score: selScore, trigger: trigger }, 'mood-status');
-            document.getElementById('trigger-section').classList.add('hidden');
-            selScore = 0;
-        }
-
-        // --- ДНЕВНИК И ДРУГОЕ ---
-        function saveDiary() {
-            const text = document.getElementById('diary-input').value;
-            if (!text) return;
-            sendData('/api/diary', { text }, 'diary-status');
-            document.getElementById('diary-input').value = "";
-        }
-
-        function saveGratitude() {
-            const text = document.getElementById('grat-input').value;
-            if (!text) return;
-            sendData('/api/gratitude', { text }, 'grat-status');
-            document.getElementById('grat-input').value = "";
-        }
-
-        function saveCBT() {
+        async function saveCBT() {
             const thought = document.getElementById('cbt-thought').value;
             if (!thought) return;
-            sendData('/api/cbt', {
-                thought: thought,
-                fact_for: document.getElementById('cbt-for').value,
-                fact_against: document.getElementById('cbt-against').value,
-                advice: document.getElementById('cbt-advice').value
-            }, 'cbt-status');
-            document.querySelectorAll('#tab-mind input').forEach(i => i.value = "");
+            const statusEl = document.getElementById('cbt-status');
+            statusEl.innerText = "Сохранение...";
+            try {
+                await fetch(`${API_URL}/api/cbt`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        user_id: userId, thought: thought,
+                        fact_for: document.getElementById('cbt-for').value,
+                        fact_against: document.getElementById('cbt-against').value,
+                        advice: document.getElementById('cbt-advice').value
+                    })
+                });
+                statusEl.innerText = "✅ Сохранено!";
+                statusEl.style.color = "#34c759";
+                document.querySelectorAll('#tab-mind input').forEach(i => i.value = "");
+            } catch (e) {
+                statusEl.innerText = "⚠️ Ошибка сети";
+                statusEl.style.color = "#ff3b30";
+            }
         }
 
-        function saveControl() {
-            sendData('/api/control', {
-                problem: document.getElementById('ctrl-problem').value,
-                in_power: document.getElementById('ctrl-in').value,
-                out_power: document.getElementById('ctrl-out').value
-            }, 'ctrl-status');
-        }
-
-        function saveWorry() {
-            const text = document.getElementById('worry-input').value;
-            if (!text) return;
-            sendData('/api/worry', { text }, 'worry-status');
-            document.getElementById('worry-input').value = "";
-        }
-
-        // --- СТАТИСТИКА ---
         async function loadStats() {
             const statsEl = document.getElementById('stats-content');
             statsEl.innerText = "Загрузка...";
             try {
                 const response = await fetch(`${API_URL}/api/stats?user_id=${userId}`);
                 const json = await response.json();
-                
-                if (json.data.length === 0) {
-                    statsEl.innerText = "Нет данных о настроении.";
-                    return;
-                }
-                
-                let html = `<b>Средний балл: </b>`;
-                const sum = json.data.reduce((a, b) => a + b.score, 0);
-                html += (sum / json.data.length).toFixed(1) + " / 5<br><br>";
-                
+                if (json.data.length === 0) { statsEl.innerText = "Нет данных."; return; }
+                let html = `<b>Средний балл: </b>${(json.data.reduce((a, b) => a + b.score, 0) / json.data.length).toFixed(1)} / 5<br><br>`;
                 json.data.slice(-7).forEach(rec => {
-                    const bar = "🟩".repeat(rec.score) + "⬜".repeat(5 - rec.score);
-                    html += `${rec.date}: ${bar}<br>`;
+                    html += `${rec.date}: ${"🟩".repeat(rec.score) + "⬜".repeat(5 - rec.score)}<br>`;
                 });
                 statsEl.innerHTML = html;
-            } catch (e) {
-                statsEl.innerText = "Ошибка загрузки статистики.";
-            }
+            } catch (e) { statsEl.innerText = "Ошибка загрузки."; }
         }
 
-        // --- ПРИВЫЧКА ---
-        async function markHabit() {
-            const statusEl = document.getElementById('habit-status');
-            statusEl.innerText = "Отправка...";
-            try {
-                const response = await fetch(`${API_URL}/api/habit`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ user_id: userId })
-                });
-                const json = await response.json();
-                statusEl.innerText = json.message;
-                statusEl.style.color = "#34c759";
-                tg.HapticFeedback.notificationOccurred('success');
-            } catch (e) {
-                statusEl.innerText = "Ошибка сети.";
-                statusEl.style.color = "#ff3b30";
-            }
-        }
-
-        // --- МОИ ЗАПИСИ ---
         async function loadNotes() {
             const notesEl = document.getElementById('notes-content');
             notesEl.innerText = "Загрузка...";
@@ -508,9 +441,7 @@
                 const response = await fetch(`${API_URL}/api/notes?user_id=${userId}`);
                 const json = await response.json();
                 notesEl.innerText = json.data;
-            } catch (e) {
-                notesEl.innerText = "Ошибка загрузки записей.";
-            }
+            } catch (e) { notesEl.innerText = "Ошибка загрузки."; }
         }
     </script>
 </body>
