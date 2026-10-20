@@ -13,7 +13,7 @@
             --btn: #ff9f43;
             --btn-text: #ffffff;
             --card: var(--tg-theme-secondary-bg-color, #ffffff);
-            --border-radius: 20px;
+            --border-radius: 24px;
             --ai-bg: #f0f7ff;
         }
 
@@ -26,23 +26,92 @@
             margin: 0; padding: 0;
             display: flex; flex-direction: column; height: 100vh;
             overflow: hidden;
+            position: relative;
         }
 
+        /* --- ПРИВЕТСТВЕННЫЙ ЭКРАН (WELCOME SCREEN) --- */
+        #welcome-screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #fffbf5 0%, #ffe8d6 100%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+        
+        #welcome-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .welcome-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+            letter-spacing: -0.5px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideUpFade 0.8s ease forwards 0.2s;
+        }
+
+        .welcome-subtitle {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 50px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideUpFade 0.8s ease forwards 0.4s;
+        }
+
+        .welcome-btn {
+            background-color: var(--btn);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(255, 159, 67, 0.4);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideUpFade 0.8s ease forwards 0.6s;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .welcome-btn:active {
+            transform: scale(0.95);
+            box-shadow: 0 5px 15px rgba(255, 159, 67, 0.3);
+        }
+
+        @keyframes slideUpFade {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- ОСНОВНОЙ ИНТЕРФЕЙС --- */
         .header {
             padding: 20px 16px; text-align: center; font-size: 22px; font-weight: 800;
             letter-spacing: -0.5px; background-color: var(--bg); z-index: 10;
         }
 
-        .content { flex: 1; overflow-y: auto; padding: 0 20px 110px 20px; }
+        .content { flex: 1; overflow-y: auto; padding: 0 20px 120px 20px; }
 
-        .tab-pane { display: none; animation: slideUp 0.35s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .tab-pane { display: none; animation: slideUp 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .tab-pane.active { display: block; }
 
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         .card {
             background-color: var(--card); border-radius: var(--border-radius);
-            padding: 24px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+            padding: 24px; margin-bottom: 20px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
             border: 1px solid rgba(0,0,0,0.02);
         }
 
@@ -51,16 +120,15 @@
 
         .btn {
             background-color: var(--btn); color: var(--btn-text); border: none; 
-            padding: 18px 20px; border-radius: 16px; font-size: 16px; font-weight: 600; 
+            padding: 18px 20px; border-radius: 18px; font-size: 16px; font-weight: 600; 
             width: 100%; margin-bottom: 16px; cursor: pointer; transition: all 0.2s ease;
             box-shadow: 0 6px 16px rgba(255, 159, 67, 0.25);
         }
         .btn:active { transform: translateY(2px) scale(0.98); box-shadow: 0 2px 8px rgba(255, 159, 67, 0.2); }
         .btn-secondary { background-color: var(--bg); color: var(--text); border: 1.5px solid rgba(0,0,0,0.1); box-shadow: none; }
-        .btn:disabled { opacity: 0.6; }
 
         input, textarea {
-            width: 100%; padding: 16px; border-radius: 14px; border: 1.5px solid rgba(0,0,0,0.08); 
+            width: 100%; padding: 16px; border-radius: 16px; border: 1.5px solid rgba(0,0,0,0.08); 
             background-color: var(--bg); color: var(--text); font-size: 16px; margin-bottom: 16px; font-family: inherit;
         }
         input:focus, textarea:focus { outline: none; border-color: var(--btn); background-color: var(--card); }
@@ -81,15 +149,31 @@
         }
         .breath-text { font-size: 18px; font-weight: 700; margin-top: 15px; height: 25px; color: var(--text);}
 
+        /* --- ПАРЯЩЕЕ НИЖНЕЕ МЕНЮ (FLOATING NAV) --- */
         .bottom-nav {
-            position: fixed; bottom: 0; left: 0; width: 100%; background-color: var(--card); 
-            border-radius: 24px 24px 0 0; display: flex; justify-content: space-around;
-            padding: 14px 0; padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
-            box-shadow: 0 -4px 30px rgba(0,0,0,0.06); z-index: 100;
+            position: fixed; 
+            bottom: 25px; /* Отступ от края */
+            left: 20px; 
+            right: 20px; 
+            width: auto; 
+            background-color: rgba(255, 255, 255, 0.85); /* Полупрозрачный фон (эффект стекла) */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 30px; /* Сильно закругленные углы */
+            display: flex; justify-content: space-around;
+            padding: 12px 10px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            z-index: 100;
+            border: 1px solid rgba(255,255,255,0.5);
         }
-        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 11px; font-weight: 500; color: var(--hint); cursor: pointer; width: 25%; }
-        .nav-item.active { color: var(--btn); }
-        .nav-icon { font-size: 24px; margin-bottom: 4px; }
+        
+        .nav-item { 
+            display: flex; flex-direction: column; align-items: center; 
+            font-size: 10px; font-weight: 600; color: #999; 
+            cursor: pointer; width: 25%; transition: color 0.2s, transform 0.2s;
+        }
+        .nav-item.active { color: var(--btn); transform: translateY(-2px); }
+        .nav-icon { font-size: 22px; margin-bottom: 4px; }
 
         .ai-card {
             background-color: var(--ai-bg); border: 1px solid #d0e3ff; border-radius: var(--border-radius);
@@ -105,6 +189,13 @@
     </style>
 </head>
 <body>
+
+    <!-- ПРИВЕТСТВЕННЫЙ ЭКРАН -->
+    <div id="welcome-screen">
+        <div class="welcome-title" id="welcome-title">Привет!</div>
+        <div class="welcome-subtitle">Твой личный остров спокойствия.<br>Здесь можно выдохнуть.</div>
+        <button class="welcome-btn" onclick="enterApp()">Войти</button>
+    </div>
 
     <div class="header" id="header-title">Главная</div>
 
@@ -177,7 +268,6 @@
                 <div id="cbt-status" class="status-msg"></div>
             </div>
 
-            <!-- Блок для тестирования ИИ -->
             <div class="card">
                 <div class="title">Тест ИИ (GigaChat)</div>
                 <div class="subtitle">Проверь, работает ли нейросеть прямо сейчас.</div>
@@ -204,7 +294,7 @@
 
     </div>
 
-    <!-- НИЖНЕЕ МЕНЮ -->
+    <!-- ПАРЯЩЕЕ НИЖНЕЕ МЕНЮ -->
     <div class="bottom-nav">
         <div class="nav-item active" onclick="switchTab('home', this, 'Главная')">
             <div class="nav-icon">🏠</div><div>Главная</div>
@@ -224,7 +314,28 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
         const userId = tg.initDataUnsafe?.user?.id || "unknown";
+        const userName = tg.initDataUnsafe?.user?.first_name || "друг";
         const API_URL = "https://mental-bot-v2-maxdikov.mia0.amvera.tech"; 
+
+        // --- ЛОГИКА ПРИВЕТСТВЕННОГО ЭКРАНА ---
+        document.getElementById('welcome-title').innerText = `Привет, ${userName}!`;
+        
+        // Проверяем, заходил ли пользователь сегодня (простой кэш в localStorage)
+        const lastVisit = localStorage.getItem('lastVisit');
+        const today = new Date().toDateString();
+        
+        if (lastVisit === today) {
+            // Если уже заходил сегодня, показываем приложение сразу
+            document.getElementById('welcome-screen').classList.add('hidden');
+        }
+
+        function enterApp() {
+            const screen = document.getElementById('welcome-screen');
+            screen.classList.add('hidden');
+            // Запоминаем дату визита
+            localStorage.setItem('lastVisit', new Date().toDateString());
+            tg.HapticFeedback.impactOccurred('light');
+        }
 
         function switchTab(tabName, navElement, title) {
             document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
@@ -235,7 +346,7 @@
             if (tabName === 'profile') loadStats();
         }
 
-        // --- УЛУЧШЕННОЕ ДЫХАНИЕ С ТАЙМЕРОМ ---
+        // --- ДЫХАНИЕ ---
         let isBreathing = false;
         async function startBreathing() {
             if (isBreathing) return;
@@ -249,7 +360,6 @@
             
             const sleep = ms => new Promise(r => setTimeout(r, ms));
             
-            // Вспомогательная функция для фазы дыхания (считает 4,3,2,1)
             async function breathPhase(phaseName, duration, scale) {
                 text.innerText = phaseName;
                 circle.style.transform = `scale(${scale})`;
@@ -273,7 +383,6 @@
             isBreathing = false;
             tg.HapticFeedback.notificationOccurred('success');
 
-            // Запрос к ИИ после дыхания
             fetchAIAdvice("Пользователь только что закончил 4 круга квадратного дыхания.", "breath-ai-block", "breath-ai-text");
         }
 
@@ -281,10 +390,8 @@
         async function fetchAIAdvice(contextText, blockId, textId) {
             const block = document.getElementById(blockId);
             const textEl = document.getElementById(textId);
-            
             block.style.display = 'block';
             textEl.innerHTML = "ИИ подбирает слова... ⏳";
-            
             try {
                 const response = await fetch(`${API_URL}/api/ai_advice`, {
                     method: 'POST',
@@ -298,13 +405,11 @@
             }
         }
 
-        // --- ТЕСТ ИИ (Кнопка на вкладке Разум) ---
         async function testAI() {
             const block = document.getElementById('test-ai-block');
             const textEl = document.getElementById('test-ai-text');
             block.style.display = 'block';
             textEl.innerHTML = "GigaChat думает... ⏳";
-            
             try {
                 const response = await fetch(`${API_URL}/api/ai_advice`, {
                     method: 'POST',
@@ -339,7 +444,6 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ user_id: userId, text: text })
                 });
-                
                 const json = await response.json();
                 
                 if (json.status === "ok") {
@@ -347,14 +451,10 @@
                     statusEl.style.color = "#34c759";
                     document.getElementById('diary-input').value = "";
                     tg.HapticFeedback.notificationOccurred('success');
-                    
                     if (json.advice) {
                         aiBlock.style.display = 'block';
                         aiText.innerText = json.advice;
                     }
-                } else {
-                    statusEl.innerText = "⚠️ Ошибка сервера";
-                    statusEl.style.color = "#ff3b30";
                 }
             } catch (e) {
                 statusEl.innerText = "⚠️ Ошибка сети";
