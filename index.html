@@ -10,9 +10,9 @@
             --bg: var(--tg-theme-bg-color, #f8f9fc);
             --text: var(--tg-theme-text-color, #1a1c29);
             --hint: var(--tg-theme-hint-color, #8b8d98);
-            --primary: #4A55A2; /* Глубокий синий */
+            --primary: #4A55A2;
             --primary-light: #e8ebf7;
-            --accent: #A084E8; /* Лавандовый акцент */
+            --accent: #A084E8;
             --card: var(--tg-theme-secondary-bg-color, #ffffff);
             --border-radius: 16px;
             --ai-bg: #f3f0ff;
@@ -34,163 +34,104 @@
         #welcome-screen {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: #1a1c29; /* Темный фон при входе */
+            background: #1a1c29;
             z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
             padding: 30px;
             transition: opacity 0.6s ease, visibility 0.6s ease;
         }
-        
-        #welcome-screen.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
+        #welcome-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 
         .welcome-title {
-            font-size: 36px;
-            font-weight: 800;
-            color: #ffffff;
-            margin-bottom: 10px;
-            text-align: center;
-            letter-spacing: -1px;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: slideUpFade 0.8s ease forwards 0.2s;
+            font-size: 36px; font-weight: 800; color: #ffffff; margin-bottom: 10px; text-align: center;
+            opacity: 0; transform: translateY(20px); animation: slideUpFade 0.8s ease forwards 0.2s;
         }
-
         .welcome-subtitle {
-            font-size: 16px;
-            color: #8b8d98;
-            margin-bottom: 50px;
-            text-align: center;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: slideUpFade 0.8s ease forwards 0.4s;
+            font-size: 16px; color: #8b8d98; margin-bottom: 50px; text-align: center;
+            opacity: 0; transform: translateY(20px); animation: slideUpFade 0.8s ease forwards 0.4s;
         }
-
         .welcome-btn {
-            background-color: var(--accent);
-            color: white;
-            border: none;
-            padding: 20px 40px;
-            border-radius: 100px;
-            font-size: 17px;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 10px 30px rgba(160, 132, 232, 0.4);
-            opacity: 0;
-            transform: translateY(20px);
-            animation: slideUpFade 0.8s ease forwards 0.6s;
-            transition: transform 0.2s ease;
-            width: 90%;
-            max-width: 350px;
+            background-color: var(--accent); color: white; border: none;
+            padding: 20px 40px; border-radius: 100px; font-size: 17px; font-weight: 700;
+            cursor: pointer; box-shadow: 0 10px 30px rgba(160, 132, 232, 0.4);
+            opacity: 0; transform: translateY(20px); animation: slideUpFade 0.8s ease forwards 0.6s;
+            transition: transform 0.2s ease; width: 90%; max-width: 350px;
         }
-
         .welcome-btn:active { transform: scale(0.96); }
 
-        @keyframes slideUpFade {
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes slideUpFade { to { opacity: 1; transform: translateY(0); } }
 
-        /* --- ОСНОВНОЙ ИНТЕРФЕЙС --- */
-        /* Верхняя навигация (вместо нижней) */
+        /* --- ВЕРХНЯЯ НАВИГАЦИЯ --- */
         .top-nav {
             display: flex;
             background-color: var(--card);
-            padding: 10px 15px;
-            border-bottom-left-radius: 24px;
-            border-bottom-right-radius: 24px;
+            padding: 15px 15px 10px 15px;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.03);
             z-index: 10;
-            justify-content: space-between;
-            align-items: center;
+            overflow-x: auto;
+            white-space: nowrap;
+            gap: 10px;
+            -webkit-overflow-scrolling: touch;
         }
-
-        .nav-logo {
-            font-size: 20px;
-            font-weight: 800;
-            color: var(--primary);
-            letter-spacing: -0.5px;
-        }
-
-        .nav-tabs {
-            display: flex;
-            gap: 15px;
-        }
+        .top-nav::-webkit-scrollbar { display: none; }
 
         .nav-tab {
             font-size: 14px;
             font-weight: 600;
             color: var(--hint);
             cursor: pointer;
-            padding: 8px 12px;
+            padding: 8px 14px;
             border-radius: 12px;
             transition: all 0.2s;
+            background-color: var(--bg);
         }
-
         .nav-tab.active {
-            background-color: var(--primary-light);
-            color: var(--primary);
+            background-color: var(--primary);
+            color: white;
         }
 
         .content { flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 40px; }
 
         .tab-pane { display: none; animation: fadeIn 0.3s ease; }
         .tab-pane.active { display: block; }
-
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Карточки-плитки на главной */
+        /* --- ГЛАВНАЯ (Информация) --- */
+        .hero-title { font-size: 28px; font-weight: 800; margin-bottom: 10px; letter-spacing: -0.5px; }
+        .hero-subtitle { font-size: 16px; color: var(--hint); margin-bottom: 30px; line-height: 1.5; }
+        
+        .info-card {
+            background: linear-gradient(135deg, var(--primary) 0%, #3a4380 100%);
+            color: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(74, 85, 162, 0.25);
+        }
+        .info-card h3 { margin: 0 0 10px 0; font-size: 20px; }
+        .info-card p { margin: 0; font-size: 15px; opacity: 0.9; line-height: 1.4; }
+
         .dashboard-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
             margin-bottom: 20px;
         }
-
         .tile {
             background-color: var(--card);
             border-radius: var(--border-radius);
             padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            display: flex; flex-direction: column; justify-content: space-between;
             box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-            cursor: pointer;
-            transition: transform 0.2s;
-            height: 120px;
+            cursor: pointer; transition: transform 0.2s; height: 120px;
         }
-
         .tile:active { transform: scale(0.97); }
         .tile-icon { font-size: 28px; margin-bottom: 10px; }
         .tile-title { font-size: 16px; font-weight: 700; }
 
-        /* Кнопка дыхания на главной */
-        .main-breath-card {
-            background: linear-gradient(135deg, var(--primary) 0%, #3a4380 100%);
-            color: white;
-            border-radius: 24px;
-            padding: 30px;
-            text-align: center;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(74, 85, 162, 0.3);
-        }
-
-        .breath-circle {
-            width: 140px; height: 140px; border-radius: 50%; 
-            background: rgba(255,255,255,0.1);
-            border: 4px solid var(--accent);
-            margin: 20px auto; 
-            transition: transform 4s linear; 
-            display: flex; align-items: center; justify-content: center;
-            color: white; font-weight: 700; font-size: 40px;
-        }
-
-        /* Внутренние формы */
+        /* --- ОБЩИЕ ЭЛЕМЕНТЫ --- */
         .card {
             background-color: var(--card); border-radius: var(--border-radius);
             padding: 20px; margin-bottom: 20px;
@@ -211,7 +152,17 @@
         }
         input:focus, textarea:focus { outline: none; border-color: var(--primary); background-color: var(--card); }
 
-        /* --- ПРОФИЛЬ --- */
+        /* Дыхание */
+        .breath-circle {
+            width: 140px; height: 140px; border-radius: 50%; 
+            background: rgba(255,255,255,0.1);
+            border: 4px solid var(--accent);
+            margin: 20px auto; transition: transform 4s linear; 
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: 700; font-size: 40px;
+        }
+
+        /* Профиль */
         .profile-header {
             display: flex; align-items: center; gap: 15px; margin-bottom: 30px;
             background-color: var(--card); padding: 20px; border-radius: var(--border-radius);
@@ -225,6 +176,7 @@
         .profile-info h2 { margin: 0; font-size: 20px; }
         .profile-info p { margin: 4px 0 0 0; color: var(--hint); font-size: 14px; }
 
+        /* ИИ */
         .ai-card {
             background-color: var(--ai-bg); border: 1px solid #e0d7ff; 
             border-radius: var(--border-radius); padding: 20px; margin-top: 20px; 
@@ -247,48 +199,67 @@
 
     <!-- ВЕРХНЯЯ НАВИГАЦИЯ -->
     <div class="top-nav">
-        <div class="nav-logo">Остров</div>
-        <div class="nav-tabs">
-            <div class="nav-tab active" onclick="switchTab('dashboard', this)">Главная</div>
-            <div class="nav-tab" onclick="switchTab('tools', this)">Практики</div>
-            <div class="nav-tab" onclick="switchTab('profile', this)">Профиль</div>
-        </div>
+        <div class="nav-tab active" onclick="switchTab('home', this)">Главная</div>
+        <div class="nav-tab" onclick="switchTab('stress', this)">От стресса</div>
+        <div class="nav-tab" onclick="switchTab('anxiety', this)">При тревоге</div>
+        <div class="nav-tab" onclick="switchTab('journal', this)">Дневник</div>
+        <div class="nav-tab" onclick="switchTab('tools', this)">Практики</div>
+        <div class="nav-tab" onclick="switchTab('profile', this)">Профиль</div>
     </div>
 
     <div class="content">
-        <!-- ВКЛАДКА 1: ДАШБОРД -->
-        <div id="tab-dashboard" class="tab-pane active">
-            <div class="main-breath-card">
-                <div style="font-size: 20px; font-weight: 700; margin-bottom: 5px;">Дыхание 4-4-4-4</div>
-                <div style="font-size: 14px; opacity: 0.8;">Сними стресс за 2 минуты</div>
-                <div class="breath-circle" id="breath-circle">4</div>
-                <div id="breath-text" style="font-weight: 600; height: 20px;">Готов?</div>
-                <button class="btn" style="background: white; color: var(--primary); margin-top: 15px;" id="breath-btn" onclick="startBreathing()">Начать</button>
+        
+        <!-- ГЛАВНАЯ -->
+        <div id="tab-home" class="tab-pane active">
+            <div class="hero-title" id="hero-greeting">Привет!</div>
+            <div class="hero-subtitle">Это твое личное пространство для восстановления. Здесь ты можешь снять стресс, разобрать тревожные мысли или просто выдохнуть.</div>
+            
+            <div class="info-card">
+                <h3>✨ Что здесь есть?</h3>
+                <p>Дыхательные практики, дневник эмоций, КПТ-анализ мыслей и мягкие советы от нашего ИИ-помощника.</p>
             </div>
 
             <div class="dashboard-grid">
-                <div class="tile" onclick="switchTab('tools', document.querySelectorAll('.nav-tab')[1])">
+                <div class="tile" onclick="switchTab('stress', document.querySelectorAll('.nav-tab')[1])">
+                    <div class="tile-icon">🌬</div>
+                    <div class="tile-title">От стресса</div>
+                </div>
+                <div class="tile" onclick="switchTab('anxiety', document.querySelectorAll('.nav-tab')[2])">
+                    <div class="tile-icon">🧘</div>
+                    <div class="tile-title">При тревоге</div>
+                </div>
+                <div class="tile" onclick="switchTab('journal', document.querySelectorAll('.nav-tab')[3])">
                     <div class="tile-icon">📖</div>
                     <div class="tile-title">Дневник</div>
                 </div>
-                <div class="tile" onclick="switchTab('tools', document.querySelectorAll('.nav-tab')[1])">
-                    <div class="tile-icon">🧠</div>
-                    <div class="tile-title">КПТ-анализ</div>
-                </div>
-                <div class="tile" onclick="switchTab('tools', document.querySelectorAll('.nav-tab')[1])">
-                    <div class="tile-icon">📊</div>
-                    <div class="tile-title">Настроение</div>
-                </div>
-                <div class="tile" onclick="switchTab('tools', document.querySelectorAll('.nav-tab')[1])">
-                    <div class="tile-icon">✨</div>
-                    <div class="tile-title">Совет ИИ</div>
+                <div class="tile" onclick="switchTab('profile', document.querySelectorAll('.nav-tab')[5])">
+                    <div class="tile-icon">👤</div>
+                    <div class="tile-title">Профиль</div>
                 </div>
             </div>
         </div>
 
-        <!-- ВКЛАДКА 2: ПРАКТИКИ (Формы) -->
-        <div id="tab-tools" class="tab-pane">
-            <!-- Дневник -->
+        <!-- ОТ СТРЕССА (Дыхание) -->
+        <div id="tab-stress" class="tab-pane">
+            <div class="card" style="text-align: center;">
+                <div class="title">Квадратное дыхание</div>
+                <p style="color: var(--hint); margin-bottom: 20px;">Техника 4-4-4-4 для быстрого снятия напряжения.</p>
+                <div class="breath-circle" id="breath-circle">4</div>
+                <div id="breath-text" style="font-weight: 600; height: 20px;">Готов?</div>
+                <button class="btn" id="breath-btn" onclick="startBreathing()" style="margin-top: 20px;">Начать</button>
+            </div>
+        </div>
+
+        <!-- ПРИ ТРЕВОГЕ (Заглушка для будущего) -->
+        <div id="tab-anxiety" class="tab-pane">
+            <div class="card">
+                <div class="title">Техники заземления</div>
+                <p style="color: var(--hint);">Здесь скоро появятся практики для возвращения в момент "здесь и сейчас" при панических атаках.</p>
+            </div>
+        </div>
+
+        <!-- ДНЕВНИК -->
+        <div id="tab-journal" class="tab-pane">
             <div class="card">
                 <div class="title">Дневник</div>
                 <textarea id="diary-input" rows="4" placeholder="Что тебя тревожит?"></textarea>
@@ -299,8 +270,10 @@
                     <div id="diary-ai-text" class="ai-text"></div>
                 </div>
             </div>
+        </div>
 
-            <!-- Настроение -->
+        <!-- ПРАКТИКИ (Настроение, КПТ, Тест ИИ) -->
+        <div id="tab-tools" class="tab-pane">
             <div class="card">
                 <div class="title">Настроение</div>
                 <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
@@ -317,7 +290,6 @@
                 <div id="mood-status" class="status-msg"></div>
             </div>
 
-            <!-- КПТ -->
             <div class="card">
                 <div class="title">КПТ-анализ</div>
                 <input type="text" id="cbt-thought" placeholder="Мысль">
@@ -327,7 +299,6 @@
                 <div id="cbt-status" class="status-msg"></div>
             </div>
 
-            <!-- Тест ИИ -->
             <div class="card">
                 <div class="title">Тест ИИ</div>
                 <button class="btn btn-secondary" onclick="testAI()">🤖 Запросить совет</button>
@@ -338,7 +309,7 @@
             </div>
         </div>
 
-        <!-- ВКЛАДКА 3: ПРОФИЛЬ -->
+        <!-- ПРОФИЛЬ -->
         <div id="tab-profile" class="tab-pane">
             <div class="profile-header">
                 <div class="avatar" id="avatar-initial">U</div>
@@ -351,9 +322,9 @@
             <div class="card">
                 <div class="title">Данные аккаунта</div>
                 <p style="color: var(--hint); font-size: 14px; line-height: 1.5; margin-bottom: 20px;">
-                    Вы вошли через Telegram. Ваши данные надежно защищены и хранятся только на вашем сервере.
+                    Вы вошли через Telegram. Данные защищены.
                 </p>
-                <button class="btn btn-secondary" onclick="loadStats()">📊 Посмотреть статистику</button>
+                <button class="btn btn-secondary" onclick="loadStats()">📊 Моя статистика</button>
                 <div id="stats-content" style="margin-top: 15px; font-weight: 600;"></div>
             </div>
         </div>
@@ -369,8 +340,8 @@
 
         // --- ПРИВЕТСТВИЕ ---
         document.getElementById('welcome-title').innerText = `Привет, ${userName}!`;
+        document.getElementById('hero-greeting').innerText = `Привет, ${userName}!`;
         
-        // Заполняем профиль
         document.getElementById('profile-name').innerText = userName;
         document.getElementById('profile-id').innerText = `ID: ${userId}`;
         document.getElementById('avatar-initial').innerText = userName.charAt(0).toUpperCase();
@@ -405,7 +376,6 @@
             const text = document.getElementById('breath-text');
             const circle = document.getElementById('breath-circle');
             btn.style.display = 'none';
-            document.getElementById('diary-ai-block').style.display = 'none'; 
             
             const sleep = ms => new Promise(r => setTimeout(r, ms));
             
@@ -433,25 +403,7 @@
             tg.HapticFeedback.notificationOccurred('success');
         }
 
-        // --- ФУНКЦИИ ДЛЯ API ---
-        async function fetchAIAdvice(contextText, blockId, textId) {
-            const block = document.getElementById(blockId);
-            const textEl = document.getElementById(textId);
-            block.style.display = 'block';
-            textEl.innerHTML = "ИИ подбирает слова... ⏳";
-            try {
-                const response = await fetch(`${API_URL}/api/ai_advice`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ context: contextText, text: "" })
-                });
-                const json = await response.json();
-                textEl.innerText = json.advice;
-            } catch (e) {
-                textEl.innerText = "Не удалось загрузить совет. Проверьте сеть.";
-            }
-        }
-
+        // --- ФУНКЦИИ ---
         async function testAI() {
             const block = document.getElementById('test-ai-block');
             const textEl = document.getElementById('test-ai-text');
@@ -542,8 +494,7 @@
                     body: JSON.stringify({ 
                         user_id: userId, thought: thought,
                         fact_for: document.getElementById('cbt-for').value,
-                        fact_against: document.getElementById('cbt-against').value,
-                        advice: document.getElementById('cbt-advice').value
+                        fact_against: document.getElementById('cbt-against').value
                     })
                 });
                 statusEl.innerText = "✅ Сохранено!";
