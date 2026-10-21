@@ -6,7 +6,6 @@
     <title>Мой Остров</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        /* --- ПЕРЕМЕННЫЕ ТЕМ --- */
         :root {
             --bg: #f8f9fc; --text: #1a1c29; --hint: #8b8d98;
             --primary: #4A55A2; --primary-light: #e8ebf7; --accent: #A084E8;
@@ -16,7 +15,6 @@
             --lavender: #ede7f6; --lavender-text: #4527a0;
             --blue: #e8ebf7; --blue-text: #4A55A2;
         }
-
         body.dark-theme {
             --bg: #12141c; --text: #ffffff; --hint: #8b8d98;
             --primary: #6c7cff; --primary-light: #2a2d42; --accent: #b39ddb;
@@ -26,7 +24,6 @@
             --lavender: #241e2c; --lavender-text: #ce93d8;
             --blue: #1e2130; --blue-text: #9fa8da;
         }
-
         body.auto-theme {
             --bg: var(--tg-theme-bg-color, #f8f9fc);
             --text: var(--tg-theme-text-color, #1a1c29);
@@ -47,7 +44,6 @@
             transition: background-color 0.3s, color 0.3s;
         }
 
-        /* --- ПРИВЕТСТВЕННЫЙ ЭКРАН --- */
         #welcome-screen {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: #1a1c29; z-index: 9999;
@@ -74,7 +70,6 @@
         .welcome-btn:active { transform: scale(0.96); }
         @keyframes slideUpFade { to { opacity: 1; transform: translateY(0); } }
 
-        /* --- ВЕРХНЯЯ НАВИГАЦИЯ --- */
         .top-nav {
             display: flex; background-color: var(--card); padding: 15px 15px 10px 15px;
             border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;
@@ -94,7 +89,6 @@
         .tab-pane.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* --- ГЛАВНАЯ --- */
         .hero-title { font-size: 28px; font-weight: 800; margin-bottom: 10px; letter-spacing: -0.5px; }
         .hero-subtitle { font-size: 16px; color: var(--hint); margin-bottom: 20px; line-height: 1.5; }
         
@@ -124,7 +118,6 @@
         .tile.lavender { background-color: var(--lavender); color: var(--lavender-text); }
         .tile.blue { background-color: var(--blue); color: var(--blue-text); }
 
-        /* --- ОБЩИЕ ЭЛЕМЕНТЫ --- */
         .card { background-color: var(--card); border-radius: var(--border-radius); padding: 20px; margin-bottom: 20px; }
         .title { font-size: 20px; font-weight: 700; margin-bottom: 15px; }
         .btn {
@@ -180,32 +173,28 @@
 </head>
 <body class="auto-theme">
 
-    <!-- ПРИВЕТСТВЕННЫЙ ЭКРАН -->
     <div id="welcome-screen">
         <div class="welcome-title" id="welcome-title">Привет</div>
         <div class="welcome-subtitle">Добро пожаловать в твое безопасное место.</div>
-        <!-- Кнопка теперь вызывает функцию корректно -->
-        <button class="welcome-btn" type="button" onclick="enterApp()">Пройти на остров безопасности</button>
+        <button class="welcome-btn" type="button" id="enter-btn">Пройти на остров безопасности</button>
     </div>
 
-    <!-- ВЕРХНЯЯ НАВИГАЦИЯ -->
     <div class="top-nav">
-        <div class="nav-tab active" onclick="switchTab('home', this)">Главная</div>
-        <div class="nav-tab" onclick="switchTab('stress', this)">От стресса</div>
-        <div class="nav-tab" onclick="switchTab('anxiety', this)">При тревоге</div>
-        <div class="nav-tab" onclick="switchTab('journal', this)">Дневник</div>
-        <div class="nav-tab" onclick="switchTab('tools', this)">Практики</div>
-        <div class="nav-tab" onclick="switchTab('profile', this)">Профиль</div>
+        <div class="nav-tab active" data-tab="home">Главная</div>
+        <div class="nav-tab" data-tab="stress">От стресса</div>
+        <div class="nav-tab" data-tab="anxiety">При тревоге</div>
+        <div class="nav-tab" data-tab="journal">Дневник</div>
+        <div class="nav-tab" data-tab="tools">Практики</div>
+        <div class="nav-tab" data-tab="profile">Профиль</div>
     </div>
 
     <div class="content">
-        
         <!-- ГЛАВНАЯ -->
         <div id="tab-home" class="tab-pane active">
             <div class="hero-title" id="hero-greeting">Привет!</div>
             <div class="hero-subtitle">Это твое личное пространство для восстановления.</div>
             
-            <div class="habit-widget" onclick="markHabit()">
+            <div class="habit-widget" id="habit-widget">
                 <div>
                     <h3>Забота о себе</h3>
                     <p id="habit-text">Нажми, чтобы отметить день</p>
@@ -214,46 +203,45 @@
             </div>
 
             <div class="dashboard-grid">
-                <div class="tile mint" onclick="switchTab('stress', document.querySelectorAll('.nav-tab')[1])">
+                <div class="tile mint" data-tab="stress">
                     <div class="tile-icon">🌬</div>
                     <div class="tile-title">От стресса</div>
                 </div>
-                <div class="tile peach" onclick="switchTab('anxiety', document.querySelectorAll('.nav-tab')[2])">
+                <div class="tile peach" data-tab="anxiety">
                     <div class="tile-icon">🧘</div>
                     <div class="tile-title">При тревоге</div>
                 </div>
-                <div class="tile lavender" onclick="switchTab('journal', document.querySelectorAll('.nav-tab')[3])">
+                <div class="tile lavender" data-tab="journal">
                     <div class="tile-icon">📖</div>
                     <div class="tile-title">Дневник</div>
                 </div>
-                <div class="tile blue" onclick="switchTab('profile', document.querySelectorAll('.nav-tab')[5])">
+                <div class="tile blue" data-tab="profile">
                     <div class="tile-icon">👤</div>
                     <div class="tile-title">Профиль</div>
                 </div>
             </div>
         </div>
 
-        <!-- ОТ СТРЕССА (Дыхание) -->
+        <!-- ОТ СТРЕССА -->
         <div id="tab-stress" class="tab-pane">
             <div class="card" style="text-align: center;">
                 <div class="title">Квадратное дыхание</div>
-                <p style="color: var(--hint); margin-bottom: 20px;">Техника 4-4-4-4 для быстрого снятия напряжения.</p>
+                <p style="color: var(--hint); margin-bottom: 20px;">Техника 4-4-4-4.</p>
                 <div class="breath-circle" id="breath-circle">4</div>
                 <div id="breath-text" style="font-weight: 600; height: 20px;">Готов?</div>
-                <button class="btn" id="breath-btn" onclick="startBreathing()" style="margin-top: 20px;">Начать</button>
+                <button class="btn" id="breath-btn" style="margin-top: 20px;">Начать</button>
             </div>
         </div>
 
-        <!-- ПРИ ТРЕВОГЕ (Заземление) -->
+        <!-- ПРИ ТРЕВОГЕ -->
         <div id="tab-anxiety" class="tab-pane">
             <div class="card">
-                <div class="title">Техника заземления 5-4-3-2-1</div>
-                <p style="color: var(--hint); margin-bottom: 20px;">Вернись в момент "здесь и сейчас", когда тревога уносит в будущее.</p>
-                
+                <div class="title">Техника 5-4-3-2-1</div>
+                <p style="color: var(--hint); margin-bottom: 20px;">Вернись в момент "здесь и сейчас".</p>
                 <div id="grounding-container">
                     <div class="grounding-step" id="ground-prompt">Назови 5 вещей, которые видишь</div>
                     <input type="text" id="ground-input" placeholder="Напиши сюда...">
-                    <button class="btn" id="ground-btn" onclick="nextGrounding()">Далее</button>
+                    <button class="btn" id="ground-btn">Далее</button>
                 </div>
             </div>
         </div>
@@ -263,7 +251,7 @@
             <div class="card">
                 <div class="title">Дневник</div>
                 <textarea id="diary-input" rows="4" placeholder="Что тебя тревожит?"></textarea>
-                <button class="btn" id="diary-btn" onclick="saveDiary()">Сохранить</button>
+                <button class="btn" id="diary-btn">Сохранить</button>
                 <div id="diary-status" class="status-msg"></div>
                 <div id="diary-ai-block" class="ai-card">
                     <div class="ai-title">✨ Мягкий совет от ИИ</div>
@@ -277,15 +265,15 @@
             <div class="card">
                 <div class="title">Настроение</div>
                 <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-                    <button class="emoji-btn" style="font-size:32px; background:none; border:none;" onclick="selectMood(1, '😭')">😭</button>
-                    <button class="emoji-btn" style="font-size:32px; background:none; border:none;" onclick="selectMood(2, '😕')">😕</button>
-                    <button class="emoji-btn" style="font-size:32px; background:none; border:none;" onclick="selectMood(3, '😐')">😐</button>
-                    <button class="emoji-btn" style="font-size:32px; background:none; border:none;" onclick="selectMood(4, '🙂')">🙂</button>
-                    <button class="emoji-btn" style="font-size:32px; background:none; border:none;" onclick="selectMood(5, '😄')">😄</button>
+                    <button class="emoji-btn" style="font-size:32px; background:none; border:none;" data-mood="😭" data-score="1">😭</button>
+                    <button class="emoji-btn" style="font-size:32px; background:none; border:none;" data-mood="😕" data-score="2">😕</button>
+                    <button class="emoji-btn" style="font-size:32px; background:none; border:none;" data-mood="😐" data-score="3">😐</button>
+                    <button class="emoji-btn" style="font-size:32px; background:none; border:none;" data-mood="🙂" data-score="4">🙂</button>
+                    <button class="emoji-btn" style="font-size:32px; background:none; border:none;" data-mood="😄" data-score="5">😄</button>
                 </div>
                 <div id="trigger-section" class="hidden">
-                    <button class="btn btn-secondary" onclick="saveMood('Работа')">Работа</button>
-                    <button class="btn btn-secondary" onclick="saveMood('Сон')">Сон</button>
+                    <button class="btn btn-secondary" data-trigger="Работа">Работа</button>
+                    <button class="btn btn-secondary" data-trigger="Сон">Сон</button>
                 </div>
                 <div id="mood-status" class="status-msg"></div>
             </div>
@@ -295,13 +283,13 @@
                 <input type="text" id="cbt-thought" placeholder="Мысль">
                 <input type="text" id="cbt-for" placeholder="Факты ЗА">
                 <input type="text" id="cbt-against" placeholder="Факты ПРОТИВ">
-                <button class="btn" onclick="saveCBT()">Записать</button>
+                <button class="btn" id="cbt-btn">Записать</button>
                 <div id="cbt-status" class="status-msg"></div>
             </div>
 
             <div class="card">
                 <div class="title">Тест ИИ</div>
-                <button class="btn btn-secondary" onclick="testAI()">🤖 Запросить совет</button>
+                <button class="btn btn-secondary" id="test-ai-btn">🤖 Запросить совет</button>
                 <div id="test-ai-block" class="ai-card" style="margin-top: 10px;">
                     <div class="ai-title">✨ Ответ ИИ</div>
                     <div id="test-ai-text" class="ai-text"></div>
@@ -322,286 +310,300 @@
             <div class="card">
                 <div class="title">Тема интерфейса</div>
                 <div class="theme-switch">
-                    <button class="theme-btn" onclick="setTheme('light', this)">Светлая</button>
-                    <button class="theme-btn active" onclick="setTheme('auto', this)">Авто</button>
-                    <button class="theme-btn" onclick="setTheme('dark', this)">Темная</button>
+                    <button class="theme-btn" data-theme="light">Светлая</button>
+                    <button class="theme-btn active" data-theme="auto">Авто</button>
+                    <button class="theme-btn" data-theme="dark">Темная</button>
                 </div>
             </div>
 
             <div class="card">
                 <div class="title">Действия</div>
-                <button class="btn btn-secondary" onclick="shareBot()">📤 Поделиться ботом</button>
-                <button class="btn btn-secondary" onclick="loadStats()">📊 Моя статистика</button>
+                <button class="btn btn-secondary" id="share-btn">📤 Поделиться ботом</button>
+                <button class="btn btn-secondary" id="stats-btn">📊 Моя статистика</button>
                 <div id="stats-content" style="margin-top: 15px; font-weight: 600;"></div>
             </div>
         </div>
-
     </div>
 
     <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand();
-        const userId = tg.initDataUnsafe?.user?.id || "unknown";
-        const userName = tg.initDataUnsafe?.user?.first_name || "друг";
-        const API_URL = "https://mental-bot-v2-maxdikov.mia0.amvera.tech"; 
-
-        // --- ПРИВЕТСТВИЕ ---
-        document.getElementById('welcome-title').innerText = `Привет, ${userName}!`;
-        document.getElementById('hero-greeting').innerText = `Привет, ${userName}!`;
-        document.getElementById('profile-name').innerText = userName;
-        document.getElementById('profile-id').innerText = `ID: ${userId}`;
-        document.getElementById('avatar-initial').innerText = userName.charAt(0).toUpperCase();
-
-        const lastVisit = localStorage.getItem('lastVisit');
-        const today = new Date().toDateString();
-        
-        if (lastVisit === today) {
-            document.getElementById('welcome-screen').classList.add('hidden');
-        }
-
-        // Функция входа (исправлена)
-        window.enterApp = function() {
-            const screen = document.getElementById('welcome-screen');
-            if (screen) {
-                screen.classList.add('hidden');
-            }
-            localStorage.setItem('lastVisit', new Date().toDateString());
-            tg.HapticFeedback.impactOccurred('light');
-            loadHabit();
-        };
-
-        // --- СМЕНА ТЕМЫ ---
-        function setTheme(theme, btn) {
-            document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+        // Оборачиваем всё в DOMContentLoaded, чтобы скрипт запускался только после загрузки HTML
+        document.addEventListener('DOMContentLoaded', () => {
+            const tg = window.Telegram?.WebApp;
+            if (tg) tg.expand();
             
-            document.body.className = ''; 
-            if (theme === 'dark') document.body.classList.add('dark-theme');
-            else if (theme === 'auto') document.body.classList.add('auto-theme');
-            
-            localStorage.setItem('appTheme', theme);
-            tg.HapticFeedback.impactOccurred('light');
-        }
+            const userId = tg?.initDataUnsafe?.user?.id || "unknown";
+            const userName = tg?.initDataUnsafe?.user?.first_name || "друг";
+            const API_URL = "https://mental-bot-v2-maxdikov.mia0.amvera.tech"; 
 
-        const savedTheme = localStorage.getItem('appTheme') || 'auto';
-        document.body.className = savedTheme === 'dark' ? 'dark-theme' : (savedTheme === 'light' ? '' : 'auto-theme');
-        
-        document.querySelectorAll('.theme-btn').forEach((btn, index) => {
-            if ((savedTheme === 'light' && index === 0) || 
-                (savedTheme === 'auto' && index === 1) || 
-                (savedTheme === 'dark' && index === 2)) {
-                btn.classList.add('active');
-            } else {
-                btn.classList.remove('active');
+            // --- ПРИВЕТСТВИЕ И ПРОФИЛЬ ---
+            const welcomeTitle = document.getElementById('welcome-title');
+            const heroGreeting = document.getElementById('hero-greeting');
+            const profileName = document.getElementById('profile-name');
+            const profileId = document.getElementById('profile-id');
+            const avatarInitial = document.getElementById('avatar-initial');
+
+            if (welcomeTitle) welcomeTitle.innerText = `Привет, ${userName}!`;
+            if (heroGreeting) heroGreeting.innerText = `Привет, ${userName}!`;
+            if (profileName) profileName.innerText = userName;
+            if (profileId) profileId.innerText = `ID: ${userId}`;
+            if (avatarInitial) avatarInitial.innerText = userName.charAt(0).toUpperCase();
+
+            // Проверка визита
+            const lastVisit = localStorage.getItem('lastVisit');
+            const today = new Date().toDateString();
+            if (lastVisit === today) {
+                document.getElementById('welcome-screen')?.classList.add('hidden');
             }
-        });
 
-        function switchTab(tabName, navElement) {
-            document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
-            document.getElementById(`tab-${tabName}`).classList.add('active');
-            navElement.classList.add('active');
-        }
+            // --- КНОПКА ВХОДА ---
+            document.getElementById('enter-btn')?.addEventListener('click', () => {
+                document.getElementById('welcome-screen')?.classList.add('hidden');
+                localStorage.setItem('lastVisit', new Date().toDateString());
+                if (tg) tg.HapticFeedback.impactOccurred('light');
+                loadHabit();
+            });
 
-        // --- ТРЕКЕР ПРИВЫЧЕК ---
-        async function loadHabit() {
-            try {
-                const response = await fetch(`${API_URL}/api/habit`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ user_id: userId })
+            // --- НАВИГАЦИЯ ---
+            document.querySelectorAll('.nav-tab, .tile').forEach(el => {
+                el.addEventListener('click', () => {
+                    const tabName = el.getAttribute('data-tab');
+                    if (!tabName) return;
+                    
+                    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+                    document.querySelectorAll('.nav-tab').forEach(n => n.classList.remove('active'));
+                    
+                    document.getElementById(`tab-${tabName}`)?.classList.add('active');
+                    
+                    // Подсвечиваем нужный таб в верхнем меню
+                    const navTab = document.querySelector(`.nav-tab[data-tab="${tabName}"]`);
+                    if (navTab) navTab.classList.add('active');
                 });
-                const json = await response.json();
-                document.getElementById('habit-streak').innerText = json.message.split(' ')[1] + " 🔥";
-                document.getElementById('habit-text').innerText = "Ты уже отметился сегодня!";
-            } catch (e) {
-                document.getElementById('habit-text').innerText = "Нажми, чтобы отметить";
-            }
-        }
+            });
 
-        async function markHabit() {
-            tg.HapticFeedback.notificationOccurred('success');
-            await loadHabit();
-        }
-
-        // --- ПОДЕЛИТЬСЯ ---
-        function shareBot() {
-            const botUsername = "Islandgoodness_bot";
-            const shareUrl = `https://t.me/share/url?url=https://t.me/${botUsername}&text=Привет! Попробуй этого бота для ментального здоровья.`;
-            tg.openTelegramLink(shareUrl);
-        }
-
-        // --- ДЫХАНИЕ ---
-        let isBreathing = false;
-        async function startBreathing() {
-            if (isBreathing) return;
-            isBreathing = true;
-            const btn = document.getElementById('breath-btn');
-            const text = document.getElementById('breath-text');
-            const circle = document.getElementById('breath-circle');
-            btn.style.display = 'none';
-            const sleep = ms => new Promise(r => setTimeout(r, ms));
+            // --- СМЕНА ТЕМЫ ---
+            const savedTheme = localStorage.getItem('appTheme') || 'auto';
+            document.body.className = savedTheme === 'dark' ? 'dark-theme' : (savedTheme === 'light' ? '' : 'auto-theme');
             
-            async function breathPhase(phaseName, duration, scale) {
-                text.innerText = phaseName;
-                circle.style.transform = `scale(${scale})`;
-                for (let i = duration; i > 0; i--) {
-                    circle.innerText = i;
-                    await sleep(1000);
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                if (btn.getAttribute('data-theme') === savedTheme) btn.classList.add('active');
+                else btn.classList.remove('active');
+
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    const theme = btn.getAttribute('data-theme');
+                    document.body.className = '';
+                    if (theme === 'dark') document.body.className = 'dark-theme';
+                    else if (theme === 'auto') document.body.className = 'auto-theme';
+                    
+                    localStorage.setItem('appTheme', theme);
+                    if (tg) tg.HapticFeedback.impactOccurred('light');
+                });
+            });
+
+            // --- ТРЕКЕР ПРИВЫЧЕК ---
+            async function loadHabit() {
+                try {
+                    const response = await fetch(`${API_URL}/api/habit`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ user_id: userId })
+                    });
+                    const json = await response.json();
+                    document.getElementById('habit-streak').innerText = json.message.split(' ')[1] + " 🔥";
+                    document.getElementById('habit-text').innerText = "Ты уже отметился сегодня!";
+                } catch (e) {
+                    document.getElementById('habit-text').innerText = "Нажми, чтобы отметить";
                 }
             }
 
-            for (let i = 1; i <= 4; i++) {
-                await breathPhase(`Вдох`, 4, 1.4);
-                await breathPhase(`Задержка`, 4, 1.4);
-                await breathPhase(`Выдох`, 4, 1.0);
-                await breathPhase(`Задержка`, 4, 1.0);
-            }
-            text.innerText = "Молодец!";
-            circle.innerText = "✅";
-            btn.style.display = 'block';
-            btn.innerText = "Начать заново";
-            isBreathing = false;
-            tg.HapticFeedback.notificationOccurred('success');
-        }
+            document.getElementById('habit-widget')?.addEventListener('click', () => {
+                if (tg) tg.HapticFeedback.notificationOccurred('success');
+                loadHabit();
+            });
 
-        // --- ЗАЗЕМЛЕНИЕ ---
-        const groundPrompts = [
-            "Назови 5 вещей, которые видишь",
-            "Назови 4 вещи, которые можешь потрогать",
-            "Назови 3 звука, которые слышишь",
-            "Назови 2 запаха, которые чувствуешь",
-            "Назови 1 вкус"
-        ];
-        let groundStep = 0;
+            // --- ПОДЕЛИТЬСЯ ---
+            document.getElementById('share-btn')?.addEventListener('click', () => {
+                const botUsername = "Islandgoodness_bot";
+                const shareUrl = `https://t.me/share/url?url=https://t.me/${botUsername}&text=Привет! Попробуй этого бота для ментального здоровья.`;
+                if (tg) tg.openTelegramLink(shareUrl);
+            });
 
-        function nextGrounding() {
-            groundStep++;
-            if (groundStep >= groundPrompts.length) {
-                document.getElementById('ground-prompt').innerText = "Отлично! Ты вернулся в момент 'здесь и сейчас'. 🌿";
-                document.getElementById('ground-input').classList.add('hidden');
-                document.getElementById('ground-btn').classList.add('hidden');
-                tg.HapticFeedback.notificationOccurred('success');
-            } else {
-                document.getElementById('ground-prompt').innerText = groundPrompts[groundStep];
-                document.getElementById('ground-input').value = "";
-            }
-        }
-
-        // --- ФУНКЦИИ API ---
-        async function testAI() {
-            const block = document.getElementById('test-ai-block');
-            const textEl = document.getElementById('test-ai-text');
-            block.style.display = 'block';
-            textEl.innerHTML = "GigaChat думает... ⏳";
-            try {
-                const response = await fetch(`${API_URL}/api/ai_advice`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ context: "Пользователь тестирует ИИ.", text: "Я чувствую легкую тревогу." })
-                });
-                const json = await response.json();
-                textEl.innerText = json.advice;
-            } catch (e) {
-                textEl.innerText = "Ошибка сети. Проверьте, работает ли Amvera.";
-            }
-        }
-
-        async function saveDiary() {
-            const text = document.getElementById('diary-input').value;
-            if (!text) return;
-            const btn = document.getElementById('diary-btn');
-            const statusEl = document.getElementById('diary-status');
-            const aiBlock = document.getElementById('diary-ai-block');
-            const aiText = document.getElementById('diary-ai-text');
-            
-            btn.disabled = true; btn.innerText = "Сохранение...";
-            statusEl.innerText = ""; aiBlock.style.display = 'none';
-            
-            try {
-                const response = await fetch(`${API_URL}/api/diary`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ user_id: userId, text: text })
-                });
-                const json = await response.json();
+            // --- ДЫХАНИЕ ---
+            let isBreathing = false;
+            document.getElementById('breath-btn')?.addEventListener('click', async () => {
+                if (isBreathing) return;
+                isBreathing = true;
+                const btn = document.getElementById('breath-btn');
+                const text = document.getElementById('breath-text');
+                const circle = document.getElementById('breath-circle');
+                btn.style.display = 'none';
+                const sleep = ms => new Promise(r => setTimeout(r, ms));
                 
-                if (json.status === "ok") {
-                    statusEl.innerText = "✅ Сохранено!";
-                    document.getElementById('diary-input').value = "";
-                    tg.HapticFeedback.notificationOccurred('success');
-                    if (json.advice) {
-                        aiBlock.style.display = 'block';
-                        aiText.innerText = json.advice;
+                async function breathPhase(phaseName, duration, scale) {
+                    text.innerText = phaseName;
+                    circle.style.transform = `scale(${scale})`;
+                    for (let i = duration; i > 0; i--) {
+                        circle.innerText = i;
+                        await sleep(1000);
                     }
                 }
-            } catch (e) {
-                statusEl.innerText = "⚠️ Ошибка сети";
-            } finally {
-                btn.disabled = false; btn.innerText = "Сохранить";
-            }
-        }
 
-        function selectMood(score, emoji) {
-            document.getElementById('trigger-section').classList.remove('hidden');
-            tg.HapticFeedback.impactOccurred('light');
-            window.tempMood = { score, emoji };
-        }
+                for (let i = 1; i <= 4; i++) {
+                    await breathPhase(`Вдох`, 4, 1.4);
+                    await breathPhase(`Задержка`, 4, 1.4);
+                    await breathPhase(`Выдох`, 4, 1.0);
+                    await breathPhase(`Задержка`, 4, 1.0);
+                }
+                text.innerText = "Молодец!";
+                circle.innerText = "✅";
+                btn.style.display = 'block';
+                btn.innerText = "Начать заново";
+                isBreathing = false;
+                if (tg) tg.HapticFeedback.notificationOccurred('success');
+            });
 
-        async function saveMood(trigger) {
-            if (!window.tempMood) return;
-            const statusEl = document.getElementById('mood-status');
-            statusEl.innerText = "Сохранение...";
-            try {
-                await fetch(`${API_URL}/api/mood`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ user_id: userId, mood: window.tempMood.emoji, score: window.tempMood.score, trigger: trigger })
+            // --- ЗАЗЕМЛЕНИЕ ---
+            const groundPrompts = [
+                "Назови 5 вещей, которые видишь",
+                "Назови 4 вещи, которые можешь потрогать",
+                "Назови 3 звука, которые слышишь",
+                "Назови 2 запаха, которые чувствуешь",
+                "Назови 1 вкус"
+            ];
+            let groundStep = 0;
+
+            document.getElementById('ground-btn')?.addEventListener('click', () => {
+                groundStep++;
+                if (groundStep >= groundPrompts.length) {
+                    document.getElementById('ground-prompt').innerText = "Отлично! Ты вернулся в момент 'здесь и сейчас'. 🌿";
+                    document.getElementById('ground-input').classList.add('hidden');
+                    document.getElementById('ground-btn').classList.add('hidden');
+                    if (tg) tg.HapticFeedback.notificationOccurred('success');
+                } else {
+                    document.getElementById('ground-prompt').innerText = groundPrompts[groundStep];
+                    document.getElementById('ground-input').value = "";
+                }
+            });
+
+            // --- КПТ ---
+            document.getElementById('cbt-btn')?.addEventListener('click', async () => {
+                const thought = document.getElementById('cbt-thought').value;
+                if (!thought) return;
+                const statusEl = document.getElementById('cbt-status');
+                statusEl.innerText = "Сохранение...";
+                try {
+                    await fetch(`${API_URL}/api/cbt`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            user_id: userId, thought: thought,
+                            fact_for: document.getElementById('cbt-for').value,
+                            fact_against: document.getElementById('cbt-against').value
+                        })
+                    });
+                    statusEl.innerText = "✅ Сохранено!";
+                    document.querySelectorAll('#tab-tools input').forEach(i => i.value = "");
+                } catch (e) {
+                    statusEl.innerText = "⚠️ Ошибка сети";
+                }
+            });
+
+            // --- ТЕСТ ИИ ---
+            document.getElementById('test-ai-btn')?.addEventListener('click', async () => {
+                const block = document.getElementById('test-ai-block');
+                const textEl = document.getElementById('test-ai-text');
+                block.style.display = 'block';
+                textEl.innerHTML = "GigaChat думает... ⏳";
+                try {
+                    const response = await fetch(`${API_URL}/api/ai_advice`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ context: "Пользователь тестирует ИИ.", text: "Я чувствую легкую тревогу." })
+                    });
+                    const json = await response.json();
+                    textEl.innerText = json.advice;
+                } catch (e) {
+                    textEl.innerText = "Ошибка сети. Проверьте, работает ли Amvera.";
+                }
+            });
+
+            // --- ДНЕВНИК ---
+            document.getElementById('diary-btn')?.addEventListener('click', async () => {
+                const text = document.getElementById('diary-input').value;
+                if (!text) return;
+                const btn = document.getElementById('diary-btn');
+                const statusEl = document.getElementById('diary-status');
+                const aiBlock = document.getElementById('diary-ai-block');
+                const aiText = document.getElementById('diary-ai-text');
+                
+                btn.disabled = true; btn.innerText = "Сохранение...";
+                statusEl.innerText = ""; aiBlock.style.display = 'none';
+                
+                try {
+                    const response = await fetch(`${API_URL}/api/diary`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ user_id: userId, text: text })
+                    });
+                    const json = await response.json();
+                    
+                    if (json.status === "ok") {
+                        statusEl.innerText = "✅ Сохранено!";
+                        document.getElementById('diary-input').value = "";
+                        if (tg) tg.HapticFeedback.notificationOccurred('success');
+                        if (json.advice) {
+                            aiBlock.style.display = 'block';
+                            aiText.innerText = json.advice;
+                        }
+                    }
+                } catch (e) {
+                    statusEl.innerText = "⚠️ Ошибка сети";
+                } finally {
+                    btn.disabled = false; btn.innerText = "Сохранить";
+                }
+            });
+
+            // --- НАСТРОЕНИЕ ---
+            let tempMood = null;
+            document.querySelectorAll('.emoji-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tempMood = { 
+                        emoji: btn.getAttribute('data-mood'), 
+                        score: btn.getAttribute('data-score') 
+                    };
+                    document.getElementById('trigger-section').classList.remove('hidden');
+                    if (tg) tg.HapticFeedback.impactOccurred('light');
                 });
-                statusEl.innerText = "✅ Настроение сохранено!";
-                document.getElementById('trigger-section').classList.add('hidden');
-                setTimeout(() => { statusEl.innerText = ""; }, 3000);
-            } catch (e) {
-                statusEl.innerText = "⚠️ Ошибка сети";
-            }
-        }
+            });
 
-        async function saveCBT() {
-            const thought = document.getElementById('cbt-thought').value;
-            if (!thought) return;
-            const statusEl = document.getElementById('cbt-status');
-            statusEl.innerText = "Сохранение...";
-            try {
-                await fetch(`${API_URL}/api/cbt`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        user_id: userId, thought: thought,
-                        fact_for: document.getElementById('cbt-for').value,
-                        fact_against: document.getElementById('cbt-against').value
-                    })
+            document.querySelectorAll('[data-trigger]').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    if (!tempMood) return;
+                    const statusEl = document.getElementById('mood-status');
+                    statusEl.innerText = "Сохранение...";
+                    try {
+                        await fetch(`${API_URL}/api/mood`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ user_id: userId, mood: tempMood.emoji, score: tempMood.score, trigger: btn.getAttribute('data-trigger') })
+                        });
+                        statusEl.innerText = "✅ Настроение сохранено!";
+                        document.getElementById('trigger-section').classList.add('hidden');
+                        setTimeout(() => { statusEl.innerText = ""; }, 3000);
+                    } catch (e) {
+                        statusEl.innerText = "⚠️ Ошибка сети";
+                    }
                 });
-                statusEl.innerText = "✅ Сохранено!";
-                document.querySelectorAll('#tab-tools input').forEach(i => i.value = "");
-            } catch (e) {
-                statusEl.innerText = "⚠️ Ошибка сети";
-            }
-        }
+            });
 
-        async function loadStats() {
-            const statsEl = document.getElementById('stats-content');
-            statsEl.innerText = "Загрузка...";
-            try {
-                const response = await fetch(`${API_URL}/api/stats?user_id=${userId}`);
-                const json = await response.json();
-                if (json.data.length === 0) { statsEl.innerText = "Нет данных."; return; }
-                let html = `<b>Средний балл: </b>${(json.data.reduce((a, b) => a + b.score, 0) / json.data.length).toFixed(1)} / 5<br><br>`;
-                json.data.slice(-7).forEach(rec => {
-                    html += `${rec.date}: ${"🟩".repeat(rec.score) + "⬜".repeat(5 - rec.score)}<br>`;
-                });
-                statsEl.innerHTML = html;
-            } catch (e) { statsEl.innerText = "Ошибка загрузки."; }
-        }
-    </script>
-</body>
-</html>
+            // --- СТАТИСТИКА ---
+            document.getElementById('stats-btn')?.addEventListener('click', async () => {
+                const statsEl = document.getElementById('stats-content');
+                statsEl.innerText = "Загрузка...";
+                try {
+                    const response = await fetch(`${API_URL}/api/stats?user_id=${userId}`);
+                    const json = await response.json();
+                    if (json.data.length === 0) { statsEl.innerText = "Нет данных."; return; }
+                    let html = `<b>Средний балл: </b>${(json.data.reduce((a, b) => a + b.score, 0)
