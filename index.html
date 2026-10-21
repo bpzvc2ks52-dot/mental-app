@@ -221,3 +221,149 @@
             </div>
         </div>
     </div>
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tg = window.Telegram?.WebApp;
+            if (tg) tg.expand();
+            
+            const userId = tg?.initDataUnsafe?.user?.id || "unknown";
+            const userName = tg?.initDataUnsafe?.user?.first_name || "друг";
+            const API_URL = "https://mental-bot-v2-maxdikov.mia0.amvera.tech"; 
+
+            // 1. Приветствие
+            const welcomeTitle = document.getElementById('welcome-title');
+            if (welcomeTitle) welcomeTitle.innerText = `Привет, ${userName}!`;
+            
+            const heroGreeting = document.getElementById('hero-greeting');
+            if (heroGreeting) heroGreeting.innerText = `Привет, ${userName}!`;
+
+            // 2. Профиль
+            const profileName = document.getElementById('profile-name');
+            const profileId = document.getElementById('profile-id');
+            const avatarInitial = document.getElementById('avatar-initial');
+            
+            if (profileName) profileName.innerText = userName;
+            if (profileId) profileId.innerText = `ID: ${userId}`;
+            if (avatarInitial) avatarInitial.innerText = userName.charAt(0).toUpperCase();
+
+            // 3. Кнопка входа
+            const enterBtn = document.getElementById('enter-btn');
+            if (enterBtn) {
+                enterBtn.addEventListener('click', function() {
+                    document.getElementById('welcome-screen').classList.add('hidden');
+                    if (tg) tg.HapticFeedback.impactOccurred('light');
+                });
+            }
+
+            // 4. Навигация
+            const navElements = document.querySelectorAll('.nav-tab, [data-tab]');
+            navElements.forEach(function(el) {
+                el.addEventListener('click', function() {
+                    const tabName = this.getAttribute('data-tab');
+                    if (!tabName) return;
+                    
+                    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+                    document.querySelectorAll('.nav-tab').forEach(n => n.classList.remove('active'));
+                    
+                    const targetTab = document.getElementById(`tab-${tabName}`);
+                    if (targetTab) targetTab.classList.add('active');
+                    
+                    const navTab = document.querySelector(`.nav-tab[data-tab="${tabName}"]`);
+                    if (navTab) navTab.classList.add('active');
+                });
+            });
+
+            // 5. Дыхание (Упрощенное)
+            let isBreathing = false;
+            const breathBtn = document.getElementById('breath-btn');
+            if (breathBtn) {
+                breathBtn.addEventListener('click', async function() {
+                    if (isBreathing) return;
+                    isBreathing = true;
+                    const btn = this;
+                    const text = document.getElementById('breath-text');
+                    const circle = document.getElementById('breath-circle');
+                    btn.style.display = 'none';
+                    
+                    const sleep = ms => new Promise(r => setTimeout(r, ms));
+                    const phases = ["Вдох", "Задержка", "Выдох", "Задержка"];
+
+                    for (let i = 0; i < 4; i++) {
+                        for (let p = 0; p < phases.length; p++) {
+                            text.innerText = phases[p];
+                            for (let s = 4; s > 0; s--) {
+                                circle.innerText = s;
+                                await sleep(1000);
+                            }
+                        }
+                    }
+                    
+                    text.innerText = "Молодец!";
+                    circle.innerText = "✅";
+                    btn.style.display = 'block';
+                    btn.innerText = "Начать заново";
+                    isBreathing = false;
+                    if (tg) tg.HapticFeedback.notificationOccurred('success');
+                });
+            }
+
+            // 6. Дневник
+            const diaryBtn = document.getElementById('diary-btn');
+            if (diaryBtn) {
+                diaryBtn.addEventListener('click', async function() {
+                    const text = document.getElementById('diary-input').value;
+                    if (!text) return;
+                    
+                    const statusEl = document.getElementById('diary-status');
+                    statusEl.innerText = "Сохранение...";
+                    
+                    try {
+                        await fetch(`${API_URL}/api/diary`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ user_id: userId, text: text })
+                        });
+                        statusEl.innerText = "✅ Сохранено!";
+                        document.getElementById('diary-input').value = "";
+                        if (tg) tg.HapticFeedback.notificationOccurred('success');
+                    } catch (e) {
+                        statusEl.innerText = "⚠️ Ошибка сети";
+                    }
+                });
+            }
+
+            // 7. Поделиться
+            const shareBtn = document.getElementById('share-btn');
+            if (shareBtn) {
+                shareBtn.addEventListener('click', function() {
+                    const shareUrl = `https://t.me/share/url?url=https://t.me/Islandgoodness_bot&text=Попробуй этого бота!`;
+                    if (tg) tg.openTelegramLink(shareUrl);
+                });
+            }
+
+            // 8. Смена темы
+            const savedTheme = localStorage.getItem('appTheme') || 'auto';
+            document.body.className = savedTheme === 'dark' ? 'dark-theme' : (savedTheme === 'light' ? '' : 'auto-theme');
+            
+            const themeBtns = document.querySelectorAll('.theme-btn');
+            themeBtns.forEach(btn => {
+                if (btn.getAttribute('data-theme') === savedTheme) btn.classList.add('active');
+                else btn.classList.remove('active');
+
+                btn.addEventListener('click', function() {
+                    themeBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const theme = this.getAttribute('data-theme');
+                    document.body.className = '';
+                    if (theme === 'dark') document.body.className = 'dark-theme';
+                    else if (theme === 'auto') document.body.className = 'auto-theme';
+                    
+                    localStorage.setItem('appTheme', theme);
+                    if (tg) tg.HapticFeedback.impactOccurred('light');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
