@@ -9,248 +9,103 @@
         :root {
             --bg: #f8f9fc; --text: #1a1c29; --hint: #8b8d98;
             --primary: #4A55A2; --primary-light: #e8ebf7; --accent: #A084E8;
-            --card: #ffffff; --border-radius: 16px; --ai-bg: #f3f0ff;
-            --mint: #e0f2f1; --mint-text: #00695c;
-            --peach: #fff3e0; --peach-text: #e65100;
-            --lavender: #ede7f6; --lavender-text: #4527a0;
-            --blue: #e8ebf7; --blue-text: #4A55A2;
-        }
-        body.dark-theme {
-            --bg: #12141c; --text: #ffffff; --hint: #8b8d98;
-            --primary: #6c7cff; --primary-light: #2a2d42; --accent: #b39ddb;
-            --card: #1e2130; --ai-bg: #1e2130;
-            --mint: #1e2c2a; --mint-text: #80cbc4;
-            --peach: #2c241e; --peach-text: #ffcc80;
-            --lavender: #241e2c; --lavender-text: #ce93d8;
-            --blue: #1e2130; --blue-text: #9fa8da;
-        }
-        body.auto-theme {
-            --bg: var(--tg-theme-bg-color, #f8f9fc);
-            --text: var(--tg-theme-text-color, #1a1c29);
-            --hint: var(--tg-theme-hint-color, #8b8d98);
-            --card: var(--tg-theme-secondary-bg-color, #ffffff);
-            --mint: var(--tg-theme-secondary-bg-color, #e0f2f1); --mint-text: var(--tg-theme-text-color, #00695c);
-            --peach: var(--tg-theme-secondary-bg-color, #fff3e0); --peach-text: var(--tg-theme-text-color, #e65100);
-            --lavender: var(--tg-theme-secondary-bg-color, #ede7f6); --lavender-text: var(--tg-theme-text-color, #4527a0);
-            --blue: var(--tg-theme-secondary-bg-color, #e8ebf7); --blue-text: var(--tg-theme-text-color, #4A55A2);
+            --card: #ffffff; --border-radius: 16px;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg); color: var(--text); margin: 0; padding: 0;
-            display: flex; flex-direction: column; height: 100vh; overflow: hidden; position: relative;
-            transition: background-color 0.3s, color 0.3s;
+            display: flex; flex-direction: column; height: 100vh; overflow: hidden;
         }
         #welcome-screen {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: #1a1c29; z-index: 9999;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 30px; transition: opacity 0.6s ease, visibility 0.6s ease;
+            padding: 30px; transition: opacity 0.4s ease;
         }
-        #welcome-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-        .welcome-title {
-            font-size: 36px; font-weight: 800; color: #ffffff; margin-bottom: 10px; text-align: center;
-            opacity: 0; transform: translateY(20px); animation: slideUpFade 0.8s ease forwards 0.2s;
-        }
-        .welcome-subtitle {
-            font-size: 16px; color: #8b8d98; margin-bottom: 50px; text-align: center;
-            opacity: 0; transform: translateY(20px); animation: slideUpFade 0.8s ease forwards 0.4s;
-        }
+        #welcome-screen.hidden { opacity: 0; visibility: hidden; }
+        .welcome-title { font-size: 32px; font-weight: 800; color: #fff; margin-bottom: 10px; }
+        .welcome-subtitle { font-size: 16px; color: #8b8d98; margin-bottom: 40px; text-align: center; }
         .welcome-btn {
             background-color: var(--accent); color: white; border: none;
-            padding: 20px 40px; border-radius: 100px; font-size: 17px; font-weight: 700;
-            cursor: pointer; box-shadow: 0 10px 30px rgba(160, 132, 232, 0.4);
-            opacity: 0; transform: translateY(20px); animation: slideUpFade 0.8s ease forwards 0.6s;
-            transition: transform 0.2s ease; width: 90%; max-width: 350px;
+            padding: 18px 30px; border-radius: 100px; font-size: 16px; font-weight: 700;
+            cursor: pointer; width: 90%; max-width: 300px;
         }
-        .welcome-btn:active { transform: scale(0.96); }
-        @keyframes slideUpFade { to { opacity: 1; transform: translateY(0); } }
         .top-nav {
-            display: flex; background-color: var(--card); padding: 15px 15px 10px 15px;
+            display: flex; background-color: var(--card); padding: 15px;
             border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.03); z-index: 10;
-            overflow-x: auto; white-space: nowrap; gap: 10px; -webkit-overflow-scrolling: touch;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03); overflow-x: auto; gap: 10px;
         }
-        .top-nav::-webkit-scrollbar { display: none; }
         .nav-tab {
             font-size: 14px; font-weight: 600; color: var(--hint);
-            cursor: pointer; padding: 8px 14px; border-radius: 12px;
-            transition: all 0.2s; background-color: var(--bg);
+            cursor: pointer; padding: 8px 14px; border-radius: 12px; background-color: var(--bg);
+            white-space: nowrap;
         }
         .nav-tab.active { background-color: var(--primary); color: white; }
-        .content { flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 40px; }
-        .tab-pane { display: none; animation: fadeIn 0.3s ease; }
+        .content { flex: 1; overflow-y: auto; padding: 20px; }
+        .tab-pane { display: none; }
         .tab-pane.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .hero-title { font-size: 28px; font-weight: 800; margin-bottom: 10px; letter-spacing: -0.5px; }
-        .hero-subtitle { font-size: 16px; color: var(--hint); margin-bottom: 20px; line-height: 1.5; }
-        .habit-widget {
-            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
-            border-radius: var(--border-radius); padding: 20px; color: #333;
-            margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;
-            box-shadow: 0 10px 20px rgba(255, 154, 158, 0.2); cursor: pointer; transition: transform 0.2s;
-        }
-        .habit-widget:active { transform: scale(0.98); }
-        .habit-widget h3 { margin: 0 0 5px 0; font-size: 18px; }
-        .habit-widget p { margin: 0; font-size: 14px; opacity: 0.8; }
-        .habit-fire { font-size: 32px; font-weight: 800; display: flex; align-items: center; gap: 5px; }
-        .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-        .tile {
-            border-radius: var(--border-radius); padding: 20px;
-            display: flex; flex-direction: column; justify-content: space-between;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.02); cursor: pointer; transition: transform 0.2s; height: 120px;
-        }
-        .tile:active { transform: scale(0.97); }
-        .tile-icon { font-size: 28px; margin-bottom: 10px; }
-        .tile-title { font-size: 16px; font-weight: 700; }
-        .tile.mint { background-color: var(--mint); color: var(--mint-text); }
-        .tile.peach { background-color: var(--peach); color: var(--peach-text); }
-        .tile.lavender { background-color: var(--lavender); color: var(--lavender-text); }
-        .tile.blue { background-color: var(--blue); color: var(--blue-text); }
         .card { background-color: var(--card); border-radius: var(--border-radius); padding: 20px; margin-bottom: 20px; }
         .title { font-size: 20px; font-weight: 700; margin-bottom: 15px; }
         .btn {
             background-color: var(--primary); color: white; border: none; 
             padding: 16px; border-radius: 12px; font-size: 16px; font-weight: 600; 
-            width: 100%; margin-bottom: 12px; cursor: pointer; transition: 0.2s;
+            width: 100%; margin-bottom: 12px; cursor: pointer;
         }
-        .btn:active { transform: scale(0.98); }
-        .btn-secondary { background-color: var(--primary-light); color: var(--primary); }
         input, textarea {
-            width: 100%; padding: 16px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.05);
+            width: 100%; padding: 16px; border-radius: 12px; border: 1px solid #ddd;
             background-color: var(--bg); color: var(--text); font-size: 15px; margin-bottom: 16px; font-family: inherit;
         }
-        input:focus, textarea:focus { outline: none; border-color: var(--primary); background-color: var(--card); }
-        .breath-circle {
-            width: 140px; height: 140px; border-radius: 50%; background: rgba(255,255,255,0.1);
-            border: 4px solid var(--accent); margin: 20px auto; transition: transform 4s linear; 
-            display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 40px;
-        }
-        .grounding-step { font-size: 20px; font-weight: 700; margin-bottom: 15px; color: var(--primary); }
-        .profile-header {
-            display: flex; align-items: center; gap: 15px; margin-bottom: 20px;
-            background-color: var(--card); padding: 20px; border-radius: var(--border-radius);
-        }
-        .avatar {
-            width: 60px; height: 60px; border-radius: 50%; background-color: var(--primary-light);
-            color: var(--primary); display: flex; align-items: center; justify-content: center;
-            font-size: 24px; font-weight: 700;
-        }
+        .profile-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; background-color: var(--card); padding: 20px; border-radius: var(--border-radius); }
+        .avatar { width: 60px; height: 60px; border-radius: 50%; background-color: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 700; }
         .profile-info h2 { margin: 0; font-size: 20px; }
         .profile-info p { margin: 4px 0 0 0; color: var(--hint); font-size: 14px; }
-        .theme-switch { display: flex; gap: 10px; margin-top: 10px; }
-        .theme-btn {
-            flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--primary-light);
-            background: none; color: var(--text); font-size: 14px; font-weight: 600; cursor: pointer;
-        }
-        .theme-btn.active { background-color: var(--primary); color: white; border-color: var(--primary); }
-        .ai-card {
-            background-color: var(--ai-bg); border: 1px solid #e0d7ff; border-radius: var(--border-radius);
-            padding: 20px; margin-top: 20px; display: none; animation: fadeIn 0.5s ease;
-        }
-        .ai-title { font-size: 16px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
-        .ai-text { font-size: 15px; line-height: 1.6; }
-        .status-msg { text-align: center; color: var(--primary); font-weight: 600; margin-top: 10px; }
         .hidden { display: none; }
     </style>
 </head>
-<body class="auto-theme">
+<body>
+
     <div id="welcome-screen">
         <div class="welcome-title" id="welcome-title">Привет</div>
         <div class="welcome-subtitle">Добро пожаловать в твое безопасное место.</div>
-        <button class="welcome-btn" type="button" id="enter-btn">Пройти на остров безопасности</button>
+        <button class="welcome-btn" id="enter-btn">Пройти на остров безопасности</button>
     </div>
+
     <div class="top-nav">
         <div class="nav-tab active" data-tab="home">Главная</div>
         <div class="nav-tab" data-tab="stress">От стресса</div>
-        <div class="nav-tab" data-tab="anxiety">При тревоге</div>
         <div class="nav-tab" data-tab="journal">Дневник</div>
-        <div class="nav-tab" data-tab="tools">Практики</div>
         <div class="nav-tab" data-tab="profile">Профиль</div>
     </div>
+
     <div class="content">
         <div id="tab-home" class="tab-pane active">
-            <div class="hero-title" id="hero-greeting">Привет!</div>
-            <div class="hero-subtitle">Это твое личное пространство для восстановления.</div>
-            <div class="habit-widget" id="habit-widget">
-                <div>
-                    <h3>Забота о себе</h3>
-                    <p id="habit-text">Нажми, чтобы отметить день</p>
-                </div>
-                <div class="habit-fire" id="habit-streak">0 🔥</div>
-            </div>
-            <div class="dashboard-grid">
-                <div class="tile mint" data-tab="stress"><div class="tile-icon">🌬</div><div class="tile-title">От стресса</div></div>
-                <div class="tile peach" data-tab="anxiety"><div class="tile-icon">🧘</div><div class="tile-title">При тревоге</div></div>
-                <div class="tile lavender" data-tab="journal"><div class="tile-icon">📖</div><div class="tile-title">Дневник</div></div>
-                <div class="tile blue" data-tab="profile"><div class="tile-icon">👤</div><div class="tile-title">Профиль</div></div>
-            </div>
+            <div class="title" id="hero-greeting">Привет!</div>
+            <p style="color: var(--hint);">Это твое личное пространство для восстановления.</p>
+            <button class="btn" data-tab="stress" style="margin-top: 20px;">От стресса</button>
+            <button class="btn" data-tab="journal">Дневник</button>
         </div>
+
         <div id="tab-stress" class="tab-pane">
-            <div class="card" style="text-align: center;">
-                <div class="title">Квадратное дыхание</div>
-                <p style="color: var(--hint); margin-bottom: 20px;">Техника 4-4-4-4.</p>
-                <div class="breath-circle" id="breath-circle">4</div>
-                <div id="breath-text" style="font-weight: 600; height: 20px;">Готов?</div>
-                <button class="btn" id="breath-btn" style="margin-top: 20px;">Начать</button>
-            </div>
-        </div>
-        <div id="tab-anxiety" class="tab-pane">
             <div class="card">
-                <div class="title">Техника 5-4-3-2-1</div>
-                <p style="color: var(--hint); margin-bottom: 20px;">Вернись в момент "здесь и сейчас".</p>
-                <div id="grounding-container">
-                    <div class="grounding-step" id="ground-prompt">Назови 5 вещей, которые видишь</div>
-                    <input type="text" id="ground-input" placeholder="Напиши сюда...">
-                    <button class="btn" id="ground-btn">Далее</button>
+                <div class="title">Квадратное дыхание</div>
+                <div style="text-align: center; margin: 20px 0;">
+                    <div id="breath-circle" style="width: 120px; height: 120px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: bold; margin: 0 auto;">4</div>
+                    <div id="breath-text" style="margin-top: 15px; font-weight: 600;">Готов?</div>
                 </div>
+                <button class="btn" id="breath-btn">Начать</button>
             </div>
         </div>
+
         <div id="tab-journal" class="tab-pane">
             <div class="card">
                 <div class="title">Дневник</div>
                 <textarea id="diary-input" rows="4" placeholder="Что тебя тревожит?"></textarea>
                 <button class="btn" id="diary-btn">Сохранить</button>
-                <div id="diary-status" class="status-msg"></div>
-                <div id="diary-ai-block" class="ai-card">
-                    <div class="ai-title">✨ Мягкий совет от ИИ</div>
-                    <div id="diary-ai-text" class="ai-text"></div>
-                </div>
+                <div id="diary-status" style="text-align: center; margin-top: 10px; font-weight: 600;"></div>
             </div>
         </div>
-        <div id="tab-tools" class="tab-pane">
-            <div class="card">
-                <div class="title">Настроение</div>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-                    <button class="emoji-btn" style="font-size:32px; background:none; border:none;" data-mood="😭" data-score="1">😭</button>
-                    <button class="emoji-btn" style="font-size:32px; background:none; border:none;" data-mood="😕" data-score="2">😕</button>
-                    <button class="emoji-btn" style="font-size:32px; background:none; border:none;" data-mood="😐" data-score="3">😐</button>
-                    <button class="emoji-btn" style="font-size:32px; background:none; border:none;" data-mood="🙂" data-score="4">🙂</button>
-                    <button class="emoji-btn" style="font-size:32px; background:none; border:none;" data-mood="😄" data-score="5">😄</button>
-                </div>
-                <div id="trigger-section" class="hidden">
-                    <button class="btn btn-secondary" data-trigger="Работа">Работа</button>
-                    <button class="btn btn-secondary" data-trigger="Сон">Сон</button>
-                </div>
-                <div id="mood-status" class="status-msg"></div>
-            </div>
-            <div class="card">
-                <div class="title">КПТ-анализ</div>
-                <input type="text" id="cbt-thought" placeholder="Мысль">
-                <input type="text" id="cbt-for" placeholder="Факты ЗА">
-                <input type="text" id="cbt-against" placeholder="Факты ПРОТИВ">
-                <button class="btn" id="cbt-btn">Записать</button>
-                <div id="cbt-status" class="status-msg"></div>
-            </div>
-            <div class="card">
-                <div class="title">Тест ИИ</div>
-                <button class="btn btn-secondary" id="test-ai-btn">🤖 Запросить совет</button>
-                <div id="test-ai-block" class="ai-card" style="margin-top: 10px;">
-                    <div class="ai-title">✨ Ответ ИИ</div>
-                    <div id="test-ai-text" class="ai-text"></div>
-                </div>
-            </div>
-        </div>
+
         <div id="tab-profile" class="tab-pane">
             <div class="profile-header">
                 <div class="avatar" id="avatar-initial">U</div>
@@ -260,23 +115,14 @@
                 </div>
             </div>
             <div class="card">
-                <div class="title">Тема интерфейса</div>
-                <div class="theme-switch">
-                    <button class="theme-btn" data-theme="light">Светлая</button>
-                    <button class="theme-btn active" data-theme="auto">Авто</button>
-                    <button class="theme-btn" data-theme="dark">Темная</button>
-                </div>
-            </div>
-            <div class="card">
                 <div class="title">Действия</div>
-                <button class="btn btn-secondary" id="share-btn">📤 Поделиться ботом</button>
-                <button class="btn btn-secondary" id="stats-btn">📊 Моя статистика</button>
-                <div id="stats-content" style="margin-top: 15px; font-weight: 600;"></div>
+                <button class="btn" id="share-btn">📤 Поделиться ботом</button>
             </div>
         </div>
     </div>
-        <script>
-        document.addEventListener('DOMContentLoaded', () => {
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
             const tg = window.Telegram?.WebApp;
             if (tg) tg.expand();
             
@@ -284,283 +130,95 @@
             const userName = tg?.initDataUnsafe?.user?.first_name || "друг";
             const API_URL = "https://mental-bot-v2-maxdikov.mia0.amvera.tech"; 
 
-            // --- ПРИВЕТСТВИЕ И ПРОФИЛЬ ---
+            // Приветствие
             const welcomeTitle = document.getElementById('welcome-title');
-            const heroGreeting = document.getElementById('hero-greeting');
-            const profileName = document.getElementById('profile-name');
-            const profileId = document.getElementById('profile-id');
-            const avatarInitial = document.getElementById('avatar-initial');
-
             if (welcomeTitle) welcomeTitle.innerText = `Привет, ${userName}!`;
+            
+            const heroGreeting = document.getElementById('hero-greeting');
             if (heroGreeting) heroGreeting.innerText = `Привет, ${userName}!`;
-            if (profileName) profileName.innerText = userName;
-            if (profileId) profileId.innerText = `ID: ${userId}`;
-            if (avatarInitial) avatarInitial.innerText = userName.charAt(0).toUpperCase();
 
-            // Проверка визита
-            const lastVisit = localStorage.getItem('lastVisit');
-            const today = new Date().toDateString();
-            if (lastVisit === today) {
-                document.getElementById('welcome-screen')?.classList.add('hidden');
-            }
+            document.getElementById('profile-name').innerText = userName;
+            document.getElementById('profile-id').innerText = `ID: ${userId}`;
+            document.getElementById('avatar-initial').innerText = userName.charAt(0).toUpperCase();
 
-            // --- КНОПКА ВХОДА (ИСПРАВЛЕНА) ---
-            document.getElementById('enter-btn')?.addEventListener('click', function() {
-                const screen = document.getElementById('welcome-screen');
-                if (screen) screen.classList.add('hidden');
-                localStorage.setItem('lastVisit', new Date().toDateString());
+            // Кнопка входа
+            document.getElementById('enter-btn').addEventListener('click', function() {
+                document.getElementById('welcome-screen').classList.add('hidden');
                 if (tg) tg.HapticFeedback.impactOccurred('light');
-                loadHabit();
             });
 
-            // --- НАВИГАЦИЯ ---
-            document.querySelectorAll('.nav-tab, .tile').forEach(el => {
-                el.addEventListener('click', () => {
-                    const tabName = el.getAttribute('data-tab');
+            // Навигация
+            document.querySelectorAll('.nav-tab, [data-tab]').forEach(function(el) {
+                el.addEventListener('click', function() {
+                    const tabName = this.getAttribute('data-tab');
                     if (!tabName) return;
                     
                     document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
                     document.querySelectorAll('.nav-tab').forEach(n => n.classList.remove('active'));
                     
-                    document.getElementById(`tab-${tabName}`)?.classList.add('active');
+                    const targetTab = document.getElementById(`tab-${tabName}`);
+                    if (targetTab) targetTab.classList.add('active');
                     
                     const navTab = document.querySelector(`.nav-tab[data-tab="${tabName}"]`);
                     if (navTab) navTab.classList.add('active');
                 });
             });
 
-            // --- СМЕНА ТЕМЫ ---
-            const savedTheme = localStorage.getItem('appTheme') || 'auto';
-            document.body.className = savedTheme === 'dark' ? 'dark-theme' : (savedTheme === 'light' ? '' : 'auto-theme');
-            
-            document.querySelectorAll('.theme-btn').forEach(btn => {
-                if (btn.getAttribute('data-theme') === savedTheme) btn.classList.add('active');
-                else btn.classList.remove('active');
-
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    
-                    const theme = btn.getAttribute('data-theme');
-                    document.body.className = '';
-                    if (theme === 'dark') document.body.className = 'dark-theme';
-                    else if (theme === 'auto') document.body.className = 'auto-theme';
-                    
-                    localStorage.setItem('appTheme', theme);
-                    if (tg) tg.HapticFeedback.impactOccurred('light');
-                });
-            });
-
-            // --- ТРЕКЕР ПРИВЫЧЕК ---
-            async function loadHabit() {
-                try {
-                    const response = await fetch(`${API_URL}/api/habit`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ user_id: userId })
-                    });
-                    const json = await response.json();
-                    document.getElementById('habit-streak').innerText = json.message.split(' ')[1] + " 🔥";
-                    document.getElementById('habit-text').innerText = "Ты уже отметился сегодня!";
-                } catch (e) {
-                    document.getElementById('habit-text').innerText = "Нажми, чтобы отметить";
-                }
-            }
-
-            document.getElementById('habit-widget')?.addEventListener('click', () => {
-                if (tg) tg.HapticFeedback.notificationOccurred('success');
-                loadHabit();
-            });
-
-            // --- ПОДЕЛИТЬСЯ ---
-            document.getElementById('share-btn')?.addEventListener('click', () => {
-                const botUsername = "Islandgoodness_bot";
-                const shareUrl = `https://t.me/share/url?url=https://t.me/${botUsername}&text=Привет! Попробуй этого бота для ментального здоровья.`;
-                if (tg) tg.openTelegramLink(shareUrl);
-            });
-
-            // --- ДЫХАНИЕ ---
+            // Дыхание (Упрощенное)
             let isBreathing = false;
-            document.getElementById('breath-btn')?.addEventListener('click', async () => {
+            document.getElementById('breath-btn').addEventListener('click', async function() {
                 if (isBreathing) return;
                 isBreathing = true;
-                const btn = document.getElementById('breath-btn');
+                const btn = this;
                 const text = document.getElementById('breath-text');
                 const circle = document.getElementById('breath-circle');
                 btn.style.display = 'none';
-                const sleep = ms => new Promise(r => setTimeout(r, ms));
                 
-                async function breathPhase(phaseName, duration, scale) {
-                    text.innerText = phaseName;
-                    circle.style.transform = `scale(${scale})`;
-                    for (let i = duration; i > 0; i--) {
-                        circle.innerText = i;
-                        await sleep(1000);
+                const sleep = ms => new Promise(r => setTimeout(r, ms));
+                const phases = ["Вдох", "Задержка", "Выдох", "Задержка"];
+
+                for (let i = 0; i < 4; i++) {
+                    for (let p = 0; p < phases.length; p++) {
+                        text.innerText = phases[p];
+                        for (let s = 4; s > 0; s--) {
+                            circle.innerText = s;
+                            await sleep(1000);
+                        }
                     }
                 }
-
-                for (let i = 1; i <= 4; i++) {
-                    await breathPhase(`Вдох`, 4, 1.4);
-                    await breathPhase(`Задержка`, 4, 1.4);
-                    await breathPhase(`Выдох`, 4, 1.0);
-                    await breathPhase(`Задержка`, 4, 1.0);
-                }
+                
                 text.innerText = "Молодец!";
                 circle.innerText = "✅";
                 btn.style.display = 'block';
                 btn.innerText = "Начать заново";
                 isBreathing = false;
-                if (tg) tg.HapticFeedback.notificationOccurred('success');
             });
 
-            // --- ЗАЗЕМЛЕНИЕ ---
-            const groundPrompts = [
-                "Назови 5 вещей, которые видишь",
-                "Назови 4 вещи, которые можешь потрогать",
-                "Назови 3 звука, которые слышишь",
-                "Назови 2 запаха, которые чувствуешь",
-                "Назови 1 вкус"
-            ];
-            let groundStep = 0;
-
-            document.getElementById('ground-btn')?.addEventListener('click', () => {
-                groundStep++;
-                if (groundStep >= groundPrompts.length) {
-                    document.getElementById('ground-prompt').innerText = "Отлично! Ты вернулся в момент 'здесь и сейчас'. 🌿";
-                    document.getElementById('ground-input').classList.add('hidden');
-                    document.getElementById('ground-btn').classList.add('hidden');
-                    if (tg) tg.HapticFeedback.notificationOccurred('success');
-                } else {
-                    document.getElementById('ground-prompt').innerText = groundPrompts[groundStep];
-                    document.getElementById('ground-input').value = "";
-                }
-            });
-
-            // --- КПТ ---
-            document.getElementById('cbt-btn')?.addEventListener('click', async () => {
-                const thought = document.getElementById('cbt-thought').value;
-                if (!thought) return;
-                const statusEl = document.getElementById('cbt-status');
-                statusEl.innerText = "Сохранение...";
-                try {
-                    await fetch(`${API_URL}/api/cbt`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ 
-                            user_id: userId, thought: thought,
-                            fact_for: document.getElementById('cbt-for').value,
-                            fact_against: document.getElementById('cbt-against').value
-                        })
-                    });
-                    statusEl.innerText = "✅ Сохранено!";
-                    document.querySelectorAll('#tab-tools input').forEach(i => i.value = "");
-                } catch (e) {
-                    statusEl.innerText = "⚠️ Ошибка сети";
-                }
-            });
-
-            // --- ТЕСТ ИИ ---
-            document.getElementById('test-ai-btn')?.addEventListener('click', async () => {
-                const block = document.getElementById('test-ai-block');
-                const textEl = document.getElementById('test-ai-text');
-                block.style.display = 'block';
-                textEl.innerHTML = "GigaChat думает... ⏳";
-                try {
-                    const response = await fetch(`${API_URL}/api/ai_advice`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ context: "Пользователь тестирует ИИ.", text: "Я чувствую легкую тревогу." })
-                    });
-                    const json = await response.json();
-                    textEl.innerText = json.advice;
-                } catch (e) {
-                    textEl.innerText = "Ошибка сети. Проверьте, работает ли Amvera.";
-                }
-            });
-
-            // --- ДНЕВНИК ---
-            document.getElementById('diary-btn')?.addEventListener('click', async () => {
+            // Дневник (Сохранение без ИИ, чтобы не было ошибок)
+            document.getElementById('diary-btn').addEventListener('click', async function() {
                 const text = document.getElementById('diary-input').value;
                 if (!text) return;
-                const btn = document.getElementById('diary-btn');
-                const statusEl = document.getElementById('diary-status');
-                const aiBlock = document.getElementById('diary-ai-block');
-                const aiText = document.getElementById('diary-ai-text');
                 
-                btn.disabled = true; btn.innerText = "Сохранение...";
-                statusEl.innerText = ""; aiBlock.style.display = 'none';
+                const statusEl = document.getElementById('diary-status');
+                statusEl.innerText = "Сохранение...";
                 
                 try {
-                    const response = await fetch(`${API_URL}/api/diary`, {
+                    await fetch(`${API_URL}/api/diary`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ user_id: userId, text: text })
                     });
-                    const json = await response.json();
-                    
-                    if (json.status === "ok") {
-                        statusEl.innerText = "✅ Сохранено!";
-                        document.getElementById('diary-input').value = "";
-                        if (tg) tg.HapticFeedback.notificationOccurred('success');
-                        if (json.advice) {
-                            aiBlock.style.display = 'block';
-                            aiText.innerText = json.advice;
-                        }
-                    }
+                    statusEl.innerText = "✅ Сохранено!";
+                    document.getElementById('diary-input').value = "";
                 } catch (e) {
                     statusEl.innerText = "⚠️ Ошибка сети";
-                } finally {
-                    btn.disabled = false; btn.innerText = "Сохранить";
                 }
             });
 
-            // --- НАСТРОЕНИЕ ---
-            let tempMood = null;
-            document.querySelectorAll('.emoji-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    tempMood = { 
-                        emoji: btn.getAttribute('data-mood'), 
-                        score: btn.getAttribute('data-score') 
-                    };
-                    document.getElementById('trigger-section').classList.remove('hidden');
-                    if (tg) tg.HapticFeedback.impactOccurred('light');
-                });
-            });
-
-            document.querySelectorAll('[data-trigger]').forEach(btn => {
-                btn.addEventListener('click', async () => {
-                    if (!tempMood) return;
-                    const statusEl = document.getElementById('mood-status');
-                    statusEl.innerText = "Сохранение...";
-                    try {
-                        await fetch(`${API_URL}/api/mood`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ user_id: userId, mood: tempMood.emoji, score: tempMood.score, trigger: btn.getAttribute('data-trigger') })
-                        });
-                        statusEl.innerText = "✅ Настроение сохранено!";
-                        document.getElementById('trigger-section').classList.add('hidden');
-                        setTimeout(() => { statusEl.innerText = ""; }, 3000);
-                    } catch (e) {
-                        statusEl.innerText = "⚠️ Ошибка сети";
-                    }
-                });
-            });
-
-            // --- СТАТИСТИКА ---
-            document.getElementById('stats-btn')?.addEventListener('click', async () => {
-                const statsEl = document.getElementById('stats-content');
-                statsEl.innerText = "Загрузка...";
-                try {
-                    const response = await fetch(`${API_URL}/api/stats?user_id=${userId}`);
-                    const json = await response.json();
-                    if (json.data.length === 0) { statsEl.innerText = "Нет данных."; return; }
-                    let html = `<b>Средний балл: </b>${(json.data.reduce((a, b) => a + b.score, 0) / json.data.length).toFixed(1)} / 5<br><br>`;
-                    json.data.slice(-7).forEach(rec => {
-                        html += `${rec.date}: ${"🟩".repeat(rec.score) + "⬜".repeat(5 - rec.score)}<br>`;
-                    });
-                    statsEl.innerHTML = html;
-                } catch (e) { statsEl.innerText = "Ошибка загрузки."; }
+            // Поделиться
+            document.getElementById('share-btn').addEventListener('click', function() {
+                const shareUrl = `https://t.me/share/url?url=https://t.me/Islandgoodness_bot&text=Попробуй этого бота!`;
+                if (tg) tg.openTelegramLink(shareUrl);
             });
         });
     </script>
