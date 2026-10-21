@@ -8,67 +8,42 @@
     <style>
         /* --- ПЕРЕМЕННЫЕ ТЕМ --- */
         :root {
-            --bg: #f8f9fc;
-            --text: #1a1c29;
-            --hint: #8b8d98;
-            --primary: #4A55A2;
-            --primary-light: #e8ebf7;
-            --accent: #A084E8;
-            --card: #ffffff;
-            --border-radius: 16px;
-            --ai-bg: #f3f0ff;
-            
+            --bg: #f8f9fc; --text: #1a1c29; --hint: #8b8d98;
+            --primary: #4A55A2; --primary-light: #e8ebf7; --accent: #A084E8;
+            --card: #ffffff; --border-radius: 16px; --ai-bg: #f3f0ff;
             --mint: #e0f2f1; --mint-text: #00695c;
             --peach: #fff3e0; --peach-text: #e65100;
             --lavender: #ede7f6; --lavender-text: #4527a0;
             --blue: #e8ebf7; --blue-text: #4A55A2;
         }
 
-        /* Темная тема */
         body.dark-theme {
-            --bg: #12141c;
-            --text: #ffffff;
-            --hint: #8b8d98;
-            --primary: #6c7cff;
-            --primary-light: #2a2d42;
-            --accent: #b39ddb;
-            --card: #1e2130;
-            --ai-bg: #1e2130;
-            
+            --bg: #12141c; --text: #ffffff; --hint: #8b8d98;
+            --primary: #6c7cff; --primary-light: #2a2d42; --accent: #b39ddb;
+            --card: #1e2130; --ai-bg: #1e2130;
             --mint: #1e2c2a; --mint-text: #80cbc4;
             --peach: #2c241e; --peach-text: #ffcc80;
             --lavender: #241e2c; --lavender-text: #ce93d8;
             --blue: #1e2130; --blue-text: #9fa8da;
         }
 
-        /* Автоматическая тема (на основе системной Telegram) */
         body.auto-theme {
             --bg: var(--tg-theme-bg-color, #f8f9fc);
             --text: var(--tg-theme-text-color, #1a1c29);
             --hint: var(--tg-theme-hint-color, #8b8d98);
             --card: var(--tg-theme-secondary-bg-color, #ffffff);
-            
-            /* Адаптация цветов плиток для темной системы */
-            --mint: var(--tg-theme-secondary-bg-color, #e0f2f1); 
-            --mint-text: var(--tg-theme-text-color, #00695c);
-            --peach: var(--tg-theme-secondary-bg-color, #fff3e0); 
-            --peach-text: var(--tg-theme-text-color, #e65100);
-            --lavender: var(--tg-theme-secondary-bg-color, #ede7f6); 
-            --lavender-text: var(--tg-theme-text-color, #4527a0);
-            --blue: var(--tg-theme-secondary-bg-color, #e8ebf7); 
-            --blue-text: var(--tg-theme-text-color, #4A55A2);
+            --mint: var(--tg-theme-secondary-bg-color, #e0f2f1); --mint-text: var(--tg-theme-text-color, #00695c);
+            --peach: var(--tg-theme-secondary-bg-color, #fff3e0); --peach-text: var(--tg-theme-text-color, #e65100);
+            --lavender: var(--tg-theme-secondary-bg-color, #ede7f6); --lavender-text: var(--tg-theme-text-color, #4527a0);
+            --blue: var(--tg-theme-secondary-bg-color, #e8ebf7); --blue-text: var(--tg-theme-text-color, #4A55A2);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0; padding: 0;
-            display: flex; flex-direction: column; height: 100vh;
-            overflow: hidden;
-            position: relative;
+            background-color: var(--bg); color: var(--text); margin: 0; padding: 0;
+            display: flex; flex-direction: column; height: 100vh; overflow: hidden; position: relative;
             transition: background-color 0.3s, color 0.3s;
         }
 
@@ -123,13 +98,11 @@
         .hero-title { font-size: 28px; font-weight: 800; margin-bottom: 10px; letter-spacing: -0.5px; }
         .hero-subtitle { font-size: 16px; color: var(--hint); margin-bottom: 20px; line-height: 1.5; }
         
-        /* Виджет привычки */
         .habit-widget {
             background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
             border-radius: var(--border-radius); padding: 20px; color: #333;
             margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;
-            box-shadow: 0 10px 20px rgba(255, 154, 158, 0.2);
-            cursor: pointer; transition: transform 0.2s;
+            box-shadow: 0 10px 20px rgba(255, 154, 158, 0.2); cursor: pointer; transition: transform 0.2s;
         }
         .habit-widget:active { transform: scale(0.98); }
         .habit-widget h3 { margin: 0 0 5px 0; font-size: 18px; }
@@ -140,8 +113,7 @@
         .tile {
             border-radius: var(--border-radius); padding: 20px;
             display: flex; flex-direction: column; justify-content: space-between;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.02); cursor: pointer; transition: transform 0.2s;
-            height: 120px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02); cursor: pointer; transition: transform 0.2s; height: 120px;
         }
         .tile:active { transform: scale(0.97); }
         .tile-icon { font-size: 28px; margin-bottom: 10px; }
@@ -169,17 +141,14 @@
         }
         input:focus, textarea:focus { outline: none; border-color: var(--primary); background-color: var(--card); }
 
-        /* Дыхание */
         .breath-circle {
             width: 140px; height: 140px; border-radius: 50%; background: rgba(255,255,255,0.1);
             border: 4px solid var(--accent); margin: 20px auto; transition: transform 4s linear; 
             display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 40px;
         }
 
-        /* Заземление */
         .grounding-step { font-size: 20px; font-weight: 700; margin-bottom: 15px; color: var(--primary); }
         
-        /* Профиль */
         .profile-header {
             display: flex; align-items: center; gap: 15px; margin-bottom: 20px;
             background-color: var(--card); padding: 20px; border-radius: var(--border-radius);
@@ -192,17 +161,13 @@
         .profile-info h2 { margin: 0; font-size: 20px; }
         .profile-info p { margin: 4px 0 0 0; color: var(--hint); font-size: 14px; }
 
-        /* Переключатель темы */
-        .theme-switch {
-            display: flex; gap: 10px; margin-top: 10px;
-        }
+        .theme-switch { display: flex; gap: 10px; margin-top: 10px; }
         .theme-btn {
             flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--primary-light);
             background: none; color: var(--text); font-size: 14px; font-weight: 600; cursor: pointer;
         }
         .theme-btn.active { background-color: var(--primary); color: white; border-color: var(--primary); }
 
-        /* ИИ */
         .ai-card {
             background-color: var(--ai-bg); border: 1px solid #e0d7ff; border-radius: var(--border-radius);
             padding: 20px; margin-top: 20px; display: none; animation: fadeIn 0.5s ease;
@@ -219,7 +184,8 @@
     <div id="welcome-screen">
         <div class="welcome-title" id="welcome-title">Привет</div>
         <div class="welcome-subtitle">Добро пожаловать в твое безопасное место.</div>
-        <button class="welcome-btn" onclick="enterApp()">Пройти на остров безопасности</button>
+        <!-- Кнопка теперь вызывает функцию корректно -->
+        <button class="welcome-btn" type="button" onclick="enterApp()">Пройти на остров безопасности</button>
     </div>
 
     <!-- ВЕРХНЯЯ НАВИГАЦИЯ -->
@@ -239,7 +205,6 @@
             <div class="hero-title" id="hero-greeting">Привет!</div>
             <div class="hero-subtitle">Это твое личное пространство для восстановления.</div>
             
-            <!-- Трекер привычек -->
             <div class="habit-widget" onclick="markHabit()">
                 <div>
                     <h3>Забота о себе</h3>
@@ -394,19 +359,23 @@
             document.getElementById('welcome-screen').classList.add('hidden');
         }
 
-        function enterApp() {
-            document.getElementById('welcome-screen').classList.add('hidden');
+        // Функция входа (исправлена)
+        window.enterApp = function() {
+            const screen = document.getElementById('welcome-screen');
+            if (screen) {
+                screen.classList.add('hidden');
+            }
             localStorage.setItem('lastVisit', new Date().toDateString());
             tg.HapticFeedback.impactOccurred('light');
             loadHabit();
-        }
+        };
 
         // --- СМЕНА ТЕМЫ ---
         function setTheme(theme, btn) {
             document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             
-            document.body.className = ''; // Сбрасываем классы
+            document.body.className = ''; 
             if (theme === 'dark') document.body.classList.add('dark-theme');
             else if (theme === 'auto') document.body.classList.add('auto-theme');
             
@@ -414,11 +383,9 @@
             tg.HapticFeedback.impactOccurred('light');
         }
 
-        // Восстанавливаем тему при загрузке
         const savedTheme = localStorage.getItem('appTheme') || 'auto';
         document.body.className = savedTheme === 'dark' ? 'dark-theme' : (savedTheme === 'light' ? '' : 'auto-theme');
         
-        // Восстанавливаем активную кнопку темы
         document.querySelectorAll('.theme-btn').forEach((btn, index) => {
             if ((savedTheme === 'light' && index === 0) || 
                 (savedTheme === 'auto' && index === 1) || 
@@ -445,7 +412,6 @@
                     body: JSON.stringify({ user_id: userId })
                 });
                 const json = await response.json();
-                // Парсим ответ (ИИ или текст)
                 document.getElementById('habit-streak').innerText = json.message.split(' ')[1] + " 🔥";
                 document.getElementById('habit-text').innerText = "Ты уже отметился сегодня!";
             } catch (e) {
@@ -460,7 +426,7 @@
 
         // --- ПОДЕЛИТЬСЯ ---
         function shareBot() {
-            const botUsername = "Islandgoodness_bot"; // Твой ник бота
+            const botUsername = "Islandgoodness_bot";
             const shareUrl = `https://t.me/share/url?url=https://t.me/${botUsername}&text=Привет! Попробуй этого бота для ментального здоровья.`;
             tg.openTelegramLink(shareUrl);
         }
@@ -622,4 +588,20 @@
             }
         }
 
-        async function loadStats()
+        async function loadStats() {
+            const statsEl = document.getElementById('stats-content');
+            statsEl.innerText = "Загрузка...";
+            try {
+                const response = await fetch(`${API_URL}/api/stats?user_id=${userId}`);
+                const json = await response.json();
+                if (json.data.length === 0) { statsEl.innerText = "Нет данных."; return; }
+                let html = `<b>Средний балл: </b>${(json.data.reduce((a, b) => a + b.score, 0) / json.data.length).toFixed(1)} / 5<br><br>`;
+                json.data.slice(-7).forEach(rec => {
+                    html += `${rec.date}: ${"🟩".repeat(rec.score) + "⬜".repeat(5 - rec.score)}<br>`;
+                });
+                statsEl.innerHTML = html;
+            } catch (e) { statsEl.innerText = "Ошибка загрузки."; }
+        }
+    </script>
+</body>
+</html>
