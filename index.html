@@ -6,16 +6,57 @@
     <title>Мой Остров</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
+        /* --- ПЕРЕМЕННЫЕ ТЕМ --- */
         :root {
-            --bg: var(--tg-theme-bg-color, #f8f9fc);
-            --text: var(--tg-theme-text-color, #1a1c29);
-            --hint: var(--tg-theme-hint-color, #8b8d98);
+            --bg: #f8f9fc;
+            --text: #1a1c29;
+            --hint: #8b8d98;
             --primary: #4A55A2;
             --primary-light: #e8ebf7;
             --accent: #A084E8;
-            --card: var(--tg-theme-secondary-bg-color, #ffffff);
+            --card: #ffffff;
             --border-radius: 16px;
             --ai-bg: #f3f0ff;
+            
+            --mint: #e0f2f1; --mint-text: #00695c;
+            --peach: #fff3e0; --peach-text: #e65100;
+            --lavender: #ede7f6; --lavender-text: #4527a0;
+            --blue: #e8ebf7; --blue-text: #4A55A2;
+        }
+
+        /* Темная тема */
+        body.dark-theme {
+            --bg: #12141c;
+            --text: #ffffff;
+            --hint: #8b8d98;
+            --primary: #6c7cff;
+            --primary-light: #2a2d42;
+            --accent: #b39ddb;
+            --card: #1e2130;
+            --ai-bg: #1e2130;
+            
+            --mint: #1e2c2a; --mint-text: #80cbc4;
+            --peach: #2c241e; --peach-text: #ffcc80;
+            --lavender: #241e2c; --lavender-text: #ce93d8;
+            --blue: #1e2130; --blue-text: #9fa8da;
+        }
+
+        /* Автоматическая тема (на основе системной Telegram) */
+        body.auto-theme {
+            --bg: var(--tg-theme-bg-color, #f8f9fc);
+            --text: var(--tg-theme-text-color, #1a1c29);
+            --hint: var(--tg-theme-hint-color, #8b8d98);
+            --card: var(--tg-theme-secondary-bg-color, #ffffff);
+            
+            /* Адаптация цветов плиток для темной системы */
+            --mint: var(--tg-theme-secondary-bg-color, #e0f2f1); 
+            --mint-text: var(--tg-theme-text-color, #00695c);
+            --peach: var(--tg-theme-secondary-bg-color, #fff3e0); 
+            --peach-text: var(--tg-theme-text-color, #e65100);
+            --lavender: var(--tg-theme-secondary-bg-color, #ede7f6); 
+            --lavender-text: var(--tg-theme-text-color, #4527a0);
+            --blue: var(--tg-theme-secondary-bg-color, #e8ebf7); 
+            --blue-text: var(--tg-theme-text-color, #4A55A2);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -28,17 +69,15 @@
             display: flex; flex-direction: column; height: 100vh;
             overflow: hidden;
             position: relative;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         /* --- ПРИВЕТСТВЕННЫЙ ЭКРАН --- */
         #welcome-screen {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #1a1c29;
-            z-index: 9999;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: #1a1c29; z-index: 9999;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 30px;
-            transition: opacity 0.6s ease, visibility 0.6s ease;
+            padding: 30px; transition: opacity 0.6s ease, visibility 0.6s ease;
         }
         #welcome-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 
@@ -58,84 +97,63 @@
             transition: transform 0.2s ease; width: 90%; max-width: 350px;
         }
         .welcome-btn:active { transform: scale(0.96); }
-
         @keyframes slideUpFade { to { opacity: 1; transform: translateY(0); } }
 
         /* --- ВЕРХНЯЯ НАВИГАЦИЯ --- */
         .top-nav {
-            display: flex;
-            background-color: var(--card);
-            padding: 15px 15px 10px 15px;
-            border-bottom-left-radius: 20px;
-            border-bottom-right-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-            z-index: 10;
-            overflow-x: auto;
-            white-space: nowrap;
-            gap: 10px;
-            -webkit-overflow-scrolling: touch;
+            display: flex; background-color: var(--card); padding: 15px 15px 10px 15px;
+            border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03); z-index: 10;
+            overflow-x: auto; white-space: nowrap; gap: 10px; -webkit-overflow-scrolling: touch;
         }
         .top-nav::-webkit-scrollbar { display: none; }
-
         .nav-tab {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--hint);
-            cursor: pointer;
-            padding: 8px 14px;
-            border-radius: 12px;
-            transition: all 0.2s;
-            background-color: var(--bg);
+            font-size: 14px; font-weight: 600; color: var(--hint);
+            cursor: pointer; padding: 8px 14px; border-radius: 12px;
+            transition: all 0.2s; background-color: var(--bg);
         }
-        .nav-tab.active {
-            background-color: var(--primary);
-            color: white;
-        }
+        .nav-tab.active { background-color: var(--primary); color: white; }
 
         .content { flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 40px; }
-
         .tab-pane { display: none; animation: fadeIn 0.3s ease; }
         .tab-pane.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* --- ГЛАВНАЯ (Информация) --- */
+        /* --- ГЛАВНАЯ --- */
         .hero-title { font-size: 28px; font-weight: 800; margin-bottom: 10px; letter-spacing: -0.5px; }
-        .hero-subtitle { font-size: 16px; color: var(--hint); margin-bottom: 30px; line-height: 1.5; }
+        .hero-subtitle { font-size: 16px; color: var(--hint); margin-bottom: 20px; line-height: 1.5; }
         
-        .info-card {
-            background: linear-gradient(135deg, var(--primary) 0%, #3a4380 100%);
-            color: white;
-            border-radius: var(--border-radius);
-            padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 25px rgba(74, 85, 162, 0.25);
+        /* Виджет привычки */
+        .habit-widget {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            border-radius: var(--border-radius); padding: 20px; color: #333;
+            margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 10px 20px rgba(255, 154, 158, 0.2);
+            cursor: pointer; transition: transform 0.2s;
         }
-        .info-card h3 { margin: 0 0 10px 0; font-size: 20px; }
-        .info-card p { margin: 0; font-size: 15px; opacity: 0.9; line-height: 1.4; }
+        .habit-widget:active { transform: scale(0.98); }
+        .habit-widget h3 { margin: 0 0 5px 0; font-size: 18px; }
+        .habit-widget p { margin: 0; font-size: 14px; opacity: 0.8; }
+        .habit-fire { font-size: 32px; font-weight: 800; display: flex; align-items: center; gap: 5px; }
 
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
+        .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
         .tile {
-            background-color: var(--card);
-            border-radius: var(--border-radius);
-            padding: 20px;
+            border-radius: var(--border-radius); padding: 20px;
             display: flex; flex-direction: column; justify-content: space-between;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-            cursor: pointer; transition: transform 0.2s; height: 120px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02); cursor: pointer; transition: transform 0.2s;
+            height: 120px;
         }
         .tile:active { transform: scale(0.97); }
         .tile-icon { font-size: 28px; margin-bottom: 10px; }
         .tile-title { font-size: 16px; font-weight: 700; }
 
+        .tile.mint { background-color: var(--mint); color: var(--mint-text); }
+        .tile.peach { background-color: var(--peach); color: var(--peach-text); }
+        .tile.lavender { background-color: var(--lavender); color: var(--lavender-text); }
+        .tile.blue { background-color: var(--blue); color: var(--blue-text); }
+
         /* --- ОБЩИЕ ЭЛЕМЕНТЫ --- */
-        .card {
-            background-color: var(--card); border-radius: var(--border-radius);
-            padding: 20px; margin-bottom: 20px;
-        }
+        .card { background-color: var(--card); border-radius: var(--border-radius); padding: 20px; margin-bottom: 20px; }
         .title { font-size: 20px; font-weight: 700; margin-bottom: 15px; }
         .btn {
             background-color: var(--primary); color: white; border: none; 
@@ -146,41 +164,48 @@
         .btn-secondary { background-color: var(--primary-light); color: var(--primary); }
 
         input, textarea {
-            width: 100%; padding: 16px; border-radius: 12px; 
-            border: 1px solid rgba(0,0,0,0.05); background-color: var(--bg); 
-            color: var(--text); font-size: 15px; margin-bottom: 16px; font-family: inherit;
+            width: 100%; padding: 16px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.05);
+            background-color: var(--bg); color: var(--text); font-size: 15px; margin-bottom: 16px; font-family: inherit;
         }
         input:focus, textarea:focus { outline: none; border-color: var(--primary); background-color: var(--card); }
 
         /* Дыхание */
         .breath-circle {
-            width: 140px; height: 140px; border-radius: 50%; 
-            background: rgba(255,255,255,0.1);
-            border: 4px solid var(--accent);
-            margin: 20px auto; transition: transform 4s linear; 
-            display: flex; align-items: center; justify-content: center;
-            color: white; font-weight: 700; font-size: 40px;
+            width: 140px; height: 140px; border-radius: 50%; background: rgba(255,255,255,0.1);
+            border: 4px solid var(--accent); margin: 20px auto; transition: transform 4s linear; 
+            display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 40px;
         }
 
+        /* Заземление */
+        .grounding-step { font-size: 20px; font-weight: 700; margin-bottom: 15px; color: var(--primary); }
+        
         /* Профиль */
         .profile-header {
-            display: flex; align-items: center; gap: 15px; margin-bottom: 30px;
+            display: flex; align-items: center; gap: 15px; margin-bottom: 20px;
             background-color: var(--card); padding: 20px; border-radius: var(--border-radius);
         }
         .avatar {
-            width: 60px; height: 60px; border-radius: 50%;
-            background-color: var(--primary-light); color: var(--primary);
-            display: flex; align-items: center; justify-content: center;
+            width: 60px; height: 60px; border-radius: 50%; background-color: var(--primary-light);
+            color: var(--primary); display: flex; align-items: center; justify-content: center;
             font-size: 24px; font-weight: 700;
         }
         .profile-info h2 { margin: 0; font-size: 20px; }
         .profile-info p { margin: 4px 0 0 0; color: var(--hint); font-size: 14px; }
 
+        /* Переключатель темы */
+        .theme-switch {
+            display: flex; gap: 10px; margin-top: 10px;
+        }
+        .theme-btn {
+            flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--primary-light);
+            background: none; color: var(--text); font-size: 14px; font-weight: 600; cursor: pointer;
+        }
+        .theme-btn.active { background-color: var(--primary); color: white; border-color: var(--primary); }
+
         /* ИИ */
         .ai-card {
-            background-color: var(--ai-bg); border: 1px solid #e0d7ff; 
-            border-radius: var(--border-radius); padding: 20px; margin-top: 20px; 
-            display: none; animation: fadeIn 0.5s ease;
+            background-color: var(--ai-bg); border: 1px solid #e0d7ff; border-radius: var(--border-radius);
+            padding: 20px; margin-top: 20px; display: none; animation: fadeIn 0.5s ease;
         }
         .ai-title { font-size: 16px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
         .ai-text { font-size: 15px; line-height: 1.6; }
@@ -188,7 +213,7 @@
         .hidden { display: none; }
     </style>
 </head>
-<body>
+<body class="auto-theme">
 
     <!-- ПРИВЕТСТВЕННЫЙ ЭКРАН -->
     <div id="welcome-screen">
@@ -212,27 +237,31 @@
         <!-- ГЛАВНАЯ -->
         <div id="tab-home" class="tab-pane active">
             <div class="hero-title" id="hero-greeting">Привет!</div>
-            <div class="hero-subtitle">Это твое личное пространство для восстановления. Здесь ты можешь снять стресс, разобрать тревожные мысли или просто выдохнуть.</div>
+            <div class="hero-subtitle">Это твое личное пространство для восстановления.</div>
             
-            <div class="info-card">
-                <h3>✨ Что здесь есть?</h3>
-                <p>Дыхательные практики, дневник эмоций, КПТ-анализ мыслей и мягкие советы от нашего ИИ-помощника.</p>
+            <!-- Трекер привычек -->
+            <div class="habit-widget" onclick="markHabit()">
+                <div>
+                    <h3>Забота о себе</h3>
+                    <p id="habit-text">Нажми, чтобы отметить день</p>
+                </div>
+                <div class="habit-fire" id="habit-streak">0 🔥</div>
             </div>
 
             <div class="dashboard-grid">
-                <div class="tile" onclick="switchTab('stress', document.querySelectorAll('.nav-tab')[1])">
+                <div class="tile mint" onclick="switchTab('stress', document.querySelectorAll('.nav-tab')[1])">
                     <div class="tile-icon">🌬</div>
                     <div class="tile-title">От стресса</div>
                 </div>
-                <div class="tile" onclick="switchTab('anxiety', document.querySelectorAll('.nav-tab')[2])">
+                <div class="tile peach" onclick="switchTab('anxiety', document.querySelectorAll('.nav-tab')[2])">
                     <div class="tile-icon">🧘</div>
                     <div class="tile-title">При тревоге</div>
                 </div>
-                <div class="tile" onclick="switchTab('journal', document.querySelectorAll('.nav-tab')[3])">
+                <div class="tile lavender" onclick="switchTab('journal', document.querySelectorAll('.nav-tab')[3])">
                     <div class="tile-icon">📖</div>
                     <div class="tile-title">Дневник</div>
                 </div>
-                <div class="tile" onclick="switchTab('profile', document.querySelectorAll('.nav-tab')[5])">
+                <div class="tile blue" onclick="switchTab('profile', document.querySelectorAll('.nav-tab')[5])">
                     <div class="tile-icon">👤</div>
                     <div class="tile-title">Профиль</div>
                 </div>
@@ -250,11 +279,17 @@
             </div>
         </div>
 
-        <!-- ПРИ ТРЕВОГЕ (Заглушка для будущего) -->
+        <!-- ПРИ ТРЕВОГЕ (Заземление) -->
         <div id="tab-anxiety" class="tab-pane">
             <div class="card">
-                <div class="title">Техники заземления</div>
-                <p style="color: var(--hint);">Здесь скоро появятся практики для возвращения в момент "здесь и сейчас" при панических атаках.</p>
+                <div class="title">Техника заземления 5-4-3-2-1</div>
+                <p style="color: var(--hint); margin-bottom: 20px;">Вернись в момент "здесь и сейчас", когда тревога уносит в будущее.</p>
+                
+                <div id="grounding-container">
+                    <div class="grounding-step" id="ground-prompt">Назови 5 вещей, которые видишь</div>
+                    <input type="text" id="ground-input" placeholder="Напиши сюда...">
+                    <button class="btn" id="ground-btn" onclick="nextGrounding()">Далее</button>
+                </div>
             </div>
         </div>
 
@@ -272,7 +307,7 @@
             </div>
         </div>
 
-        <!-- ПРАКТИКИ (Настроение, КПТ, Тест ИИ) -->
+        <!-- ПРАКТИКИ -->
         <div id="tab-tools" class="tab-pane">
             <div class="card">
                 <div class="title">Настроение</div>
@@ -320,10 +355,17 @@
             </div>
 
             <div class="card">
-                <div class="title">Данные аккаунта</div>
-                <p style="color: var(--hint); font-size: 14px; line-height: 1.5; margin-bottom: 20px;">
-                    Вы вошли через Telegram. Данные защищены.
-                </p>
+                <div class="title">Тема интерфейса</div>
+                <div class="theme-switch">
+                    <button class="theme-btn" onclick="setTheme('light', this)">Светлая</button>
+                    <button class="theme-btn active" onclick="setTheme('auto', this)">Авто</button>
+                    <button class="theme-btn" onclick="setTheme('dark', this)">Темная</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="title">Действия</div>
+                <button class="btn btn-secondary" onclick="shareBot()">📤 Поделиться ботом</button>
                 <button class="btn btn-secondary" onclick="loadStats()">📊 Моя статистика</button>
                 <div id="stats-content" style="margin-top: 15px; font-weight: 600;"></div>
             </div>
@@ -341,7 +383,6 @@
         // --- ПРИВЕТСТВИЕ ---
         document.getElementById('welcome-title').innerText = `Привет, ${userName}!`;
         document.getElementById('hero-greeting').innerText = `Привет, ${userName}!`;
-        
         document.getElementById('profile-name').innerText = userName;
         document.getElementById('profile-id').innerText = `ID: ${userId}`;
         document.getElementById('avatar-initial').innerText = userName.charAt(0).toUpperCase();
@@ -357,7 +398,36 @@
             document.getElementById('welcome-screen').classList.add('hidden');
             localStorage.setItem('lastVisit', new Date().toDateString());
             tg.HapticFeedback.impactOccurred('light');
+            loadHabit();
         }
+
+        // --- СМЕНА ТЕМЫ ---
+        function setTheme(theme, btn) {
+            document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            document.body.className = ''; // Сбрасываем классы
+            if (theme === 'dark') document.body.classList.add('dark-theme');
+            else if (theme === 'auto') document.body.classList.add('auto-theme');
+            
+            localStorage.setItem('appTheme', theme);
+            tg.HapticFeedback.impactOccurred('light');
+        }
+
+        // Восстанавливаем тему при загрузке
+        const savedTheme = localStorage.getItem('appTheme') || 'auto';
+        document.body.className = savedTheme === 'dark' ? 'dark-theme' : (savedTheme === 'light' ? '' : 'auto-theme');
+        
+        // Восстанавливаем активную кнопку темы
+        document.querySelectorAll('.theme-btn').forEach((btn, index) => {
+            if ((savedTheme === 'light' && index === 0) || 
+                (savedTheme === 'auto' && index === 1) || 
+                (savedTheme === 'dark' && index === 2)) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
 
         function switchTab(tabName, navElement) {
             document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
@@ -366,17 +436,44 @@
             navElement.classList.add('active');
         }
 
+        // --- ТРЕКЕР ПРИВЫЧЕК ---
+        async function loadHabit() {
+            try {
+                const response = await fetch(`${API_URL}/api/habit`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: userId })
+                });
+                const json = await response.json();
+                // Парсим ответ (ИИ или текст)
+                document.getElementById('habit-streak').innerText = json.message.split(' ')[1] + " 🔥";
+                document.getElementById('habit-text').innerText = "Ты уже отметился сегодня!";
+            } catch (e) {
+                document.getElementById('habit-text').innerText = "Нажми, чтобы отметить";
+            }
+        }
+
+        async function markHabit() {
+            tg.HapticFeedback.notificationOccurred('success');
+            await loadHabit();
+        }
+
+        // --- ПОДЕЛИТЬСЯ ---
+        function shareBot() {
+            const botUsername = "Islandgoodness_bot"; // Твой ник бота
+            const shareUrl = `https://t.me/share/url?url=https://t.me/${botUsername}&text=Привет! Попробуй этого бота для ментального здоровья.`;
+            tg.openTelegramLink(shareUrl);
+        }
+
         // --- ДЫХАНИЕ ---
         let isBreathing = false;
         async function startBreathing() {
             if (isBreathing) return;
             isBreathing = true;
-            
             const btn = document.getElementById('breath-btn');
             const text = document.getElementById('breath-text');
             const circle = document.getElementById('breath-circle');
             btn.style.display = 'none';
-            
             const sleep = ms => new Promise(r => setTimeout(r, ms));
             
             async function breathPhase(phaseName, duration, scale) {
@@ -394,7 +491,6 @@
                 await breathPhase(`Выдох`, 4, 1.0);
                 await breathPhase(`Задержка`, 4, 1.0);
             }
-            
             text.innerText = "Молодец!";
             circle.innerText = "✅";
             btn.style.display = 'block';
@@ -403,7 +499,30 @@
             tg.HapticFeedback.notificationOccurred('success');
         }
 
-        // --- ФУНКЦИИ ---
+        // --- ЗАЗЕМЛЕНИЕ ---
+        const groundPrompts = [
+            "Назови 5 вещей, которые видишь",
+            "Назови 4 вещи, которые можешь потрогать",
+            "Назови 3 звука, которые слышишь",
+            "Назови 2 запаха, которые чувствуешь",
+            "Назови 1 вкус"
+        ];
+        let groundStep = 0;
+
+        function nextGrounding() {
+            groundStep++;
+            if (groundStep >= groundPrompts.length) {
+                document.getElementById('ground-prompt').innerText = "Отлично! Ты вернулся в момент 'здесь и сейчас'. 🌿";
+                document.getElementById('ground-input').classList.add('hidden');
+                document.getElementById('ground-btn').classList.add('hidden');
+                tg.HapticFeedback.notificationOccurred('success');
+            } else {
+                document.getElementById('ground-prompt').innerText = groundPrompts[groundStep];
+                document.getElementById('ground-input').value = "";
+            }
+        }
+
+        // --- ФУНКЦИИ API ---
         async function testAI() {
             const block = document.getElementById('test-ai-block');
             const textEl = document.getElementById('test-ai-text');
@@ -425,7 +544,6 @@
         async function saveDiary() {
             const text = document.getElementById('diary-input').value;
             if (!text) return;
-            
             const btn = document.getElementById('diary-btn');
             const statusEl = document.getElementById('diary-status');
             const aiBlock = document.getElementById('diary-ai-block');
@@ -504,20 +622,4 @@
             }
         }
 
-        async function loadStats() {
-            const statsEl = document.getElementById('stats-content');
-            statsEl.innerText = "Загрузка...";
-            try {
-                const response = await fetch(`${API_URL}/api/stats?user_id=${userId}`);
-                const json = await response.json();
-                if (json.data.length === 0) { statsEl.innerText = "Нет данных."; return; }
-                let html = `<b>Средний балл: </b>${(json.data.reduce((a, b) => a + b.score, 0) / json.data.length).toFixed(1)} / 5<br><br>`;
-                json.data.slice(-7).forEach(rec => {
-                    html += `${rec.date}: ${"🟩".repeat(rec.score) + "⬜".repeat(5 - rec.score)}<br>`;
-                });
-                statsEl.innerHTML = html;
-            } catch (e) { statsEl.innerText = "Ошибка загрузки."; }
-        }
-    </script>
-</body>
-</html>
+        async function loadStats()
