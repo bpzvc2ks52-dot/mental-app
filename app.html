@@ -31,7 +31,7 @@
             position: relative;
             display: flex;
             flex-direction: column;
-            height: 100dvh;          /* динамическая высота */
+            height: 100dvh;
             overflow: hidden;
         }
 
@@ -51,7 +51,7 @@
             display: flex;
             flex-direction: column;
             flex: 1;
-            min-height: 0;           /* критично для flex-скролла */
+            min-height: 0;
             overflow: hidden;
         }
 
@@ -61,11 +61,11 @@
 
         .content {
             flex: 1;
-            min-height: 0;           /* критично */
+            min-height: 0;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
             overscroll-behavior: contain;
-            padding: 10px 20px 140px; /* место под нижнее меню + safe-area */
+            padding: 10px 20px 140px;
             padding-bottom: calc(140px + env(safe-area-inset-bottom, 0px));
         }
         .section-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; margin-top: 20px; color: var(--text-sec); }
@@ -106,7 +106,7 @@
 
         .inner-screen {
             display: none;
-            position: fixed;          /* было absolute — теперь fixed надёжнее */
+            position: fixed;
             inset: 0;
             background: var(--bg);
             z-index: 500;
@@ -129,6 +129,25 @@
         input:focus, textarea:focus { border-color: var(--text); }
         .ai-box { background: var(--tile-purple); padding: 16px; border-radius: 16px; margin-top: 16px; display: none; text-align: left; animation: fadeIn 0.4s ease; }
 
+        /* Кнопка музыки */
+        #music-toggle {
+            position: fixed;
+            top: calc(20px + env(safe-area-inset-top, 0px));
+            right: 20px;
+            z-index: 200;
+            width: 48px; height: 48px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            font-size: 22px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        #music-toggle:active { transform: scale(0.9); }
+
         @media (prefers-reduced-motion: reduce) {
             .fade-in, .splash-icon, .tile, .inner-screen, .breath-circle { animation: none !important; transition: none !important; }
         }
@@ -142,6 +161,8 @@
         <div class="splash-sub">Твой уютный уголок заботы.</div>
         <button class="splash-btn" id="start-btn">Начать путь</button>
     </div>
+
+    <button id="music-toggle" aria-label="Включить музыку">🎵</button>
 
     <div id="main-screen">
         <div class="header fade-in">
@@ -443,7 +464,94 @@
                 const num = document.getElementById('streak-num-inner');
                 num.innerText = parseInt(num.innerText) + 1;
             });
-        });
-    </script>
-</body>
-</html>
+
+            // ===== МУЗЫКА =====
+            const Music = (() => {
+                let ctx = null, master = null, nodes = [], playing = false;
+
+                function ramp(param, value, time = 1.5) {
+                    const now = ctx.currentTime;
+                    param.cancelScheduledValues(now);
+                    param.setValueAtTime(param.value, now);
+                    param.linearRampToValueAtTime(value, now + time);
+                }
+
+                function createNoiseBuffer(seconds = 2) {
+                    const buf = ctx.createBuffer(1, ctx.sampleRate * seconds, ctx.sampleRate);
+                    const data = buf.getChannelData(0);
+                    for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+                    return buf;
+                }
+
+                function createPad(freq, detune = 0) {
+                    const osc = ctx.createOscillator();
+                    osc.type = 'sine';
+                    osc.frequency.value = freq;
+                    osc.detune.value = detune;
+                    const gain = ctx.createGain();
+                    gain.gain.value = 0;
+                    osc.connect(gain).connect(master);
+                    osc.start();
+                    nodes.push(osc, gain);
+                    ramp(gain.gain, 0.06, 3);
+                    return { osc, gain };
+                }
+
+                function createNoiseLayer(type = 'lowpass', freq = 800, volume = 0.04) {
+                    const src = ctx.createBufferSource();
+                    src.buffer = createNoiseBuffer(2);
+                    src.loop = true;
+                    const filter = ctx.createBiquadFilter();
+                    filter.type = type;
+                    filter.frequency.value = freq;
+                    filter.Q.value = 0.7;
+                    const gain = ctx.createGain();
+                    gain.gain.value = 0;
+                    src.connect(filter).connect(gain).connect(master);
+                    src.start();
+                    nodes.push(src, filter, gain);
+                    ramp(gain.gain, volume, 3);
+                }
+
+                function addLFO(target, rate = 0.08, depth = 0.01) {
+                    const lfo = ctx.createOscillator();
+                    lfo.frequency.value = rate;
+                    const lfoGain = ctx.createGain();
+                    lfoGain.gain.value = depth;
+                    lfo.connect(lfoGain).connect(target.gain);
+                    lfo.start();
+                    nodes.push(lfo, lfoGain);
+                }
+
+                async function start() {
+                    if (playing) return;
+                    ctx = ctx || new (window.AudioContext || window.webkitAudioContext)();
+                    if (ctx.state === 'suspended') await ctx.resume();
+
+                    master = ctx.createGain();
+                    master.gain.value = 0;
+                    master.connect(ctx.destination);
+                    ramp(master.gain, 0.5, 2);
+
+                    const chord = [
+                        createPad(220.00, -4),
+                        createPad(261.63,  3),
+                        createPad(329.63, -2),
+                        createPad(110.00,  0),
+                    ];
+                    chord.forEach((p, i) => addLFO(p.gain, 0.05 + i * 0.02, 0.015));
+
+                    createNoiseLayer('lowpass', 600, 0.05);
+                    createNoiseLayer('highpass', 2500, 0.015);
+
+                    playing = true;
+                }
+
+                async function stop() {
+                    if (!playing) return;
+                    ramp(master.gain, 0, 1.2);
+                    const toStop = nodes.slice();
+                    nodes = [];
+                    playing = false;
+                    setTimeout(() => {
+                        toStop.forEach(n => { try { n.stop && n
