@@ -129,7 +129,6 @@
         input:focus, textarea:focus { border-color: var(--text); }
         .ai-box { background: var(--tile-purple); padding: 16px; border-radius: 16px; margin-top: 16px; display: none; text-align: left; animation: fadeIn 0.4s ease; }
 
-        /* Кнопка музыки */
         #music-toggle {
             position: fixed;
             top: calc(20px + env(safe-area-inset-top, 0px));
@@ -465,25 +464,28 @@
                 num.innerText = parseInt(num.innerText) + 1;
             });
 
-            // ===== МУЗЫКА =====
+            // ===== МУЗЫКА (Web Audio API) =====
             const Music = (() => {
                 let ctx = null, master = null, nodes = [], playing = false;
 
-                function ramp(param, value, time = 1.5) {
+                function ramp(param, value, time) {
+                    time = time || 1.5;
                     const now = ctx.currentTime;
                     param.cancelScheduledValues(now);
                     param.setValueAtTime(param.value, now);
                     param.linearRampToValueAtTime(value, now + time);
                 }
 
-                function createNoiseBuffer(seconds = 2) {
+                function createNoiseBuffer(seconds) {
+                    seconds = seconds || 2;
                     const buf = ctx.createBuffer(1, ctx.sampleRate * seconds, ctx.sampleRate);
                     const data = buf.getChannelData(0);
                     for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
                     return buf;
                 }
 
-                function createPad(freq, detune = 0) {
+                function createPad(freq, detune) {
+                    detune = detune || 0;
                     const osc = ctx.createOscillator();
                     osc.type = 'sine';
                     osc.frequency.value = freq;
@@ -494,10 +496,13 @@
                     osc.start();
                     nodes.push(osc, gain);
                     ramp(gain.gain, 0.06, 3);
-                    return { osc, gain };
+                    return { osc: osc, gain: gain };
                 }
 
-                function createNoiseLayer(type = 'lowpass', freq = 800, volume = 0.04) {
+                function createNoiseLayer(type, freq, volume) {
+                    type = type || 'lowpass';
+                    freq = freq || 800;
+                    volume = volume || 0.04;
                     const src = ctx.createBufferSource();
                     src.buffer = createNoiseBuffer(2);
                     src.loop = true;
@@ -513,7 +518,9 @@
                     ramp(gain.gain, volume, 3);
                 }
 
-                function addLFO(target, rate = 0.08, depth = 0.01) {
+                function addLFO(target, rate, depth) {
+                    rate = rate || 0.08;
+                    depth = depth || 0.01;
                     const lfo = ctx.createOscillator();
                     lfo.frequency.value = rate;
                     const lfoGain = ctx.createGain();
@@ -537,21 +544,8 @@
                         createPad(220.00, -4),
                         createPad(261.63,  3),
                         createPad(329.63, -2),
-                        createPad(110.00,  0),
+                        createPad(110.00,  0)
                     ];
-                    chord.forEach((p, i) => addLFO(p.gain, 0.05 + i * 0.02, 0.015));
+                    chord.forEach(function(p, i) { addLFO(p.gain, 0.05 + i * 0.02, 0.015); });
 
-                    createNoiseLayer('lowpass', 600, 0.05);
-                    createNoiseLayer('highpass', 2500, 0.015);
-
-                    playing = true;
-                }
-
-                async function stop() {
-                    if (!playing) return;
-                    ramp(master.gain, 0, 1.2);
-                    const toStop = nodes.slice();
-                    nodes = [];
-                    playing = false;
-                    setTimeout(() => {
-                        toStop.forEach(n => { try { n.stop && n
+                    createNoiseLayer('
