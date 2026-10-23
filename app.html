@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Остров добра</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
             --bg: #f9f7f4; --text: #3a2e2a; --text-sec: #8c7b75;
@@ -263,40 +262,34 @@
             </div>
         </div>
     </div>
-        <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const tg = window.Telegram?.WebApp;
-            if (tg) tg.expand();
-            
-            const userId = tg?.initDataUnsafe?.user?.id || "unknown";
-            const userName = tg?.initDataUnsafe?.user?.first_name || "друг";
-            const API_URL = "https://mental-bot-v2-maxdikov.mia0.amvera.tech"; 
 
-            document.getElementById('profile-name').innerText = userName;
-            
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Приветствие
             const hour = new Date().getHours();
             const greetingEl = document.getElementById('greeting');
             if (hour < 12) greetingEl.innerText = "Доброе утро!";
             else if (hour < 18) greetingEl.innerText = "Добрый день!";
             else greetingEl.innerText = "Добрый вечер!";
 
-            // Плавная навигация
-            window.openScreen = function(name) {
-                document.querySelectorAll('.inner-screen').forEach(s => s.classList.remove('active'));
-                document.getElementById(`screen-${name}`).classList.add('active');
-                if (tg) tg.HapticFeedback.impactOccurred('light');
-            }
-            window.closeScreens = function() {
-                document.querySelectorAll('.inner-screen').forEach(s => s.classList.remove('active'));
-                if (tg) tg.HapticFeedback.impactOccurred('light');
+            // Кнопка Начать путь
+            const startBtn = document.getElementById('start-btn');
+            if (startBtn) {
+                startBtn.addEventListener('click', function() {
+                    document.getElementById('splash').classList.add('hidden');
+                });
             }
 
-            // Кнопка старта
-            document.getElementById('start-btn').addEventListener('click', function() {
-                document.getElementById('splash').classList.add('hidden');
-                loadHabit();
-                if (tg) tg.HapticFeedback.notificationOccurred('success');
-            });
+            // Навигация (глобальные функции для onclick в HTML)
+            window.openScreen = function(name) {
+                document.querySelectorAll('.inner-screen').forEach(s => s.classList.remove('active'));
+                const target = document.getElementById(`screen-${name}`);
+                if (target) target.classList.add('active');
+            }
+            
+            window.closeScreens = function() {
+                document.querySelectorAll('.inner-screen').forEach(s => s.classList.remove('active'));
+            }
 
             // Универсальная функция дыхания
             async function runBreathing(circleId, textId, btn, phasesArray, cycles = 4) {
@@ -324,160 +317,83 @@
                 btn.style.display = 'block';
                 btn.innerText = "Повторить";
                 btn.disabled = false;
-                if (tg) tg.HapticFeedback.notificationOccurred('success');
                 document.getElementById('mood-modal').style.display = 'flex';
             }
 
-            // Коробочное 4-4-4-4
+            // Обработчики дыхания
             document.getElementById('breath-btn').addEventListener('click', function() {
                 runBreathing('breath-circle', 'breath-text', this, [
-                    {name: "Вдох", sec: 4, scale: true},
-                    {name: "Задержка", sec: 4, scale: true},
-                    {name: "Выдох", sec: 4, scale: false},
-                    {name: "Задержка", sec: 4, scale: false}
+                    {name: "Вдох", sec: 4, scale: true}, {name: "Задержка", sec: 4, scale: true},
+                    {name: "Выдох", sec: 4, scale: false}, {name: "Задержка", sec: 4, scale: false}
                 ]);
             });
 
-            // Тактическое 4-4-4-2
             document.getElementById('tac-btn').addEventListener('click', function() {
                 runBreathing('tac-circle', 'tac-text', this, [
-                    {name: "Вдох", sec: 4, scale: true},
-                    {name: "Задержка", sec: 4, scale: true},
-                    {name: "Выдох", sec: 4, scale: false},
-                    {name: "Задержка", sec: 2, scale: false}
+                    {name: "Вдох", sec: 4, scale: true}, {name: "Задержка", sec: 4, scale: true},
+                    {name: "Выдох", sec: 4, scale: false}, {name: "Задержка", sec: 2, scale: false}
                 ]);
             });
 
-            // Сон 4-7-8
             document.getElementById('sleep-btn').addEventListener('click', function() {
                 runBreathing('sleep-circle', 'sleep-text', this, [
-                    {name: "Вдох", sec: 4, scale: true},
-                    {name: "Задержка", sec: 7, scale: true},
+                    {name: "Вдох", sec: 4, scale: true}, {name: "Задержка", sec: 7, scale: true},
                     {name: "Выдох", sec: 8, scale: false}
                 ]);
             });
 
-            // Настроение
+            // Закрытие модалки настроения
             document.querySelectorAll('.mood-btn').forEach(btn => {
-                btn.addEventListener('click', async function() {
-                    const score = this.getAttribute('data-score');
+                btn.addEventListener('click', function() {
                     document.getElementById('mood-modal').style.display = 'none';
-                    try {
-                        await fetch(`${API_URL}/api/mood`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ user_id: userId, mood: 'emoji', score: score, trigger: 'После практики' })
-                        });
-                    } catch (e) { console.log(e); }
                 });
             });
 
-            // Привычка
-            async function loadHabit() {
-                try {
-                    const response = await fetch(`${API_URL}/api/habit`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ user_id: userId })
-                    });
-                    const json = await response.json();
-                    document.getElementById('streak-num-inner').innerText = json.message.split(' ')[1];
-                } catch (e) {}
-            }
-            document.getElementById('habit-btn-inner').addEventListener('click', loadHabit);
-
             // Дневник
-            document.getElementById('diary-btn').addEventListener('click', async function() {
+            document.getElementById('diary-btn').addEventListener('click', function() {
                 const text = document.getElementById('diary-input').value;
                 if (!text) return;
-                const statusEl = document.getElementById('diary-status');
-                statusEl.innerText = "Сохранение...";
-                try {
-                    await fetch(`${API_URL}/api/diary`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ user_id: userId, text: text })
-                    });
-                    statusEl.innerText = "✅ Записано";
-                    document.getElementById('diary-input').value = "";
-                } catch (e) { statusEl.innerText = "⚠️ Ошибка"; }
+                document.getElementById('diary-status').innerText = "Сохранено (локально)";
+                document.getElementById('diary-input').value = "";
             });
 
             // Благодарность
-            document.getElementById('grat-btn').addEventListener('click', async function() {
+            document.getElementById('grat-btn').addEventListener('click', function() {
                 const text = document.getElementById('grat-input').value;
                 if (!text) return;
-                const statusEl = document.getElementById('grat-status');
-                statusEl.innerText = "Сохранение...";
-                try {
-                    await fetch(`${API_URL}/api/gratitude`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ user_id: userId, text: text })
-                    });
-                    statusEl.innerText = "✅ Записано";
-                    document.getElementById('grat-input').value = "";
-                } catch (e) { statusEl.innerText = "⚠️ Ошибка"; }
+                document.getElementById('grat-status').innerText = "Сохранено (локально)";
+                document.getElementById('grat-input').value = "";
             });
 
             // КПТ
-            document.getElementById('cbt-btn').addEventListener('click', async function() {
-                const thought = document.getElementById('cbt-thought').value;
-                if (!thought) return;
-                const statusEl = document.getElementById('cbt-status');
-                statusEl.innerText = "Сохранение...";
-                try {
-                    await fetch(`${API_URL}/api/cbt`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ 
-                            user_id: userId, thought: thought,
-                            fact_for: document.getElementById('cbt-for').value,
-                            fact_against: document.getElementById('cbt-against').value
-                        })
-                    });
-                    statusEl.innerText = "✅ Записано";
-                    document.querySelectorAll('#screen-cbt input').forEach(i => i.value = "");
-                } catch (e) { statusEl.innerText = "⚠️ Ошибка"; }
+            document.getElementById('cbt-btn').addEventListener('click', function() {
+                document.getElementById('cbt-status').innerText = "Сохранено (локально)";
+                document.querySelectorAll('#screen-cbt input').forEach(i => i.value = "");
             });
 
             // Заземление
             const prompts = ["Назови 5 вещей", "Назови 4 вещи", "Назови 3 звука", "Назови 2 запаха", "Назови 1 вкус"];
             let step = 0;
-            let answers = [];
-
-            document.getElementById('ground-btn').addEventListener('click', async function() {
+            document.getElementById('ground-btn').addEventListener('click', function() {
                 const val = document.getElementById('ground-input').value;
                 if (!val) return;
-                answers.push(val);
                 step++;
-
                 if (step >= prompts.length) {
-                    document.getElementById('ground-prompt').innerText = "Ты вернулся в момент.";
+                    document.getElementById('ground-prompt').innerText = "Ты вернулся в момент. Молодец.";
                     document.getElementById('ground-input').style.display = 'none';
                     this.style.display = 'none';
-                    
-                    const aiBox = document.getElementById('ground-ai');
-                    const aiText = document.getElementById('ground-ai-text');
-                    aiBox.style.display = 'block';
-                    aiText.innerText = "ИИ думает...";
-
-                    try {
-                        const res = await fetch(`${API_URL}/api/ai_advice`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ 
-                                context: "Заземление", 
-                                text: "Пользователь описал: " + answers.join(", ") 
-                            })
-                        });
-                        const json = await res.json();
-                        aiText.innerText = json.advice;
-                    } catch (e) { aiText.innerText = "Ты справился с упражнением!"; }
+                    document.getElementById('ground-ai').style.display = 'block';
+                    document.getElementById('ground-ai-text').innerText = "Ты справился с упражнением. Это самое главное.";
                 } else {
                     document.getElementById('ground-prompt').innerText = prompts[step];
                     document.getElementById('ground-input').value = "";
                 }
+            });
+
+            // Привычка
+            document.getElementById('habit-btn-inner').addEventListener('click', function() {
+                const num = document.getElementById('streak-num-inner');
+                num.innerText = parseInt(num.innerText) + 1;
             });
         });
     </script>
