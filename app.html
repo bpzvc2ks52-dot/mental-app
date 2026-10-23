@@ -151,7 +151,7 @@
             .fade-in, .splash-icon, .tile, .inner-screen, .breath-circle { animation: none !important; transition: none !important; }
         }
     </style>
-</head>
+    </head>
 <body>
 
     <div id="splash">
@@ -464,8 +464,8 @@
                 num.innerText = parseInt(num.innerText) + 1;
             });
 
-            // ===== МУЗЫКА (Web Audio API) =====
-            const Music = (() => {
+            // ===== МУЗЫКА =====
+            const Music = (function() {
                 let ctx = null, master = null, nodes = [], playing = false;
 
                 function ramp(param, value, time) {
@@ -548,4 +548,42 @@
                     ];
                     chord.forEach(function(p, i) { addLFO(p.gain, 0.05 + i * 0.02, 0.015); });
 
-                    createNoiseLayer('
+                    createNoiseLayer('lowpass', 600, 0.05);
+                    createNoiseLayer('highpass', 2500, 0.015);
+
+                    playing = true;
+                }
+
+                async function stop() {
+                    if (!playing) return;
+                    ramp(master.gain, 0, 1.2);
+                    const toStop = nodes.slice();
+                    nodes = [];
+                    playing = false;
+                    setTimeout(function() {
+                        toStop.forEach(function(n) {
+                            try { if (n.stop) n.stop(); n.disconnect(); } catch(e) {}
+                        });
+                        if (master) master.disconnect();
+                    }, 1400);
+                }
+
+                return {
+                    toggle: async function() {
+                        if (playing) { await stop(); } else { await start(); }
+                        return playing;
+                    }
+                };
+            })();
+
+            const musicBtn = document.getElementById('music-toggle');
+            let musicOn = false;
+            musicBtn.addEventListener('click', async function() {
+                musicOn = await Music.toggle();
+                musicBtn.textContent = musicOn ? '🔇' : '🎵';
+                musicBtn.setAttribute('aria-label', musicOn ? 'Выключить музыку' : 'Включить музыку');
+            });
+        });
+    </script>
+</body>
+</html>
