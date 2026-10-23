@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Остров добра</title>
     <style>
         :root {
@@ -15,21 +15,30 @@
             --card: #ffffff; --radius: 24px;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
-        body {
+
+        html, body {
+            margin: 0; padding: 0;
+            width: 100%;
+            min-height: 100%;
+            min-height: 100dvh;
+            background-color: var(--bg);
+            color: var(--text);
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg); color: var(--text); margin: 0; padding: 0;
-            display: flex; flex-direction: column; 
-            height: 100vh; 
-            height: 100dvh;
-            overflow: hidden; 
             letter-spacing: -0.2px;
+            overscroll-behavior-y: none;
+        }
+        body {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            height: 100dvh;          /* динамическая высота */
+            overflow: hidden;
         }
 
         .fade-in { animation: fadeIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        #splash { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.6s ease, transform 0.6s ease; }
+        #splash { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.6s ease, transform 0.6s ease; }
         #splash.hidden { opacity: 0; transform: scale(1.05); pointer-events: none; }
         .splash-icon { font-size: 70px; margin-bottom: 16px; animation: float 3s infinite ease-in-out; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
@@ -38,21 +47,37 @@
         .splash-btn { background: var(--text); color: #fff; border: none; padding: 16px 40px; border-radius: 100px; font-size: 16px; font-weight: 700; cursor: pointer; transition: transform 0.2s; }
         .splash-btn:active { transform: scale(0.92); opacity: 0.8; }
 
+        #main-screen {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;           /* критично для flex-скролла */
+            overflow: hidden;
+        }
+
         .header { padding: 30px 24px 10px; z-index: 10; flex-shrink: 0; }
         .greeting { font-size: 26px; font-weight: 800; margin-bottom: 6px; }
         .greeting-sub { font-size: 15px; color: var(--text-sec); line-height: 1.4; }
 
-        .content { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 10px 20px 120px; }
+        .content {
+            flex: 1;
+            min-height: 0;           /* критично */
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+            padding: 10px 20px 140px; /* место под нижнее меню + safe-area */
+            padding-bottom: calc(140px + env(safe-area-inset-bottom, 0px));
+        }
         .section-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; margin-top: 20px; color: var(--text-sec); }
 
         .bento-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
         .tile { border-radius: var(--radius); padding: 20px; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
         .tile:active { transform: scale(0.95); }
         .tile-wide { grid-column: span 2; flex-direction: row; align-items: center; gap: 16px; min-height: 80px; }
-        .tile-icon { width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 20px; background: rgba(255,255,255,0.6); }
+        .tile-icon { width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 20px; background: rgba(255,255,255,0.6); flex-shrink: 0; }
         .tile-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
         .tile-desc { font-size: 12px; color: var(--text-sec); line-height: 1.3; }
-        
+
         .tile-blue { background: var(--tile-blue); } .tile-blue .tile-icon { color: var(--tile-blue-icon); }
         .tile-purple { background: var(--tile-purple); } .tile-purple .tile-icon { color: var(--tile-purple-icon); }
         .tile-peach { background: var(--tile-peach); } .tile-peach .tile-icon { color: var(--tile-peach-icon); }
@@ -60,22 +85,53 @@
         .tile-green { background: var(--tile-green); } .tile-green .tile-icon { color: var(--tile-green-icon); }
         .tile-white { background: var(--card); box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.02); }
 
-        .bottom-nav { position: fixed; bottom: 24px; left: 24px; right: 24px; background: rgba(255,255,255,0.85); backdrop-filter: blur(20px); border-radius: 32px; display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 10px 40px rgba(0,0,0,0.08); border: 1px solid rgba(255,255,255,0.5); z-index: 100; }
+        .bottom-nav {
+            position: fixed;
+            left: 24px; right: 24px;
+            bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 32px;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            border: 1px solid rgba(255,255,255,0.5);
+            z-index: 100;
+        }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sec); font-size: 10px; font-weight: 600; cursor: pointer; width: 33%; transition: color 0.2s; }
         .nav-item.active { color: var(--text); }
         .nav-icon { font-size: 22px; margin-bottom: 4px; }
 
-        .inner-screen { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 500; flex-direction: column; overflow-y: auto; transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .inner-screen {
+            display: none;
+            position: fixed;          /* было absolute — теперь fixed надёжнее */
+            inset: 0;
+            background: var(--bg);
+            z-index: 500;
+            flex-direction: column;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+            transform: translateX(100%);
+            transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+        }
         .inner-screen.active { display: flex; transform: translateX(0); }
         .back-btn { padding: 20px; font-size: 16px; font-weight: 600; color: var(--text); cursor: pointer; flex-shrink: 0; }
         .inner-content { padding: 0 24px 40px; text-align: center; }
-        
+
         .breath-circle { width: 150px; height: 150px; border-radius: 50%; background: var(--tile-blue); border: 3px solid var(--tile-blue-icon); display: flex; align-items: center; justify-content: center; font-size: 38px; font-weight: 700; color: #1565c0; margin: 20px auto; transition: transform 4s ease-in-out; }
         .btn { background: var(--text); color: white; border: none; padding: 15px; border-radius: 16px; font-size: 16px; font-weight: 600; width: 100%; cursor: pointer; margin-top: 12px; transition: transform 0.2s; }
         .btn:active { transform: scale(0.96); opacity: 0.8; }
         input, textarea { width: 100%; padding: 16px; border-radius: 16px; border: 1px solid #e0d6d0; background: var(--card); color: var(--text); font-size: 16px; margin-bottom: 12px; font-family: inherit; resize: none; outline: none; }
         input:focus, textarea:focus { border-color: var(--text); }
         .ai-box { background: var(--tile-purple); padding: 16px; border-radius: 16px; margin-top: 16px; display: none; text-align: left; animation: fadeIn 0.4s ease; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .fade-in, .splash-icon, .tile, .inner-screen, .breath-circle { animation: none !important; transition: none !important; }
+        }
     </style>
 </head>
 <body>
@@ -250,7 +306,7 @@
         </div>
     </div>
 
-    <div id="mood-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
+    <div id="mood-modal" style="position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
         <div style="background: var(--card); width: 90%; max-width: 320px; border-radius: 24px; padding: 28px; text-align: center; animation: fadeIn 0.3s ease;">
             <h3 style="margin-top: 0;">Как ты себя чувствуешь?</h3>
             <div style="display: flex; justify-content: space-around; margin-top: 20px;">
@@ -265,14 +321,12 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Приветствие
             const hour = new Date().getHours();
             const greetingEl = document.getElementById('greeting');
             if (hour < 12) greetingEl.innerText = "Доброе утро!";
             else if (hour < 18) greetingEl.innerText = "Добрый день!";
             else greetingEl.innerText = "Добрый вечер!";
 
-            // Кнопка Начать путь
             const startBtn = document.getElementById('start-btn');
             if (startBtn) {
                 startBtn.addEventListener('click', function() {
@@ -280,25 +334,26 @@
                 });
             }
 
-            // Навигация (глобальные функции для onclick в HTML)
             window.openScreen = function(name) {
                 document.querySelectorAll('.inner-screen').forEach(s => s.classList.remove('active'));
                 const target = document.getElementById(`screen-${name}`);
-                if (target) target.classList.add('active');
+                if (target) {
+                    target.classList.add('active');
+                    target.scrollTop = 0;
+                }
             }
-            
+
             window.closeScreens = function() {
                 document.querySelectorAll('.inner-screen').forEach(s => s.classList.remove('active'));
             }
 
-            // Универсальная функция дыхания
             async function runBreathing(circleId, textId, btn, phasesArray, cycles = 4) {
                 if (btn.disabled) return;
                 btn.disabled = true;
                 const text = document.getElementById(textId);
                 const circle = document.getElementById(circleId);
                 btn.style.display = 'none';
-                
+
                 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
                 for (let i = 0; i < cycles; i++) {
@@ -311,7 +366,7 @@
                         }
                     }
                 }
-                
+
                 text.innerText = "Завершено";
                 circle.innerText = "✓";
                 btn.style.display = 'block';
@@ -320,7 +375,6 @@
                 document.getElementById('mood-modal').style.display = 'flex';
             }
 
-            // Обработчики дыхания
             document.getElementById('breath-btn').addEventListener('click', function() {
                 runBreathing('breath-circle', 'breath-text', this, [
                     {name: "Вдох", sec: 4, scale: true}, {name: "Задержка", sec: 4, scale: true},
@@ -342,14 +396,12 @@
                 ]);
             });
 
-            // Закрытие модалки настроения
             document.querySelectorAll('.mood-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     document.getElementById('mood-modal').style.display = 'none';
                 });
             });
 
-            // Дневник
             document.getElementById('diary-btn').addEventListener('click', function() {
                 const text = document.getElementById('diary-input').value;
                 if (!text) return;
@@ -357,7 +409,6 @@
                 document.getElementById('diary-input').value = "";
             });
 
-            // Благодарность
             document.getElementById('grat-btn').addEventListener('click', function() {
                 const text = document.getElementById('grat-input').value;
                 if (!text) return;
@@ -365,13 +416,11 @@
                 document.getElementById('grat-input').value = "";
             });
 
-            // КПТ
             document.getElementById('cbt-btn').addEventListener('click', function() {
                 document.getElementById('cbt-status').innerText = "Сохранено (локально)";
                 document.querySelectorAll('#screen-cbt input').forEach(i => i.value = "");
             });
 
-            // Заземление
             const prompts = ["Назови 5 вещей", "Назови 4 вещи", "Назови 3 звука", "Назови 2 запаха", "Назови 1 вкус"];
             let step = 0;
             document.getElementById('ground-btn').addEventListener('click', function() {
@@ -390,7 +439,6 @@
                 }
             });
 
-            // Привычка
             document.getElementById('habit-btn-inner').addEventListener('click', function() {
                 const num = document.getElementById('streak-num-inner');
                 num.innerText = parseInt(num.innerText) + 1;
