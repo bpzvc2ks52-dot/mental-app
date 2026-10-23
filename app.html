@@ -3,132 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Остров безопасности</title>
+    <title>Остров</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
-            --bg: #fdfbf7; --text: #3e2723; --text-secondary: #8d6e63;
-            --accent: #e67e22; --accent-light: #fdf2e9;
-            --border: #f0e6d2; --card: #ffffff;
-            --radius: 16px; --nav-height: 70px;
+            --bg: #f9f8f6;
+            --surface: #ffffff;
+            --text: #1c1c1e;
+            --text-sec: #8e8e93;
+            --accent: #2d6a4f; /* Глубокий изумрудный */
+            --accent-light: #e9f5ef;
+            --border: #e5e5ea;
+            --radius: 16px;
+            --nav-height: 80px;
         }
 
         body.dark-theme {
-            --bg: #2b1f1a; --text: #f5ece7; --text-secondary: #a8988e;
-            --accent: #f39c12; --accent-light: #3e2c23;
-            --border: #4a342f; --card: #3d2c23;
-        }
-
-        body.auto-theme {
-            --bg: var(--tg-theme-bg-color, #fdfbf7);
-            --text: var(--tg-theme-text-color, #3e2723);
-            --text-secondary: var(--tg-theme-hint-color, #8d6e63);
-            --accent: #e67e22;
-            --accent-light: var(--tg-theme-secondary-bg-color, #fdf2e9);
-            --border: var(--tg-theme-secondary-bg-color, #f0e6d2);
-            --card: var(--tg-theme-secondary-bg-color, #ffffff);
+            --bg: #121212;
+            --surface: #1c1c1e;
+            --text: #f2f2f7;
+            --text-sec: #8e8e93;
+            --accent: #52b788;
+            --accent-light: #1b2e25;
+            --border: #2c2c2e;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg); color: var(--text); margin: 0; padding: 0;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0; padding: 0;
             display: flex; flex-direction: column; height: 100vh; overflow: hidden;
-            transition: background-color 0.3s, color 0.3s;
+            letter-spacing: -0.3px;
+            transition: background-color 0.3s;
         }
 
-        /* Экран приветствия */
-        #welcome-screen {
+        /* --- ЭКРАН ЗАГРУЗКИ / ПРИВЕТСТВИЯ --- */
+        #splash {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg); z-index: 9999;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 30px; transition: opacity 0.5s ease; overflow: hidden;
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        #welcome-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-        
-        .bg-animation {
-            position: absolute; width: 150vw; height: 150vw;
-            background: radial-gradient(circle, var(--accent-light) 0%, transparent 60%);
-            opacity: 0.6; border-radius: 50%; animation: float 10s infinite alternate ease-in-out;
-        }
-        @keyframes float {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(10%, 10%) scale(1.1); }
+        #splash.hidden { opacity: 0; pointer-events: none; }
+
+        .logo-pulse {
+            width: 80px; height: 80px; border-radius: 50%;
+            background: var(--accent); margin-bottom: 24px;
+            animation: pulse 2s infinite ease-in-out;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 32px; font-weight: 700;
         }
 
-        .welcome-content {
-            position: relative; z-index: 10; text-align: center;
-            background: var(--card); padding: 40px 20px; border-radius: 24px; border: 1px solid var(--border);
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
         }
 
-        .welcome-title { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
-        .welcome-subtitle { font-size: 15px; color: var(--text-secondary); margin-bottom: 30px; }
-        .welcome-btn {
-            background-color: var(--accent); color: white; border: none;
-            padding: 16px 30px; border-radius: var(--radius); font-size: 16px; font-weight: 600;
-            cursor: pointer; width: 100%; max-width: 300px; transition: transform 0.2s;
+        .splash-title { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+        .splash-sub { font-size: 16px; color: var(--text-sec); margin-bottom: 40px; }
+        .splash-btn {
+            background: var(--accent); color: white; border: none;
+            padding: 16px 40px; border-radius: 30px; font-size: 16px; font-weight: 600;
+            cursor: pointer; transition: transform 0.2s;
         }
-        .welcome-btn:active { transform: scale(0.96); }
+        .splash-btn:active { transform: scale(0.96); }
 
-        /* Общий интерфейс */
-        .header { padding: 24px 24px 10px 24px; font-size: 24px; font-weight: 700; }
-        .content { flex: 1; overflow-y: auto; padding: 10px 24px 90px 24px; }
-        .tab-pane { display: none; }
-        .tab-pane.active { display: block; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* --- ОСНОВНОЙ ИНТЕРФЕЙС --- */
+        .header {
+            padding: 20px 20px 10px; font-size: 32px; font-weight: 800;
+            letter-spacing: -1px; background: var(--bg); z-index: 10;
+        }
 
+        .content {
+            flex: 1; overflow-y: auto; padding: 0 20px calc(var(--nav-height) + 20px);
+        }
+
+        .tab-pane { display: none; animation: fadeIn 0.4s ease; }
+        .tab-pane.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Карточки */
         .card {
-            background-color: var(--card); border: 1px solid var(--border);
-            border-radius: var(--radius); padding: 20px; margin-bottom: 16px;
+            background: var(--surface); border-radius: var(--radius); padding: 20px;
+            margin-bottom: 16px; border: 1px solid var(--border);
+            transition: transform 0.2s;
         }
-        .card-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
-        .card-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.4; }
+        .card:active { transform: scale(0.99); }
 
-        /* Главная */
-        .hero-welcome { font-size: 26px; font-weight: 800; margin-bottom: 12px; color: var(--accent); }
-        .habit-card {
-            background: linear-gradient(135deg, var(--accent-light) 0%, var(--card) 100%);
-            text-align: center; padding: 30px 20px; border: 1px solid var(--accent);
+        .card-title { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+        .card-desc { font-size: 14px; color: var(--text-sec); line-height: 1.5; }
+
+        .habit-number { font-size: 56px; font-weight: 800; color: var(--accent); line-height: 1; margin: 10px 0; }
+
+        /* Кнопки */
+        .btn {
+            background: var(--accent); color: white; border: none; padding: 16px;
+            border-radius: 12px; font-size: 16px; font-weight: 600; width: 100%;
+            cursor: pointer; transition: opacity 0.2s; margin-top: 12px;
         }
-        .habit-number { font-size: 48px; font-weight: 800; color: var(--accent); line-height: 1; margin: 10px 0; }
-        
+        .btn:active { opacity: 0.8; }
+        .btn-outline { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+
         /* Дыхание */
-        .breath-container { display: flex; flex-direction: column; align-items: center; padding: 30px 0; }
         .breath-circle {
-            width: 140px; height: 140px; border-radius: 50%; 
-            background-color: var(--accent-light); border: 2px solid var(--accent);
+            width: 160px; height: 160px; border-radius: 50%;
+            background: var(--accent-light); border: 2px solid var(--accent);
             display: flex; align-items: center; justify-content: center;
             font-size: 40px; font-weight: 300; color: var(--accent);
-            transition: transform 4s ease-in-out;
+            margin: 20px auto; transition: transform 4s ease-in-out;
         }
-        .breath-text { margin-top: 20px; font-size: 18px; font-weight: 600; }
 
-        /* Заземление и Дневник */
-        .grounding-step { font-size: 16px; font-weight: 700; color: var(--accent); margin-bottom: 10px; }
-        .ai-response { background: var(--accent-light); padding: 16px; border-radius: 12px; margin-top: 16px; display: none; }
-
-        /* Меню */
+        /* Навигация */
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; width: 100%;
-            background-color: var(--card); border-top: 1px solid var(--border);
+            background: rgba(255,255,255,0.85); backdrop-filter: blur(15px);
+            border-top: 1px solid var(--border);
             display: flex; justify-content: space-around;
-            padding-bottom: env(safe-area-inset-bottom, 10px);
-            height: calc(var(--nav-height) + env(safe-area-inset-bottom, 10px));
-            z-index: 100;
+            padding: 12px 0 calc(12px + env(safe-area-inset-bottom));
+            height: var(--nav-height); z-index: 100;
         }
+        body.dark-theme .bottom-nav { background: rgba(28,28,30,0.85); }
+
         .nav-item {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            width: 25%; cursor: pointer; color: var(--text-secondary);
-            font-size: 10px; font-weight: 600;
+            display: flex; flex-direction: column; align-items: center;
+            color: var(--text-sec); font-size: 10px; font-weight: 600;
+            cursor: pointer; width: 25%; transition: color 0.2s;
         }
         .nav-item.active { color: var(--accent); }
         .nav-icon { font-size: 22px; margin-bottom: 4px; }
 
-        /* Элементы форм */
-        .btn { background-color: var(--accent); color: white; border: none; padding: 14px; border-radius: 12px; font-size: 15px; font-weight: 600; width: 100%; margin-top: 12px; cursor: pointer; }
-        input, textarea { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--border); background-color: var(--bg); color: var(--text); font-size: 15px; margin-bottom: 12px; font-family: inherit; }
-        
+        /* ИИ-совет */
+        .ai-box {
+            background: var(--accent-light); border-left: 3px solid var(--accent);
+            padding: 14px; border-radius: 0 12px 12px 0; margin-top: 16px;
+            font-size: 14px; display: none; animation: fadeIn 0.5s;
+        }
+
         /* Модальное окно */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -137,27 +151,31 @@
         }
         .modal-overlay.active { display: flex; }
         .modal {
-            background: var(--card); width: 100%; max-width: 320px;
+            background: var(--surface); width: 100%; max-width: 320px;
             border-radius: 20px; padding: 24px; text-align: center;
-            animation: slideUp 0.3s ease;
+            animation: scaleIn 0.3s ease;
         }
-        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
-        .mood-buttons { display: flex; justify-content: space-around; margin-top: 16px; }
-        .mood-btn { font-size: 36px; background: none; border: none; cursor: pointer; transition: transform 0.2s; }
+        @keyframes scaleIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .mood-buttons { display: flex; justify-content: space-around; margin-top: 20px; }
+        .mood-btn { font-size: 36px; background: none; border: none; cursor: pointer; transition: transform 0.1s; }
         .mood-btn:active { transform: scale(1.2); }
+
+        input, textarea {
+            width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border);
+            background: var(--bg); color: var(--text); font-size: 16px; margin-bottom: 12px;
+            font-family: inherit; resize: none;
+        }
+        input:focus, textarea:focus { outline: none; border-color: var(--accent); }
     </style>
 </head>
-<body class="auto-theme">
+<body>
 
     <!-- Экран приветствия -->
-    <div id="welcome-screen">
-        <div class="bg-animation"></div>
-        <div class="welcome-content">
-            <div class="welcome-title" id="welcome-title">Привет</div>
-            <div class="welcome-subtitle">Твой личный гид по спокойствию.</div>
-            <button class="welcome-btn" id="enter-btn">Перейти на остров безопасности</button>
-        </div>
+    <div id="splash">
+        <div class="logo-pulse">🌿</div>
+        <div class="splash-title" id="splash-name">Привет</div>
+        <div class="splash-sub">Твой проводник к спокойствию.</div>
+        <button class="splash-btn" id="start-btn">Начать</button>
     </div>
 
     <!-- Заголовок -->
@@ -165,51 +183,48 @@
 
     <!-- Контент -->
     <div class="content">
-        <!-- Главная (Ознакомительная) -->
+        <!-- Главная -->
         <div id="tab-home" class="tab-pane active">
-            <div class="hero-welcome" id="hero-greeting">Привет!</div>
-            <p style="color: var(--text-secondary); margin-bottom: 24px;">Добро пожаловать. Здесь ты можешь выдохнуть, разобрать мысли и просто побыть с собой.</p>
-            
-            <div class="card habit-card" id="habit-widget" style="cursor: pointer;">
+            <div class="card" style="text-align: center;">
                 <div class="card-title">Твоя серия</div>
-                <div class="habit-number" id="habit-streak">0</div>
-                <div class="card-desc" id="habit-text">Нажми, чтобы отметить день</div>
+                <div class="habit-number" id="streak-num">0</div>
+                <div class="card-desc" id="streak-text">Нажми, чтобы отметить день</div>
+            </div>
+            <div class="card">
+                <div class="card-title">О приложении</div>
+                <div class="card-desc">Здесь ты можешь выдохнуть, разобрать тревожные мысли и просто побыть с собой. Мы не заменяем терапию, но помогаем здесь и сейчас.</div>
             </div>
         </div>
 
         <!-- Дыхание -->
         <div id="tab-stress" class="tab-pane">
             <div class="card" style="text-align: center;">
-                <div class="card-title">Квадратное дыхание</div>
-                <div class="breath-container">
-                    <div class="breath-circle" id="breath-circle">4</div>
-                    <div class="breath-text" id="breath-text">Готов?</div>
-                </div>
+                <div class="card-title">Дыхание 4-4-4-4</div>
+                <div class="card-desc">Сними напряжение за 2 минуты.</div>
+                <div class="breath-circle" id="breath-circle">4</div>
+                <div id="breath-text" style="font-weight: 600; margin-bottom: 10px;">Готов?</div>
                 <button class="btn" id="breath-btn">Начать</button>
             </div>
         </div>
 
-        <!-- Дневник и Заземление -->
+        <!-- Дневник -->
         <div id="tab-journal" class="tab-pane">
             <div class="card">
                 <div class="card-title">Дневник</div>
-                <p class="card-desc" style="margin-bottom: 12px;">Опиши, что тебя тревожит.</p>
+                <div class="card-desc" style="margin-bottom: 12px;">Выплесни мысли, чтобы они не копились.</div>
                 <textarea id="diary-input" rows="4" placeholder="Твои мысли..."></textarea>
                 <button class="btn" id="diary-btn">Сохранить</button>
-                <div id="diary-status" style="font-size: 13px; color: var(--accent); margin-top: 8px;"></div>
+                <div id="diary-status" style="font-size: 13px; color: var(--accent); margin-top: 8px; text-align: center;"></div>
             </div>
-
             <div class="card">
                 <div class="card-title">Заземление 5-4-3-2-1</div>
-                <p class="card-desc" style="margin-bottom: 12px;">Вернись в момент "здесь и сейчас".</p>
-                <div id="grounding-container">
-                    <div class="grounding-step" id="ground-prompt">Назови 5 вещей, которые видишь</div>
-                    <input type="text" id="ground-input" placeholder="Напиши сюда...">
-                    <button class="btn" id="ground-btn">Далее</button>
-                </div>
-                <div id="grounding-ai-result" class="ai-response">
-                    <div style="font-size: 11px; font-weight: 700; color: var(--accent); text-transform: uppercase; margin-bottom: 5px;">✨ Совет от ИИ</div>
-                    <div id="grounding-ai-text" style="font-size: 14px;"></div>
+                <div class="card-desc" style="margin-bottom: 12px;">Вернись в момент "здесь и сейчас".</div>
+                <div id="ground-prompt" style="font-weight: 600; color: var(--accent); margin-bottom: 10px;">Назови 5 вещей, которые видишь</div>
+                <input type="text" id="ground-input" placeholder="Напиши...">
+                <button class="btn" id="ground-btn">Далее</button>
+                <div id="ground-ai" class="ai-box">
+                    <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;">✨ Совет от ИИ</div>
+                    <span id="ground-ai-text"></span>
                 </div>
             </div>
         </div>
@@ -218,32 +233,34 @@
         <div id="tab-profile" class="tab-pane">
             <div class="card">
                 <div class="card-title">Профиль</div>
-                <p class="card-desc">Вы вошли как <span id="profile-name">...</span> (ID: <span id="profile-id">...</span>)</p>
+                <div class="card-desc">Вы вошли как <span id="profile-name">...</span></div>
             </div>
             <div class="card">
-                <button class="btn" id="share-btn" style="background-color: var(--accent-light); color: var(--accent);">Поделиться приложением</button>
+                <div class="card-title">Премиум</div>
+                <div class="card-desc">Разблокируй расширенную аналитику и эксклюзивные практики.</div>
+                <button class="btn btn-outline" id="premium-btn">Разблокировать за Stars</button>
             </div>
         </div>
     </div>
 
-    <!-- Нижнее меню -->
+    <!-- Навигация -->
     <div class="bottom-nav">
-        <div class="nav-item active" data-tab="home"><div class="nav-icon">◉</div><div>Главная</div></div>
-        <div class="nav-item" data-tab="stress"><div class="nav-icon">◌</div><div>Дыхание</div></div>
-        <div class="nav-item" data-tab="journal"><div class="nav-icon">≡</div><div>Дневник</div></div>
-        <div class="nav-item" data-tab="profile"><div class="nav-icon">○</div><div>Профиль</div></div>
+        <div class="nav-item active" data-tab="home"><div class="nav-icon">◉</div>Главная</div>
+        <div class="nav-item" data-tab="stress"><div class="nav-icon">◌</div>Дыхание</div>
+        <div class="nav-item" data-tab="journal"><div class="nav-icon">≡</div>Дневник</div>
+        <div class="nav-item" data-tab="profile"><div class="nav-icon">○</div>Профиль</div>
     </div>
 
-    <!-- Всплывающее окно настроения после дыхания -->
+    <!-- Модальное окно -->
     <div class="modal-overlay" id="mood-modal">
         <div class="modal">
-            <div class="modal-title">Как ты себя чувствуешь?</div>
+            <div class="card-title">Как ты себя чувствуешь?</div>
             <div class="mood-buttons">
-                <button class="mood-btn" data-mood="😄" data-score="5">😄</button>
-                <button class="mood-btn" data-mood="🙂" data-score="4">🙂</button>
-                <button class="mood-btn" data-mood="😐" data-score="3">😐</button>
-                <button class="mood-btn" data-mood="😕" data-score="2">😕</button>
-                <button class="mood-btn" data-mood="😭" data-score="1">😭</button>
+                <button class="mood-btn" data-score="5">😄</button>
+                <button class="mood-btn" data-score="4">🙂</button>
+                <button class="mood-btn" data-score="3">😐</button>
+                <button class="mood-btn" data-score="2">😕</button>
+                <button class="mood-btn" data-score="1">😭</button>
             </div>
         </div>
     </div>
@@ -258,14 +275,12 @@
             const API_URL = "https://mental-bot-v2-maxdikov.mia0.amvera.tech"; 
 
             // Приветствие
-            document.getElementById('welcome-title').innerText = `Привет, ${userName}`;
-            document.getElementById('hero-greeting').innerText = `Привет, ${userName}`;
+            document.getElementById('splash-name').innerText = `Привет, ${userName}`;
             document.getElementById('profile-name').innerText = userName;
-            document.getElementById('profile-id').innerText = userId;
 
             // Вход
-            document.getElementById('enter-btn').addEventListener('click', function() {
-                document.getElementById('welcome-screen').classList.add('hidden');
+            document.getElementById('start-btn').addEventListener('click', function() {
+                document.getElementById('splash').classList.add('hidden');
                 if (tg) tg.HapticFeedback.impactOccurred('light');
                 loadHabit();
             });
@@ -290,7 +305,7 @@
                 });
             });
 
-            // Трекер привычек
+            // Привычка
             async function loadHabit() {
                 try {
                     const response = await fetch(`${API_URL}/api/habit`, {
@@ -299,17 +314,13 @@
                         body: JSON.stringify({ user_id: userId })
                     });
                     const json = await response.json();
-                    document.getElementById('habit-streak').innerText = json.message.split(' ')[1];
-                    document.getElementById('habit-text').innerText = "Вы отметились сегодня!";
+                    document.getElementById('streak-num').innerText = json.message.split(' ')[1];
+                    document.getElementById('streak-text').innerText = "Вы отметились сегодня";
                 } catch (e) {
-                    document.getElementById('habit-text').innerText = "Нажми, чтобы отметить";
+                    document.getElementById('streak-text').innerText = "Нажми, чтобы отметить";
                 }
             }
-
-            document.getElementById('habit-widget').addEventListener('click', function() {
-                if (tg) tg.HapticFeedback.notificationOccurred('success');
-                loadHabit();
-            });
+            document.getElementById('streak-num').parentElement.addEventListener('click', loadHabit);
 
             // Дыхание
             let isBreathing = false;
@@ -335,34 +346,27 @@
                     }
                 }
                 
-                text.innerText = "Сессия завершена";
+                text.innerText = "Завершено";
                 circle.innerText = "✓";
                 btn.style.display = 'block';
                 btn.innerText = "Повторить";
                 isBreathing = false;
                 if (tg) tg.HapticFeedback.notificationOccurred('success');
-
-                // Показываем модальное окно
                 document.getElementById('mood-modal').classList.add('active');
             });
 
-            // Обработка выбора настроения после дыхания
+            // Настроение
             document.querySelectorAll('.mood-btn').forEach(btn => {
                 btn.addEventListener('click', async function() {
-                    const mood = this.getAttribute('data-mood');
                     const score = this.getAttribute('data-score');
                     document.getElementById('mood-modal').classList.remove('active');
-                    
                     try {
                         await fetch(`${API_URL}/api/mood`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ user_id: userId, mood: mood, score: score, trigger: 'После дыхания' })
+                            body: JSON.stringify({ user_id: userId, mood: 'emoji', score: score, trigger: 'После дыхания' })
                         });
-                        if (tg) tg.HapticFeedback.notificationOccurred('success');
-                    } catch (e) {
-                        console.log("Ошибка сохранения настроения");
-                    }
+                    } catch (e) { console.log(e); }
                 });
             });
 
@@ -370,10 +374,8 @@
             document.getElementById('diary-btn').addEventListener('click', async function() {
                 const text = document.getElementById('diary-input').value;
                 if (!text) return;
-                
                 const statusEl = document.getElementById('diary-status');
                 statusEl.innerText = "Сохранение...";
-                
                 try {
                     await fetch(`${API_URL}/api/diary`, {
                         method: 'POST',
@@ -382,66 +384,57 @@
                     });
                     statusEl.innerText = "✅ Записано";
                     document.getElementById('diary-input').value = "";
-                    if (tg) tg.HapticFeedback.notificationOccurred('success');
                 } catch (e) {
-                    statusEl.innerText = "⚠️ Ошибка сети";
+                    statusEl.innerText = "⚠️ Ошибка";
                 }
             });
 
             // Заземление
-            const groundPrompts = [
-                "Назови 5 вещей, которые видишь",
-                "Назови 4 вещи, которые можешь потрогать",
-                "Назови 3 звука, которые слышишь",
-                "Назови 2 запаха, которые чувствуешь",
-                "Назови 1 вкус"
-            ];
-            let groundStep = 0;
-            let userGroundingAnswers = [];
+            const prompts = ["Назови 5 вещей", "Назови 4 вещи", "Назови 3 звука", "Назови 2 запаха", "Назови 1 вкус"];
+            let step = 0;
+            let answers = [];
 
             document.getElementById('ground-btn').addEventListener('click', async function() {
-                const inputVal = document.getElementById('ground-input').value;
-                if (!inputVal) return;
+                const val = document.getElementById('ground-input').value;
+                if (!val) return;
+                answers.push(val);
+                step++;
 
-                userGroundingAnswers.push(inputVal);
-                groundStep++;
-
-                if (groundStep >= groundPrompts.length) {
-                    // Завершение
-                    document.getElementById('ground-prompt').innerText = "Ты вернулся в настоящий момент.";
+                if (step >= prompts.length) {
+                    document.getElementById('ground-prompt').innerText = "Ты вернулся в момент.";
                     document.getElementById('ground-input').style.display = 'none';
                     this.style.display = 'none';
                     
-                    // Показываем блок ИИ и запрашиваем совет
-                    const aiBlock = document.getElementById('grounding-ai-result');
-                    const aiText = document.getElementById('grounding-ai-text');
-                    aiBlock.style.display = 'block';
-                    aiText.innerText = "ИИ подбирает слова... ⏳";
+                    const aiBox = document.getElementById('ground-ai');
+                    const aiText = document.getElementById('ground-ai-text');
+                    aiBox.style.display = 'block';
+                    aiText.innerText = "ИИ думает...";
 
                     try {
-                        const response = await fetch(`${API_URL}/api/ai_advice`, {
+                        const res = await fetch(`${API_URL}/api/ai_advice`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ 
-                                context: "Практика заземления 5-4-3-2-1", 
-                                text: "Пользователь описал: " + userGroundingAnswers.join(", ") 
+                                context: "Заземление", 
+                                text: "Пользователь описал: " + answers.join(", ") 
                             })
                         });
-                        const json = await response.json();
+                        const json = await res.json();
                         aiText.innerText = json.advice;
                     } catch (e) {
-                        aiText.innerText = "Не удалось загрузить совет. Но ты справился с упражнением!";
+                        aiText.innerText = "Ты справился с упражнением!";
                     }
                 } else {
-                    document.getElementById('ground-prompt').innerText = groundPrompts[groundStep];
+                    document.getElementById('ground-prompt').innerText = prompts[step];
                     document.getElementById('ground-input').value = "";
                 }
             });
 
-            // Поделиться
-            document.getElementById('share-btn').addEventListener('click', function() {
-                const shareUrl = `https://t.me/share/url?url=https://t.me/Islandgoodness_bot&text=Попробуйте это приложение для ментального здоровья.`;
-                if (tg) tg.openTelegramLink(shareUrl);
+            // Премиум-кнопка (заглушка)
+            document.getElementById('premium-btn').addEventListener('click', function() {
+                if (tg) {
+                    tg.showAlert("Интеграция с Telegram Stars появится здесь. Кнопка уже готова к подключению платежей.");
+                }
             });
         });
     </script>
