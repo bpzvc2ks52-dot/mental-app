@@ -7,173 +7,74 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
-            /* Общий фон и текст */
-            --bg: #f9f7f4; /* Теплый, почти белый */
-            --text: #3a2e2a; /* Мягкий шоколадный */
-            --text-sec: #8c7b75;
-            
-            /* Цвета для плиток */
+            --bg: #f9f7f4; --text: #3a2e2a; --text-sec: #8c7b75;
             --tile-blue: #eef5f9; --tile-blue-icon: #90caf9;
             --tile-purple: #f6f1fa; --tile-purple-icon: #ce93d8;
             --tile-peach: #fdf4ed; --tile-peach-icon: #ffb74d;
             --tile-pink: #fcf1f1; --tile-pink-icon: #f48fb1;
             --tile-green: #f1f8f1; --tile-green-icon: #a5d6a7;
-            
-            --card: #ffffff;
-            --radius: 24px;
+            --card: #ffffff; --radius: 24px;
         }
-
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0; padding: 0;
-            display: flex; flex-direction: column; height: 100vh; overflow: hidden;
-            letter-spacing: -0.2px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg); color: var(--text); margin: 0; padding: 0;
+            display: flex; flex-direction: column; height: 100vh; overflow: hidden; letter-spacing: -0.2px;
         }
-
-        /* Плавное появление элементов */
         .fade-in { animation: fadeIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Экран приветствия */
-        #splash {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg); z-index: 9999; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; transition: opacity 0.6s ease, transform 0.6s ease;
-        }
+        #splash { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.6s ease, transform 0.6s ease; }
         #splash.hidden { opacity: 0; transform: scale(1.05); pointer-events: none; }
-        
         .splash-icon { font-size: 70px; margin-bottom: 16px; animation: float 3s infinite ease-in-out; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        
         .splash-title { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
         .splash-sub { font-size: 15px; color: var(--text-sec); margin-bottom: 30px; }
-        
-        .splash-btn { 
-            background: var(--text); color: #fff; border: none; padding: 16px 40px; 
-            border-radius: 100px; font-size: 16px; font-weight: 700; cursor: pointer;
-            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s;
-        }
+        .splash-btn { background: var(--text); color: #fff; border: none; padding: 16px 40px; border-radius: 100px; font-size: 16px; font-weight: 700; cursor: pointer; transition: transform 0.2s; }
         .splash-btn:active { transform: scale(0.92); opacity: 0.8; }
 
-        /* Главный интерфейс */
-        .header {
-            padding: 30px 24px 10px; z-index: 10;
-        }
+        .header { padding: 30px 24px 10px; z-index: 10; }
         .greeting { font-size: 26px; font-weight: 800; margin-bottom: 6px; }
         .greeting-sub { font-size: 15px; color: var(--text-sec); line-height: 1.4; }
 
         .content { flex: 1; overflow-y: auto; padding: 10px 20px 100px; }
         .section-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; margin-top: 20px; color: var(--text-sec); }
 
-        /* Bento-сетка */
         .bento-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-        
-        .tile {
-            border-radius: var(--radius); padding: 20px; cursor: pointer;
-            display: flex; flex-direction: column; justify-content: space-between;
-            position: relative; overflow: hidden;
-            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s;
-        }
+        .tile { border-radius: var(--radius); padding: 20px; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
         .tile:active { transform: scale(0.95); }
-        
         .tile-wide { grid-column: span 2; flex-direction: row; align-items: center; gap: 16px; min-height: 80px; }
-        
-        .tile-icon {
-            width: 44px; height: 44px; border-radius: 14px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 20px; background: rgba(255,255,255,0.6);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-        }
-
+        .tile-icon { width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 20px; background: rgba(255,255,255,0.6); }
         .tile-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
         .tile-desc { font-size: 12px; color: var(--text-sec); line-height: 1.3; }
         
-        /* Цветовые схемы плиток */
-        .tile-blue { background: var(--tile-blue); }
-        .tile-blue .tile-icon { color: var(--tile-blue-icon); }
-        
-        .tile-purple { background: var(--tile-purple); }
-        .tile-purple .tile-icon { color: var(--tile-purple-icon); }
-        
-        .tile-peach { background: var(--tile-peach); }
-        .tile-peach .tile-icon { color: var(--tile-peach-icon); }
-        
-        .tile-pink { background: var(--tile-pink); }
-        .tile-pink .tile-icon { color: var(--tile-pink-icon); }
-
-        .tile-green { background: var(--tile-green); }
-        .tile-green .tile-icon { color: var(--tile-green-icon); }
-
+        .tile-blue { background: var(--tile-blue); } .tile-blue .tile-icon { color: var(--tile-blue-icon); }
+        .tile-purple { background: var(--tile-purple); } .tile-purple .tile-icon { color: var(--tile-purple-icon); }
+        .tile-peach { background: var(--tile-peach); } .tile-peach .tile-icon { color: var(--tile-peach-icon); }
+        .tile-pink { background: var(--tile-pink); } .tile-pink .tile-icon { color: var(--tile-pink-icon); }
+        .tile-green { background: var(--tile-green); } .tile-green .tile-icon { color: var(--tile-green-icon); }
         .tile-white { background: var(--card); box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.02); }
 
-        /* Нижнее меню */
-        .bottom-nav {
-            position: fixed; bottom: 24px; left: 24px; right: 24px;
-            background: rgba(255,255,255,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-radius: 32px; display: flex; justify-content: space-around;
-            padding: 12px 0; box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-            border: 1px solid rgba(255,255,255,0.5); z-index: 100;
-        }
-        .nav-item {
-            display: flex; flex-direction: column; align-items: center;
-            color: var(--text-sec); font-size: 10px; font-weight: 600;
-            cursor: pointer; width: 33%; transition: color 0.2s, transform 0.2s;
-        }
-        .nav-item:active { transform: scale(0.9); }
+        .bottom-nav { position: fixed; bottom: 24px; left: 24px; right: 24px; background: rgba(255,255,255,0.85); backdrop-filter: blur(20px); border-radius: 32px; display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 10px 40px rgba(0,0,0,0.08); border: 1px solid rgba(255,255,255,0.5); z-index: 100; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sec); font-size: 10px; font-weight: 600; cursor: pointer; width: 33%; transition: color 0.2s; }
         .nav-item.active { color: var(--text); }
         .nav-icon { font-size: 22px; margin-bottom: 4px; }
 
-        /* Внутренние экраны с плавным выездом */
-        .inner-screen {
-            display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg); z-index: 500; flex-direction: column; overflow-y: auto;
-            transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
+        .inner-screen { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 500; flex-direction: column; overflow-y: auto; transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .inner-screen.active { display: flex; transform: translateX(0); }
-        
-        .back-btn { padding: 20px; font-size: 16px; font-weight: 600; color: var(--text); cursor: pointer; display: flex; align-items: center; gap: 8px; }
-        .back-btn:active { opacity: 0.5; }
-        
+        .back-btn { padding: 20px; font-size: 16px; font-weight: 600; color: var(--text); cursor: pointer; }
         .inner-content { padding: 0 24px; text-align: center; }
         
-        /* Дыхание */
-        .breath-circle {
-            width: 150px; height: 150px; border-radius: 50%;
-            background: var(--tile-blue); border: 3px solid var(--tile-blue-icon);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 38px; font-weight: 700; color: #1565c0;
-            margin: 20px auto; transition: transform 4s ease-in-out;
-        }
-
-        /* Кнопки и формы */
-        .btn { 
-            background: var(--text); color: white; border: none; padding: 15px; 
-            border-radius: 16px; font-size: 16px; font-weight: 600; width: 100%; 
-            cursor: pointer; margin-top: 12px; transition: transform 0.2s, opacity 0.2s; 
-        }
+        .breath-circle { width: 150px; height: 150px; border-radius: 50%; background: var(--tile-blue); border: 3px solid var(--tile-blue-icon); display: flex; align-items: center; justify-content: center; font-size: 38px; font-weight: 700; color: #1565c0; margin: 20px auto; transition: transform 4s ease-in-out; }
+        .btn { background: var(--text); color: white; border: none; padding: 15px; border-radius: 16px; font-size: 16px; font-weight: 600; width: 100%; cursor: pointer; margin-top: 12px; transition: transform 0.2s; }
         .btn:active { transform: scale(0.96); opacity: 0.8; }
-        
-        input, textarea { 
-            width: 100%; padding: 16px; border-radius: 16px; border: 1px solid #e0d6d0; 
-            background: var(--card); color: var(--text); font-size: 16px; margin-bottom: 12px; 
-            font-family: inherit; resize: none; outline: none; transition: border 0.2s;
-        }
+        input, textarea { width: 100%; padding: 16px; border-radius: 16px; border: 1px solid #e0d6d0; background: var(--card); color: var(--text); font-size: 16px; margin-bottom: 12px; font-family: inherit; resize: none; outline: none; }
         input:focus, textarea:focus { border-color: var(--text); }
-        
-        .ai-box { 
-            background: var(--tile-purple); padding: 16px; border-radius: 16px; 
-            margin-top: 16px; display: none; text-align: left; 
-            animation: fadeIn 0.4s ease;
-        }
+        .ai-box { background: var(--tile-purple); padding: 16px; border-radius: 16px; margin-top: 16px; display: none; text-align: left; animation: fadeIn 0.4s ease; }
     </style>
 </head>
 <body>
 
-    <!-- Экран приветствия -->
     <div id="splash">
         <div class="splash-icon">🌿</div>
         <div class="splash-title">Остров добра</div>
@@ -181,7 +82,6 @@
         <button class="splash-btn" id="start-btn">Начать путь</button>
     </div>
 
-    <!-- Главный экран -->
     <div id="main-screen">
         <div class="header fade-in">
             <div class="greeting" id="greeting">Доброе утро!</div>
@@ -193,60 +93,51 @@
             <div class="bento-grid">
                 <div class="tile tile-blue" onclick="openScreen('breath')">
                     <div class="tile-icon">🎁</div>
-                    <div>
-                        <div class="tile-title">Коробочное</div>
-                        <div class="tile-desc">дыхание 4-4-4-4</div>
-                    </div>
+                    <div><div class="tile-title">Коробочное</div><div class="tile-desc">дыхание 4-4-4-4</div></div>
                 </div>
-                <div class="tile tile-purple" onclick="alert('Скоро появится!')">
+                <div class="tile tile-purple" onclick="openScreen('tactical')">
                     <div class="tile-icon">🎯</div>
-                    <div>
-                        <div class="tile-title">Тактическое</div>
-                        <div class="tile-desc">когда нужно сосредоточиться</div>
-                    </div>
+                    <div><div class="tile-title">Тактическое</div><div class="tile-desc">для концентрации</div></div>
+                </div>
+                <div class="tile tile-pink" onclick="openScreen('sleep')">
+                    <div class="tile-icon">🌙</div>
+                    <div><div class="tile-title">Дыхание 4-7-8</div><div class="tile-desc">для сна и покоя</div></div>
+                </div>
+                <div class="tile tile-green" onclick="alert('Скоро появится!')">
+                    <div class="tile-icon">⚡</div>
+                    <div><div class="tile-title">Энергия</div><div class="tile-desc">быстро взбодриться</div></div>
                 </div>
             </div>
 
             <div class="section-title">На каждый день</div>
             <div class="bento-grid" style="grid-template-columns: 1fr;">
+                <div class="tile tile-white tile-wide" onclick="openScreen('cbt')">
+                    <div class="tile-icon" style="background: var(--tile-blue);">🧠</div>
+                    <div style="flex: 1;"><div class="tile-title">КПТ (Мысли)</div><div class="tile-desc">разбери тревожную мысль по фактам</div></div>
+                </div>
                 <div class="tile tile-white tile-wide" onclick="openScreen('grounding')">
                     <div class="tile-icon" style="background: var(--tile-purple);">📝</div>
-                    <div style="flex: 1;">
-                        <div class="tile-title">Заземление</div>
-                        <div class="tile-desc">вернись в момент "здесь и сейчас"</div>
-                    </div>
+                    <div style="flex: 1;"><div class="tile-title">Заземление</div><div class="tile-desc">вернись в момент "здесь и сейчас"</div></div>
                 </div>
                 <div class="tile tile-white tile-wide" onclick="openScreen('diary')">
                     <div class="tile-icon" style="background: var(--tile-peach);">📖</div>
-                    <div style="flex: 1;">
-                        <div class="tile-title">Дневник</div>
-                        <div class="tile-desc">выплесни мысли, чтобы они не копились</div>
-                    </div>
+                    <div style="flex: 1;"><div class="tile-title">Дневник</div><div class="tile-desc">выплесни мысли, чтобы они не копились</div></div>
+                </div>
+                <div class="tile tile-white tile-wide" onclick="openScreen('gratitude')">
+                    <div class="tile-icon" style="background: var(--tile-green);">🙏</div>
+                    <div style="flex: 1;"><div class="tile-title">Благодарность</div><div class="tile-desc">запиши 3 хорошие вещи за день</div></div>
                 </div>
                 <div class="tile tile-white tile-wide" onclick="openScreen('habit')">
                     <div class="tile-icon" style="background: var(--tile-pink);">✅</div>
-                    <div style="flex: 1;">
-                        <div class="tile-title">Чеклист заботы</div>
-                        <div class="tile-desc">отметь свой день заботы о себе</div>
-                    </div>
+                    <div style="flex: 1;"><div class="tile-title">Чеклист заботы</div><div class="tile-desc">отметь свой день заботы о себе</div></div>
                 </div>
             </div>
         </div>
 
-        <!-- Нижнее меню -->
         <div class="bottom-nav">
-            <div class="nav-item active" onclick="closeScreens()">
-                <div class="nav-icon">🏠</div>
-                <div>Дом</div>
-            </div>
-            <div class="nav-item" onclick="alert('Скоро появится!')">
-                <div class="nav-icon">♡</div>
-                <div>Избранное</div>
-            </div>
-            <div class="nav-item" onclick="openScreen('profile')">
-                <div class="nav-icon">👤</div>
-                <div>Профиль</div>
-            </div>
+            <div class="nav-item active" onclick="closeScreens()"><div class="nav-icon">🏠</div><div>Дом</div></div>
+            <div class="nav-item" onclick="alert('Скоро появится!')"><div class="nav-icon">♡</div><div>Избранное</div></div>
+            <div class="nav-item" onclick="openScreen('profile')"><div class="nav-icon">👤</div><div>Профиль</div></div>
         </div>
     </div>
 
@@ -262,14 +153,38 @@
         </div>
     </div>
 
-    <div id="screen-diary" class="inner-screen">
+    <div id="screen-tactical" class="inner-screen">
         <div class="back-btn" onclick="closeScreens()">← Назад</div>
         <div class="inner-content">
-            <h2 style="font-size: 24px;">Дневник</h2>
-            <p style="color: var(--text-sec); margin-bottom: 20px;">Выплесни мысли на бумагу.</p>
-            <textarea id="diary-input" rows="6" placeholder="Что тебя беспокоит?"></textarea>
-            <button class="btn" id="diary-btn">Сохранить</button>
-            <div id="diary-status" style="margin-top: 10px; color: var(--text-sec); font-weight: 600;"></div>
+            <h2 style="font-size: 24px;">Тактическое дыхание</h2>
+            <p style="color: var(--text-sec); margin-bottom: 30px;">Схема 4-4-4-2 для фокуса.</p>
+            <div class="breath-circle" id="tac-circle" style="background: var(--tile-purple); border-color: var(--tile-purple-icon); color: #4a148c;">4</div>
+            <div id="tac-text" style="font-weight: 700; font-size: 18px; margin-bottom: 20px;">Готов?</div>
+            <button class="btn" id="tac-btn">Начать</button>
+        </div>
+    </div>
+
+    <div id="screen-sleep" class="inner-screen">
+        <div class="back-btn" onclick="closeScreens()">← Назад</div>
+        <div class="inner-content">
+            <h2 style="font-size: 24px;">Дыхание 4-7-8</h2>
+            <p style="color: var(--text-sec); margin-bottom: 30px;">Для глубокого расслабления.</p>
+            <div class="breath-circle" id="sleep-circle" style="background: var(--tile-pink); border-color: var(--tile-pink-icon); color: #880e4f;">4</div>
+            <div id="sleep-text" style="font-weight: 700; font-size: 18px; margin-bottom: 20px;">Готов?</div>
+            <button class="btn" id="sleep-btn">Начать</button>
+        </div>
+    </div>
+
+    <div id="screen-cbt" class="inner-screen">
+        <div class="back-btn" onclick="closeScreens()">← Назад</div>
+        <div class="inner-content" style="text-align: left;">
+            <h2 style="font-size: 24px; text-align: center;">КПТ-анализ</h2>
+            <p style="color: var(--text-sec); margin-bottom: 20px; text-align: center;">Разбери мысль по фактам.</p>
+            <input type="text" id="cbt-thought" placeholder="Тревожная мысль">
+            <input type="text" id="cbt-for" placeholder="Факты ЗА">
+            <input type="text" id="cbt-against" placeholder="Факты ПРОТИВ">
+            <button class="btn" id="cbt-btn">Записать</button>
+            <div id="cbt-status" style="margin-top: 10px; text-align: center; color: var(--text-sec); font-weight: 600;"></div>
         </div>
     </div>
 
@@ -285,6 +200,28 @@
                 <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; margin-bottom: 6px; color: var(--tile-purple-icon);">✨ Совет от ИИ</div>
                 <span id="ground-ai-text"></span>
             </div>
+        </div>
+    </div>
+
+    <div id="screen-diary" class="inner-screen">
+        <div class="back-btn" onclick="closeScreens()">← Назад</div>
+        <div class="inner-content">
+            <h2 style="font-size: 24px;">Дневник</h2>
+            <p style="color: var(--text-sec); margin-bottom: 20px;">Выплесни мысли на бумагу.</p>
+            <textarea id="diary-input" rows="6" placeholder="Что тебя беспокоит?"></textarea>
+            <button class="btn" id="diary-btn">Сохранить</button>
+            <div id="diary-status" style="margin-top: 10px; color: var(--text-sec); font-weight: 600;"></div>
+        </div>
+    </div>
+
+    <div id="screen-gratitude" class="inner-screen">
+        <div class="back-btn" onclick="closeScreens()">← Назад</div>
+        <div class="inner-content">
+            <h2 style="font-size: 24px;">Благодарность</h2>
+            <p style="color: var(--text-sec); margin-bottom: 20px;">Запиши 3 вещи, за которые ты благодарен.</p>
+            <textarea id="grat-input" rows="4" placeholder="1. ...&#10;2. ...&#10;3. ..."></textarea>
+            <button class="btn" id="grat-btn">Сохранить</button>
+            <div id="grat-status" style="margin-top: 10px; color: var(--text-sec); font-weight: 600;"></div>
         </div>
     </div>
 
@@ -310,7 +247,7 @@
     </div>
 
     <!-- Модалка -->
-    <div class="modal-overlay" id="mood-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
+    <div id="mood-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
         <div style="background: var(--card); width: 90%; max-width: 320px; border-radius: 24px; padding: 28px; text-align: center; animation: fadeIn 0.3s ease;">
             <h3 style="margin-top: 0;">Как ты себя чувствуешь?</h3>
             <div style="display: flex; justify-content: space-around; margin-top: 20px;">
@@ -340,7 +277,6 @@
             else if (hour < 18) greetingEl.innerText = "Добрый день!";
             else greetingEl.innerText = "Добрый вечер!";
 
-            // Плавная навигация
             window.openScreen = function(name) {
                 document.querySelectorAll('.inner-screen').forEach(s => s.classList.remove('active'));
                 document.getElementById(`screen-${name}`).classList.add('active');
@@ -351,31 +287,28 @@
                 if (tg) tg.HapticFeedback.impactOccurred('light');
             }
 
-            // Кнопка старта
             document.getElementById('start-btn').addEventListener('click', function() {
                 document.getElementById('splash').classList.add('hidden');
                 loadHabit();
                 if (tg) tg.HapticFeedback.notificationOccurred('success');
             });
 
-            // Дыхание
-            let isBreathing = false;
-            document.getElementById('breath-btn').addEventListener('click', async function() {
-                if (isBreathing) return;
-                isBreathing = true;
-                const btn = this;
-                const text = document.getElementById('breath-text');
-                const circle = document.getElementById('breath-circle');
+            // Универсальная функция дыхания
+            async function runBreathing(circleId, textId, btn, phasesArray, cycles = 4) {
+                if (btn.disabled) return;
+                btn.disabled = true;
+                const text = document.getElementById(textId);
+                const circle = document.getElementById(circleId);
+                const originalText = btn.innerText;
                 btn.style.display = 'none';
                 
                 const sleep = ms => new Promise(r => setTimeout(r, ms));
-                const phases = ["Вдох", "Задержка", "Выдох", "Задержка"];
 
-                for (let i = 0; i < 4; i++) {
-                    for (let p = 0; p < phases.length; p++) {
-                        text.innerText = phases[p];
-                        circle.style.transform = p % 2 === 0 ? 'scale(1.3)' : 'scale(1)';
-                        for (let s = 4; s > 0; s--) {
+                for (let i = 0; i < cycles; i++) {
+                    for (let p = 0; p < phasesArray.length; p++) {
+                        text.innerText = phasesArray[p].name;
+                        circle.style.transform = phasesArray[p].scale ? 'scale(1.3)' : 'scale(1)';
+                        for (let s = phasesArray[p].sec; s > 0; s--) {
                             circle.innerText = s;
                             await sleep(1000);
                         }
@@ -386,9 +319,38 @@
                 circle.innerText = "✓";
                 btn.style.display = 'block';
                 btn.innerText = "Повторить";
-                isBreathing = false;
+                btn.disabled = false;
                 if (tg) tg.HapticFeedback.notificationOccurred('success');
                 document.getElementById('mood-modal').style.display = 'flex';
+            }
+
+            // Коробочное 4-4-4-4
+            document.getElementById('breath-btn').addEventListener('click', function() {
+                runBreathing('breath-circle', 'breath-text', this, [
+                    {name: "Вдох", sec: 4, scale: true},
+                    {name: "Задержка", sec: 4, scale: true},
+                    {name: "Выдох", sec: 4, scale: false},
+                    {name: "Задержка", sec: 4, scale: false}
+                ]);
+            });
+
+            // Тактическое 4-4-4-2
+            document.getElementById('tac-btn').addEventListener('click', function() {
+                runBreathing('tac-circle', 'tac-text', this, [
+                    {name: "Вдох", sec: 4, scale: true},
+                    {name: "Задержка", sec: 4, scale: true},
+                    {name: "Выдох", sec: 4, scale: false},
+                    {name: "Задержка", sec: 2, scale: false}
+                ]);
+            });
+
+            // Сон 4-7-8
+            document.getElementById('sleep-btn').addEventListener('click', function() {
+                runBreathing('sleep-circle', 'sleep-text', this, [
+                    {name: "Вдох", sec: 4, scale: true},
+                    {name: "Задержка", sec: 7, scale: true},
+                    {name: "Выдох", sec: 8, scale: false}
+                ]);
             });
 
             // Настроение
@@ -400,9 +362,8 @@
                         await fetch(`${API_URL}/api/mood`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ user_id: userId, mood: 'emoji', score: score, trigger: 'После дыхания' })
+                            body: JSON.stringify({ user_id: userId, mood: 'emoji', score: score, trigger: 'После практики' })
                         });
-                        if (tg) tg.HapticFeedback.notificationOccurred('success');
                     } catch (e) { console.log(e); }
                 });
             });
@@ -435,9 +396,45 @@
                     });
                     statusEl.innerText = "✅ Записано";
                     document.getElementById('diary-input').value = "";
-                } catch (e) {
-                    statusEl.innerText = "⚠️ Ошибка";
-                }
+                } catch (e) { statusEl.innerText = "⚠️ Ошибка"; }
+            });
+
+            // Благодарность
+            document.getElementById('grat-btn').addEventListener('click', async function() {
+                const text = document.getElementById('grat-input').value;
+                if (!text) return;
+                const statusEl = document.getElementById('grat-status');
+                statusEl.innerText = "Сохранение...";
+                try {
+                    await fetch(`${API_URL}/api/gratitude`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ user_id: userId, text: text })
+                    });
+                    statusEl.innerText = "✅ Записано";
+                    document.getElementById('grat-input').value = "";
+                } catch (e) { statusEl.innerText = "⚠️ Ошибка"; }
+            });
+
+            // КПТ
+            document.getElementById('cbt-btn').addEventListener('click', async function() {
+                const thought = document.getElementById('cbt-thought').value;
+                if (!thought) return;
+                const statusEl = document.getElementById('cbt-status');
+                statusEl.innerText = "Сохранение...";
+                try {
+                    await fetch(`${API_URL}/api/cbt`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            user_id: userId, thought: thought,
+                            fact_for: document.getElementById('cbt-for').value,
+                            fact_against: document.getElementById('cbt-against').value
+                        })
+                    });
+                    statusEl.innerText = "✅ Записано";
+                    document.querySelectorAll('#screen-cbt input').forEach(i => i.value = "");
+                } catch (e) { statusEl.innerText = "⚠️ Ошибка"; }
             });
 
             // Заземление
@@ -472,9 +469,7 @@
                         });
                         const json = await res.json();
                         aiText.innerText = json.advice;
-                    } catch (e) {
-                        aiText.innerText = "Ты справился с упражнением!";
-                    }
+                    } catch (e) { aiText.innerText = "Ты справился с упражнением!"; }
                 } else {
                     document.getElementById('ground-prompt').innerText = prompts[step];
                     document.getElementById('ground-input').value = "";
