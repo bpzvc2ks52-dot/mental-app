@@ -338,8 +338,7 @@
             </div>
         </div>
     </div>
-
-    <script>
+        <script>
         document.addEventListener('DOMContentLoaded', function() {
             const hour = new Date().getHours();
             const greetingEl = document.getElementById('greeting');
@@ -464,9 +463,9 @@
                 num.innerText = parseInt(num.innerText) + 1;
             });
 
-            // ===== МУЗЫКА =====
+            // ===== МУЗЫКА: выбор сцены =====
             const Music = (function() {
-                let ctx = null, master = null, nodes = [], playing = false;
+                let ctx = null, master = null, nodes = [], playing = false, currentScene = null;
 
                 function ramp(param, value, time) {
                     time = time || 1.5;
@@ -477,111 +476,161 @@
                 }
 
                 function createNoiseBuffer(seconds) {
-                    seconds = seconds || 2;
+                    seconds = seconds || 3;
                     const buf = ctx.createBuffer(1, ctx.sampleRate * seconds, ctx.sampleRate);
                     const data = buf.getChannelData(0);
                     for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
                     return buf;
                 }
 
-                function createPad(freq, detune) {
-                    detune = detune || 0;
-                    const osc = ctx.createOscillator();
-                    osc.type = 'sine';
-                    osc.frequency.value = freq;
-                    osc.detune.value = detune;
-                    const gain = ctx.createGain();
-                    gain.gain.value = 0;
-                    osc.connect(gain).connect(master);
-                    osc.start();
-                    nodes.push(osc, gain);
-                    ramp(gain.gain, 0.06, 3);
-                    return { osc: osc, gain: gain };
-                }
-
-                function createNoiseLayer(type, freq, volume) {
-                    type = type || 'lowpass';
-                    freq = freq || 800;
-                    volume = volume || 0.04;
+                function noiseSource(type, freq, q, volume) {
                     const src = ctx.createBufferSource();
-                    src.buffer = createNoiseBuffer(2);
+                    src.buffer = createNoiseBuffer(3);
                     src.loop = true;
                     const filter = ctx.createBiquadFilter();
                     filter.type = type;
                     filter.frequency.value = freq;
-                    filter.Q.value = 0.7;
+                    filter.Q.value = q || 0.7;
                     const gain = ctx.createGain();
                     gain.gain.value = 0;
                     src.connect(filter).connect(gain).connect(master);
                     src.start();
                     nodes.push(src, filter, gain);
                     ramp(gain.gain, volume, 3);
+                    return gain;
+                }
+
+                function createPad(freq, detune, volume) {
+                    const osc = ctx.createOscillator();
+                    osc.type = 'sine';
+                    osc.frequency.value = freq;
+                    osc.detune.value = detune || 0;
+                    const gain = ctx.createGain();
+                    gain.gain.value = 0;
+                    osc.connect(gain).connect(master);
+                    osc.start();
+                    nodes.push(osc, gain);
+                    ramp(gain.gain, volume || 0.05, 3);
+                    return gain;
                 }
 
                 function addLFO(target, rate, depth) {
-                    rate = rate || 0.08;
-                    depth = depth || 0.01;
                     const lfo = ctx.createOscillator();
-                    lfo.frequency.value = rate;
+                    lfo.frequency.value = rate || 0.08;
                     const lfoGain = ctx.createGain();
-                    lfoGain.gain.value = depth;
+                    lfoGain.gain.value = depth || 0.01;
                     lfo.connect(lfoGain).connect(target.gain);
                     lfo.start();
                     nodes.push(lfo, lfoGain);
                 }
 
-                async function start() {
-                    if (playing) return;
-                    ctx = ctx || new (window.AudioContext || window.webkitAudioContext)();
+                async function start(scene) {
+                    if (playing && currentScene === scene) return;
+                    if (!ctx || ctx.state === 'closed') {
+                        ctx = new (window.AudioContext || window.webkitAudioContext)();
+                        master = ctx.createGain();
+                        master.gain.value = 0;
+                        master.connect(ctx.destination);
+                    }
                     if (ctx.state === 'suspended') await ctx.resume();
 
-                    master = ctx.createGain();
-                    master.gain.value = 0;
-                    master.connect(ctx.destination);
+                    stopNodes();
+                    currentScene = scene;
+                    playing = true;
                     ramp(master.gain, 0.5, 2);
 
-                    const chord = [
-                        createPad(220.00, -4),
-                        createPad(261.63,  3),
-                        createPad(329.63, -2),
-                        createPad(110.00,  0)
-                    ];
-                    chord.forEach(function(p, i) { addLFO(p.gain, 0.05 + i * 0.02, 0.015); });
+                    if (scene === 'rain') {
+                        noiseSource('lowpass', 1200, 0.6, 0.09);
+                        noiseSource('highpass', 4000, 0.5, 0.02);
+                        const dropOsc = createPad(880, 0, 0.01);
+                        addLFO(dropOsc, 7, 0.008);
+                    } else if (scene === 'waves') {
+                        const w = noiseSource('lowpass', 500, 0.8, 0.12);
+                        addLFO(w, 0.12, 0.06);
+                        noiseSource('lowpass', 200, 1.0, 0.05);
+                    } else {
+                        const chord = [
+                            createPad(220.00, -4, 0.05),
+                            createPad(261.63,  3, 0.045),
+                            createPad(329.63, -2, 0.04),
+                            createPad(110.00,  0, 0.06)
+                        ];
+                        chord.forEach(function(p, i) { addLFO(p, 0.05 + i * 0.02, 0.012); });
+                        noiseSource('lowpass', 600, 0.7, 0.03);
+                    }
+                }
 
-                    createNoiseLayer('lowpass', 600, 0.05);
-                    createNoiseLayer('highpass', 2500, 0.015);
-
-                    playing = true;
+                function stopNodes() {
+                    nodes.forEach(function(n) {
+                        try { if (n.stop) n.stop(); n.disconnect(); } catch(e) {}
+                    });
+                    nodes = [];
                 }
 
                 async function stop() {
                     if (!playing) return;
-                    ramp(master.gain, 0, 1.2);
-                    const toStop = nodes.slice();
-                    nodes = [];
                     playing = false;
+                    currentScene = null;
+                    if (master) ramp(master.gain, 0, 1.2);
                     setTimeout(function() {
-                        toStop.forEach(function(n) {
-                            try { if (n.stop) n.stop(); n.disconnect(); } catch(e) {}
-                        });
-                        if (master) master.disconnect();
+                        stopNodes();
+                        if (master) { try { master.disconnect(); } catch(e){} }
+                        master = null;
+                        if (ctx) { try { ctx.close(); } catch(e){} }
+                        ctx = null;
                     }, 1400);
                 }
 
                 return {
-                    toggle: async function() {
-                        if (playing) { await stop(); } else { await start(); }
-                        return playing;
-                    }
+                    play: async function(scene) {
+                        if (playing && currentScene === scene) {
+                            await stop();
+                            return false;
+                        }
+                        await start(scene);
+                        return true;
+                    },
+                    isPlaying: function() { return playing; }
                 };
             })();
 
             const musicBtn = document.getElementById('music-toggle');
-            let musicOn = false;
-            musicBtn.addEventListener('click', async function() {
-                musicOn = await Music.toggle();
-                musicBtn.textContent = musicOn ? '🔇' : '🎵';
-                musicBtn.setAttribute('aria-label', musicOn ? 'Выключить музыку' : 'Включить музыку');
+
+            const menu = document.createElement('div');
+            menu.id = 'music-menu';
+            menu.style.cssText = 'position: fixed; top: calc(76px + env(safe-area-inset-top,0px)); right: 20px; z-index: 200; background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 16px; padding: 8px; box-shadow: 0 8px 30px rgba(0,0,0,0.12); display: none; flex-direction: column; gap: 4px; min-width: 180px;';
+            [['rain', '🌧 Дождь'], ['waves', '🌊 Волны'], ['ambient', '🎵 Эмбиент']].forEach(function(item) {
+                const btn = document.createElement('button');
+                btn.textContent = item[1];
+                btn.dataset.scene = item[0];
+                btn.style.cssText = 'border: none; background: transparent; padding: 10px 14px; font-size: 15px; text-align: left; border-radius: 10px; cursor: pointer; color: #3a2e2a; font-family: inherit;';
+                btn.addEventListener('click', async function() {
+                    const nowPlaying = await Music.play(item[0]);
+                    musicBtn.textContent = nowPlaying ? '🔇' : '🎵';
+                    musicBtn.setAttribute('aria-label', nowPlaying ? 'Выключить музыку' : 'Включить музыку');
+                    menu.style.display = 'none';
+                });
+                btn.addEventListener('mouseenter', function() { btn.style.background = '#f0ebe6'; });
+                btn.addEventListener('mouseleave', function() { btn.style.background = 'transparent'; });
+                menu.appendChild(btn);
+            });
+            document.body.appendChild(menu);
+
+            musicBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (Music.isPlaying()) {
+                    Music.play(null);
+                    musicBtn.textContent = '🎵';
+                    menu.style.display = 'none';
+                } else {
+                    menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+                }
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!menu.contains(e.target) && e.target !== musicBtn) {
+                    menu.style.display = 'none';
+                }
             });
         });
     </script>
