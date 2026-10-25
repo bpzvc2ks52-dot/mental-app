@@ -6,35 +6,10 @@
     <meta name="theme-color" content="#f9f7f4">
     <title>Остров добра</title>
     <style>
-        :root {
-            --bg: #f9f7f4; --text: #3a2e2a; --text-sec: #8c7b75;
-            --tile-blue: #eef5f9; --tile-blue-icon: #90caf9;
-            --tile-purple: #f6f1fa; --tile-purple-icon: #ce93d8;
-            --tile-peach: #fdf4ed; --tile-peach-icon: #ffb74d;
-            --tile-pink: #fcf1f1; --tile-pink-icon: #f48fb1;
-            --tile-green: #f1f8f1; --tile-green-icon: #a5d6a7;
-            --card: #ffffff; --radius: 24px;
-            --nav-bg: rgba(255,255,255,0.85);
-            --border: rgba(0,0,0,0.02);
-        }
-        html[data-theme="dark"] {
-            --bg: #1a1715; --text: #f0e9e4; --text-sec: #a89a94;
-            --tile-blue: #1e2a33; --tile-blue-icon: #64b5f6;
-            --tile-purple: #241f2e; --tile-purple-icon: #ba68c8;
-            --tile-peach: #2e2419; --tile-peach-icon: #ffa726;
-            --tile-pink: #2e1f22; --tile-pink-icon: #f06292;
-            --tile-green: #1c2a1c; --tile-green-icon: #81c784;
-            --card: #241f1c; --nav-bg: rgba(36,31,28,0.85);
-            --border: rgba(255,255,255,0.06);
-        }
+        :root { --bg: #f9f7f4; --text: #3a2e2a; --text-sec: #8c7b75; --tile-blue: #eef5f9; --tile-blue-icon: #90caf9; --tile-purple: #f6f1fa; --tile-purple-icon: #ce93d8; --tile-peach: #fdf4ed; --tile-peach-icon: #ffb74d; --tile-pink: #fcf1f1; --tile-pink-icon: #f48fb1; --tile-green: #f1f8f1; --tile-green-icon: #a5d6a7; --card: #ffffff; --radius: 24px; --nav-bg: rgba(255,255,255,0.85); --border: rgba(0,0,0,0.02); }
+        html[data-theme="dark"] { --bg: #1a1715; --text: #f0e9e4; --text-sec: #a89a94; --tile-blue: #1e2a33; --tile-blue-icon: #64b5f6; --tile-purple: #241f2e; --tile-purple-icon: #ba68c8; --tile-peach: #2e2419; --tile-peach-icon: #ffa726; --tile-pink: #2e1f22; --tile-pink-icon: #f06292; --tile-green: #1c2a1c; --tile-green-icon: #81c784; --card: #241f1c; --nav-bg: rgba(36,31,28,0.85); --border: rgba(255,255,255,0.06); }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        html, body {
-            margin: 0; padding: 0; width: 100%; min-height: 100%; min-height: 100dvh;
-            background-color: var(--bg); color: var(--text);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            letter-spacing: -0.2px; overscroll-behavior-y: none;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
+        html, body { margin: 0; padding: 0; width: 100%; min-height: 100%; min-height: 100dvh; background-color: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; letter-spacing: -0.2px; overscroll-behavior-y: none; transition: background-color 0.3s ease, color 0.3s ease; }
         body { position: relative; display: flex; flex-direction: column; height: 100dvh; overflow: hidden; }
         .fade-in { animation: fadeIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
@@ -75,7 +50,7 @@
         .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sec); font-size: 10px; font-weight: 600; cursor: pointer; width: 25%; transition: color 0.2s; }
         .nav-item.active { color: var(--text); }
         .nav-icon { font-size: 22px; margin-bottom: 4px; }
-        .inner-screen { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 500; flex-direction: column; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); padding-bottom: env(safe-area-inset-bottom, 0px); }
+                .inner-screen { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 500; flex-direction: column; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); padding-bottom: env(safe-area-inset-bottom, 0px); }
         .inner-screen.active { display: flex; transform: translateX(0); }
         .back-btn { padding: 20px; font-size: 16px; font-weight: 600; color: var(--text); cursor: pointer; flex-shrink: 0; }
         .inner-content { padding: 0 24px 40px; text-align: center; }
@@ -113,20 +88,16 @@
         @keyframes flicker { from { transform: translateX(-50%) scale(1) rotate(-2deg); } to { transform: translateX(-50%) scale(1.05) rotate(2deg); } }
         #mood-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
         .modal-card { background: var(--card); width: 90%; max-width: 340px; border-radius: 24px; padding: 28px; text-align: center; animation: fadeIn 0.3s ease; }
-        @media (prefers-reduced-motion: reduce) {
-            .fade-in, .splash-icon, .tile, .inner-screen, .breath-circle, .candle-flame::before { animation: none !important; transition: none !important; }
-        }
+        @media (prefers-reduced-motion: reduce) { .fade-in, .splash-icon, .tile, .inner-screen, .breath-circle, .candle-flame::before { animation: none !important; transition: none !important; } }
     </style>
 </head>
 <body>
-
     <div id="splash">
         <div class="splash-icon">🌿</div>
         <div class="splash-title">Остров добра</div>
         <div class="splash-sub">Твой уютный уголок заботы.</div>
         <button class="splash-btn" id="start-btn">Начать путь</button>
     </div>
-
     <div id="onboarding" style="position: fixed; inset: 0; background: var(--bg); z-index: 9998; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 32px; text-align: center;">
         <div style="font-size: 60px; margin-bottom: 20px;">👋</div>
         <h2 style="font-size: 24px; margin-bottom: 8px;">Как тебя зовут?</h2>
@@ -134,10 +105,8 @@
         <input type="text" id="onboarding-name" placeholder="Твоё имя" style="max-width: 300px;">
         <button class="btn" id="onboarding-save" style="max-width: 300px;">Продолжить</button>
     </div>
-
     <button id="music-toggle" aria-label="Включить музыку">🎵</button>
-
-    <div id="main-screen">
+        <div id="main-screen">
         <div class="header fade-in">
             <div>
                 <div class="greeting" id="greeting">Доброе утро!</div>
@@ -147,7 +116,8 @@
                 <button class="icon-btn" id="theme-toggle" aria-label="Сменить тему">🌙</button>
             </div>
         </div>
-                <div class="content fade-in">
+
+        <div class="content fade-in">
             <div class="progress-ring-wrap">
                 <svg class="progress-ring" viewBox="0 0 56 56">
                     <circle class="bg" cx="28" cy="28" r="24"></circle>
@@ -225,8 +195,7 @@
             <div class="nav-item" data-nav="profile" onclick="openScreen('profile')"><div class="nav-icon">👤</div><div>Профиль</div></div>
         </div>
     </div>
-
-    <div id="screen-favorites" class="inner-screen">
+        <div id="screen-favorites" class="inner-screen">
         <div class="back-btn" onclick="closeScreens()">← Назад</div>
         <div class="inner-content">
             <h2 style="font-size: 24px;">Избранное</h2>
@@ -235,13 +204,49 @@
         </div>
     </div>
 
-    <div id="screen-breath" class="inner-screen"><div class="back-btn" onclick="closeScreens()">← Назад</div><div class="inner-content"><h2 style="font-size: 24px;">Коробочное дыхание</h2><p style="color: var(--text-sec); margin-bottom: 30px;">Сними напряжение за 2 минуты.</p><div class="breath-circle" id="breath-circle">4</div><div id="breath-text" style="font-weight: 700; font-size: 18px; margin-bottom: 20px;">Готов?</div><button class="btn" id="breath-btn">Начать</button></div></div>
+    <div id="screen-breath" class="inner-screen">
+        <div class="back-btn" onclick="closeScreens()">← Назад</div>
+        <div class="inner-content">
+            <h2 style="font-size: 24px;">Коробочное дыхание</h2>
+            <p style="color: var(--text-sec); margin-bottom: 30px;">Сними напряжение за 2 минуты.</p>
+            <div class="breath-circle" id="breath-circle">4</div>
+            <div id="breath-text" style="font-weight: 700; font-size: 18px; margin-bottom: 20px;">Готов?</div>
+            <button class="btn" id="breath-btn">Начать</button>
+        </div>
+    </div>
 
-    <div id="screen-tactical" class="inner-screen"><div class="back-btn" onclick="closeScreens()">← Назад</div><div class="inner-content"><h2 style="font-size: 24px;">Тактическое дыхание</h2><p style="color: var(--text-sec); margin-bottom: 30px;">Схема 4-4-4-2 для фокуса.</p><div class="breath-circle" id="tac-circle" style="background: var(--tile-purple); border-color: var(--tile-purple-icon); color: #4a148c;">4</div><div id="tac-text" style="font-weight: 700; font-size: 18px; margin-bottom: 20px;">Готов?</div><button class="btn" id="tac-btn">Начать</button></div></div>
+    <div id="screen-tactical" class="inner-screen">
+        <div class="back-btn" onclick="closeScreens()">← Назад</div>
+        <div class="inner-content">
+            <h2 style="font-size: 24px;">Тактическое дыхание</h2>
+            <p style="color: var(--text-sec); margin-bottom: 30px;">Схема 4-4-4-2 для фокуса.</p>
+            <div class="breath-circle" id="tac-circle" style="background: var(--tile-purple); border-color: var(--tile-purple-icon); color: #4a148c;">4</div>
+            <div id="tac-text" style="font-weight: 700; font-size: 18px; margin-bottom: 20px;">Готов?</div>
+            <button class="btn" id="tac-btn">Начать</button>
+        </div>
+    </div>
 
-    <div id="screen-sleep" class="inner-screen"><div class="back-btn" onclick="closeScreens()">← Назад</div><div class="inner-content"><h2 style="font-size: 24px;">Дыхание 4-7-8</h2><p style="color: var(--text-sec); margin-bottom: 30px;">Для глубокого расслабления.</p><div class="breath-circle" id="sleep-circle" style="background: var(--tile-pink); border-color: var(--tile-pink-icon); color: #880e4f;">4</div><div id="sleep-text" style="font-weight: 700; font-size: 18px; margin-bottom: 20px;">Готов?</div><button class="btn" id="sleep-btn">Начать</button></div></div>
+    <div id="screen-sleep" class="inner-screen">
+        <div class="back-btn" onclick="closeScreens()">← Назад</div>
+        <div class="inner-content">
+            <h2 style="font-size: 24px;">Дыхание 4-7-8</h2>
+            <p style="color: var(--text-sec); margin-bottom: 30px;">Для глубокого расслабления.</p>
+            <div class="breath-circle" id="sleep-circle" style="background: var(--tile-pink); border-color: var(--tile-pink-icon); color: #880e4f;">4</div>
+            <div id="sleep-text" style="font-weight: 700; font-size: 18px; margin-bottom: 20px;">Готов?</div>
+            <button class="btn" id="sleep-btn">Начать</button>
+        </div>
+    </div>
 
-    <div id="screen-energy" class="inner-screen"><div class="back-btn" onclick="closeScreens()">← Назад</div><div class="inner-content"><h2 style="font-size: 24px;">Энергия</h2><p style="color: var(--text-sec); margin-bottom: 30px;">Активное дыхание для бодрости. 60 секунд.</p><div class="breath-circle" id="energy-circle" style="background: var(--tile-green); border-color: var(--tile-green-icon); color: #2e7d32;">2</div><div id="energy-text" style="font-weight: 700; font-size: 18px; margin-bottom: 20px;">Готов?</div><button class="btn" id="energy-btn">Начать</button></div></div>
+    <div id="screen-energy" class="inner-screen">
+        <div class="back-btn" onclick="closeScreens()">← Назад</div>
+        <div class="inner-content">
+            <h2 style="font-size: 24px;">Энергия</h2>
+            <p style="color: var(--text-sec); margin-bottom: 30px;">Активное дыхание для бодрости. 60 секунд.</p>
+            <div class="breath-circle" id="energy-circle" style="background: var(--tile-green); border-color: var(--tile-green-icon); color: #2e7d32;">2</div>
+            <div id="energy-text" style="font-weight: 700; font-size: 18px; margin-bottom: 20px;">Готов?</div>
+            <button class="btn" id="energy-btn">Начать</button>
+        </div>
+    </div>
 
     <div id="screen-panic" class="inner-screen">
         <div class="back-btn" onclick="closeScreens()">← Назад</div>
@@ -258,37 +263,170 @@
             </div>
         </div>
     </div>
+        <div id="screen-cbt" class="inner-screen">
+        <div class="back-btn" onclick="closeScreens()">← Назад</div>
+        <div class="inner-content" style="text-align: left;">
+            <h2 style="font-size: 24px; text-align: center;">КПТ-анализ</h2>
+            <p style="color: var(--text-sec); margin-bottom: 20px; text-align: center;">Разбери мысль по фактам.</p>
+            <input type="text" id="cbt-thought" placeholder="Тревожная мысль">
+            <input type="text" id="cbt-emotion" placeholder="Какая эмоция? (страх, злость...)">
+            <input type="text" id="cbt-for" placeholder="Факты ЗА">
+            <input type="text" id="cbt-against" placeholder="Факты ПРОТИВ">
+            <input type="text" id="cbt-friend" placeholder="Что бы ты сказал другу?">
+            <button class="btn" id="cbt-btn">Записать</button>
+            <div id="cbt-status" style="margin-top: 10px; text-align: center; color: var(--text-sec); font-weight: 600;"></div>
+        </div>
+    </div>
 
-    <div id="screen-cbt" class="inner-screen"><div class="back-btn" onclick="closeScreens()">← Назад</div><div class="inner-content" style="text-align: left;"><h2 style="font-size: 24px; text-align: center;">КПТ-анализ</h2><p style="color: var(--text-sec); margin-bottom: 20px; text-align: center;">Разбери мысль по фактам.</p><input type="text" id="cbt-thought" placeholder="Тревожная мысль"><input type="text" id="cbt-emotion" placeholder="Какая эмоция?"><input type="text" id="cbt-for" placeholder="Факты ЗА"><input type="text" id="cbt-against" placeholder="Факты ПРОТИВ"><input type="text" id="cbt-friend" placeholder="Что бы ты сказал другу?"><button class="btn" id="cbt-btn">Записать</button><div id="cbt-status" style="margin-top: 10px; text-align: center; color: var(--text-sec); font-weight: 600;"></div></div></div>
+    <div id="screen-grounding" class="inner-screen">
+        <div class="back-btn" onclick="closeScreens()">← Назад</div>
+        <div class="inner-content" style="text-align: left;">
+            <h2 style="font-size: 24px;">Заземление</h2>
+            <p style="color: var(--text-sec); margin-bottom: 20px;">Вернись в момент "здесь и сейчас".</p>
+            <div id="ground-prompt" style="font-weight: 700; margin-bottom: 10px; font-size: 18px;">Назови 5 вещей, которые видишь</div>
+            <input type="text" id="ground-input" placeholder="Напиши...">
+            <button class="btn" id="ground-btn">Далее</button>
+            <div id="ground-ai" class="ai-box">
+                <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; margin-bottom: 6px; color: var(--tile-purple-icon);">✨ Совет от ИИ</div>
+                <span id="ground-ai-text"></span>
+            </div>
+        </div>
+    </div>
 
-    <div id="screen-grounding" class="inner-screen"><div class="back-btn" onclick="closeScreens()">← Назад</div><div class="inner-content" style="text-align: left;"><h2 style="font-size: 24px;">Заземление</h2><p style="color: var(--text-sec); margin-bottom: 20px;">Вернись в момент "здесь и сейчас".</p><div id="ground-prompt" style="font-weight: 700; margin-bottom: 10px; font-size: 18px;">Назови 5 вещей, которые видишь</div><input type="text" id="ground-input" placeholder="Напиши..."><button class="btn" id="ground-btn">Далее</button><div id="ground-ai" class="ai-box"><div style="font-size: 11px; font-weight: 800; text-transform: uppercase; margin-bottom: 6px; color: var(--tile-purple-icon);">✨ Совет от ИИ</div><span id="ground-ai-text"></span></div></div></div>
+    <div id="screen-diary" class="inner-screen">
+        <div class="back-btn" onclick="closeScreens()">← Назад</div>
+        <div class="inner-content">
+            <h2 style="font-size: 24px;">Дневник</h2>
+            <p style="color: var(--text-sec); margin-bottom: 20px;">Выплесни мысли на бумагу.</p>
+            <textarea id="diary-input" rows="6" placeholder="Что тебя беспокоит?"></textarea>
+            <button class="btn" id="diary-btn">Сохранить</button>
+            <div id="diary-status" style="margin-top: 10px; color: var(--text-sec); font-weight: 600;"></div>
+        </div>
+    </div>
 
-    <div id="screen-diary" class="inner-screen"><div class="back-btn" onclick="closeScreens()">← Назад</div><div class="inner-content"><h2 style="font-size: 24px;">Дневник</h2><p style="color: var(--text-sec); margin-bottom: 20px;">Выплесни мысли на бумагу.</p><textarea id="diary-input" rows="6" placeholder="Что тебя беспокоит?"></textarea><button class="btn" id="diary-btn">Сохранить</button><div id="diary-status" style="margin-top: 10px; color: var(--text-sec); font-weight: 600;"></div></div></div>
+    <div id="screen-gratitude" class="inner-screen">
+        <div class="back-btn" onclick="closeScreens()">← Назад</div>
+        <div class="inner-content">
+            <h2 style="font-size: 24px;">Благодарность</h2>
+            <p style="color: var(--text-sec); margin-bottom: 20px;">Запиши 3 вещи, за которые ты благодарен.</p>
+            <textarea id="grat-input" rows="4" placeholder="1. ...&#10;2. ...&#10;3. ..."></textarea>
+            <button class="btn" id="grat-btn">Сохранить</button>
+            <div id="grat-status" style="margin-top: 10px; color: var(--text-sec); font-weight: 600;"></div>
+        </div>
+    </div>
 
-    <div id="screen-gratitude" class="inner-screen"><div class="back-btn" onclick="closeScreens()">← Назад</div><div class="inner-content"><h2 style="font-size: 24px;">Благодарность</h2><p style="color: var(--text-sec); margin-bottom: 20px;">Запиши 3 вещи.</p><textarea id="grat-input" rows="4" placeholder="1. ...&#10;2. ...&#10;3. ..."></textarea><button class="btn" id="grat-btn">Сохранить</button><div id="grat-status" style="margin-top: 10px; color: var(--text-sec); font-weight: 600;"></div></div></div>
+    <div id="screen-habit" class="inner-screen">
+        <div class="back-btn" onclick="closeScreens()">← Назад</div>
+        <div class="inner-content">
+            <h2 style="font-size: 24px;">Чеклист заботы</h2>
+            <p style="color: var(--text-sec); margin-bottom: 20px;">Отметь день, когда ты позаботился о себе.</p>
+            <div style="font-size: 64px; font-weight: 800; margin: 20px 0;" id="streak-num-inner">0</div>
+            <button class="btn" id="habit-btn-inner">Отметить день</button>
+        </div>
+    </div>
+        <div id="screen-emotions" class="inner-screen">
+        <div class="back-btn" onclick="closeScreens()">← Назад</div>
+        <div class="inner-content">
+            <h2 style="font-size: 24px;">Колесо эмоций</h2>
+            <p style="color: var(--text-sec); margin-bottom: 16px;">Что ты сейчас чувствуешь?</p>
+            <div class="emotion-wheel">
+                <div class="emotion-chip" data-emotion="joy">😊 Радость</div>
+                <div class="emotion-chip" data-emotion="sad">😢 Грусть</div>
+                <div class="emotion-chip" data-emotion="anger">😠 Злость</div>
+                <div class="emotion-chip" data-emotion="fear">😨 Страх</div>
+                <div class="emotion-chip" data-emotion="anxiety">😰 Тревога</div>
+                <div class="emotion-chip" data-emotion="shame">😳 Стыд</div>
+                <div class="emotion-chip" data-emotion="lonely">🥺 Одиночество</div>
+                <div class="emotion-chip" data-emotion="tired">😴 Усталость</div>
+            </div>
+            <div class="emotion-tip" id="emotion-tip"></div>
+        </div>
+    </div>
 
-    <div id="screen-habit" class="inner-screen"><div class="back-btn" onclick="closeScreens()">← Назад</div><div class="inner-content"><h2 style="font-size: 24px;">Чеклист заботы</h2><p style="color: var(--text-sec); margin-bottom: 20px;">Отметь день заботы о себе.</p><div style="font-size: 64px; font-weight: 800; margin: 20px 0;" id="streak-num-inner">0</div><button class="btn" id="habit-btn-inner">Отметить день</button></div></div>
+    <div id="screen-candle" class="inner-screen">
+        <div class="back-btn" onclick="closeScreens()">← Назад</div>
+        <div class="inner-content">
+            <h2 style="font-size: 24px;">Медитация на свечу</h2>
+            <p style="color: var(--text-sec); margin-bottom: 16px;">Смотри на пламя 3 минуты. Просто дыши.</p>
+            <div class="candle-flame"></div>
+            <div style="font-size: 32px; font-weight: 800; margin: 20px 0;" id="candle-timer">3:00</div>
+            <button class="btn" id="candle-btn">Начать</button>
+        </div>
+    </div>
 
-    <div id="screen-emotions" class="inner-screen"><div class="back-btn" onclick="closeScreens()">← Назад</div><div class="inner-content"><h2 style="font-size: 24px;">Колесо эмоций</h2><p style="color: var(--text-sec); margin-bottom: 16px;">Что ты сейчас чувствуешь?</p><div class="emotion-wheel"><div class="emotion-chip" data-emotion="joy">😊 Радость</div><div class="emotion-chip" data-emotion="sad">😢 Грусть</div><div class="emotion-chip" data-emotion="anger">😠 Злость</div><div class="emotion-chip" data-emotion="fear">😨 Страх</div><div class="emotion-chip" data-emotion="anxiety">😰 Тревога</div><div class="emotion-chip" data-emotion="shame">😳 Стыд</div><div class="emotion-chip" data-emotion="lonely">🥺 Одиночество</div><div class="emotion-chip" data-emotion="tired">😴 Усталость</div></div><div class="emotion-tip" id="emotion-tip"></div></div></div>
+    <div id="screen-body" class="inner-screen">
+        <div class="back-btn" onclick="closeScreens()">← Назад</div>
+        <div class="inner-content">
+            <h2 style="font-size: 24px;">Сканирование тела</h2>
+            <p style="color: var(--text-sec); margin-bottom: 20px;">Веди внимание от стоп к голове.</p>
+            <div style="background: var(--card); padding: 24px; border-radius: 20px; min-height: 120px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 600;" id="body-text">Нажми «Начать»</div>
+            <div style="font-size: 14px; color: var(--text-sec); margin-top: 12px;" id="body-progress"></div>
+            <button class="btn" id="body-btn">Начать</button>
+        </div>
+    </div>
 
-    <div id="screen-candle" class="inner-screen"><div class="back-btn" onclick="closeScreens()">← Назад</div><div class="inner-content"><h2 style="font-size: 24px;">Медитация на свечу</h2><p style="color: var(--text-sec); margin-bottom: 16px;">Смотри на пламя 3 минуты.</p><div class="candle-flame"></div><div style="font-size: 32px; font-weight: 800; margin: 20px 0;" id="candle-timer">3:00</div><button class="btn" id="candle-btn">Начать</button></div></div>
+    <div id="screen-wins" class="inner-screen">
+        <div class="back-btn" onclick="closeScreens()">← Назад</div>
+        <div class="inner-content">
+            <h2 style="font-size: 24px;">Копилка побед</h2>
+            <p style="color: var(--text-sec); margin-bottom: 20px;">Маленькие достижения тоже считаются.</p>
+            <input type="text" id="win-input" placeholder="Что сегодня получилось?">
+            <button class="btn" id="win-btn">Добавить</button>
+            <div id="wins-list" style="text-align: left; margin-top: 20px;"></div>
+        </div>
+    </div>
 
-    <div id="screen-body" class="inner-screen"><div class="back-btn" onclick="closeScreens()">← Назад</div><div class="inner-content"><h2 style="font-size: 24px;">Сканирование тела</h2><p style="color: var(--text-sec); margin-bottom: 20px;">Веди внимание от стоп к голове.</p><div style="background: var(--card); padding: 24px; border-radius: 20px; min-height: 120px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 600;" id="body-text">Нажми «Начать»</div><div style="font-size: 14px; color: var(--text-sec); margin-top: 12px;" id="body-progress"></div><button class="btn" id="body-btn">Начать</button></div></div>
+    <div id="screen-sleep-tracker" class="inner-screen">
+        <div class="back-btn" onclick="closeScreens()">← Назад</div>
+        <div class="inner-content">
+            <h2 style="font-size: 24px;">Трекер сна</h2>
+            <p style="color: var(--text-sec); margin-bottom: 20px;">Как спалось этой ночью?</p>
+            <input type="time" id="sleep-bed" placeholder="Лёг">
+            <input type="time" id="sleep-wake" placeholder="Встал">
+            <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                <button class="btn btn-secondary sleep-quality" data-q="1">😫</button>
+                <button class="btn btn-secondary sleep-quality" data-q="2">😕</button>
+                <button class="btn btn-secondary sleep-quality" data-q="3">😐</button>
+                <button class="btn btn-secondary sleep-quality" data-q="4">🙂</button>
+                <button class="btn btn-secondary sleep-quality" data-q="5">😴</button>
+            </div>
+            <button class="btn" id="sleep-save">Сохранить</button>
+            <div id="sleep-list" style="text-align: left; margin-top: 20px;"></div>
+        </div>
+    </div>
 
-    <div id="screen-wins" class="inner-screen"><div class="back-btn" onclick="closeScreens()">← Назад</div><div class="inner-content"><h2 style="font-size: 24px;">Копилка побед</h2><p style="color: var(--text-sec); margin-bottom: 20px;">Маленькие достижения тоже считаются.</p><input type="text" id="win-input" placeholder="Что сегодня получилось?"><button class="btn" id="win-btn">Добавить</button><div id="wins-list" style="text-align: left; margin-top: 20px;"></div></div></div>
-
-    <div id="screen-sleep-tracker" class="inner-screen"><div class="back-btn" onclick="closeScreens()">← Назад</div><div class="inner-content"><h2 style="font-size: 24px;">Трекер сна</h2><p style="color: var(--text-sec); margin-bottom: 20px;">Как спалось?</p><input type="time" id="sleep-bed"><input type="time" id="sleep-wake"><div style="display: flex; gap: 8px; margin-bottom: 12px;"><button class="btn btn-secondary sleep-quality" data-q="1">😫</button><button class="btn btn-secondary sleep-quality" data-q="2">😕</button><button class="btn btn-secondary sleep-quality" data-q="3">😐</button><button class="btn btn-secondary sleep-quality" data-q="4">🙂</button><button class="btn btn-secondary sleep-quality" data-q="5">😴</button></div><button class="btn" id="sleep-save">Сохранить</button><div id="sleep-list" style="text-align: left; margin-top: 20px;"></div></div></div>
-
-    <div id="screen-affirmations" class="inner-screen"><div class="back-btn" onclick="closeScreens()">← Назад</div><div class="inner-content"><h2 style="font-size: 24px;">Аффирмации</h2><p style="color: var(--text-sec); margin-bottom: 20px;">Тёплые слова для тебя.</p><div style="background: var(--tile-purple); padding: 32px 24px; border-radius: 24px; font-size: 20px; font-weight: 600; line-height: 1.5; min-height: 140px; display: flex; align-items: center; justify-content: center;" id="affirmation-text">Нажми «Другая»</div><button class="btn" id="affirmation-btn">Другая</button></div></div>
+    <div id="screen-affirmations" class="inner-screen">
+        <div class="back-btn" onclick="closeScreens()">← Назад</div>
+        <div class="inner-content">
+            <h2 style="font-size: 24px;">Аффирмации</h2>
+            <p style="color: var(--text-sec); margin-bottom: 20px;">Тёплые слова для тебя.</p>
+            <div style="background: var(--tile-purple); padding: 32px 24px; border-radius: 24px; font-size: 20px; font-weight: 600; line-height: 1.5; min-height: 140px; display: flex; align-items: center; justify-content: center;" id="affirmation-text">Нажми «Другая», чтобы получить тёплые слова</div>
+            <button class="btn" id="affirmation-btn">Другая</button>
+        </div>
+    </div>
 
     <div id="screen-profile" class="inner-screen">
         <div class="back-btn" onclick="closeScreens()">← Назад</div>
         <div class="inner-content">
             <h2 style="font-size: 24px;">Профиль</h2>
-            <div style="background: var(--card); padding: 20px; border-radius: 20px; margin-top: 20px;"><p style="font-size: 16px; font-weight: 600; margin: 0;">Привет, <span id="profile-name">друг</span> 👋</p></div>
-            <div style="background: var(--card); padding: 20px; border-radius: 20px; margin-top: 12px; text-align: left;"><p style="font-size: 14px; color: var(--text-sec); margin: 0 0 8px;">Тема</p><button class="btn btn-secondary" id="theme-toggle-2" style="margin-top: 0;">🌙 Тёмная тема</button></div>
-            <div style="background: var(--card); padding: 20px; border-radius: 20px; margin-top: 12px; text-align: left;"><p style="font-size: 14px; color: var(--text-sec); margin: 0 0 8px;">Письмо себе</p><textarea id="letter-input" rows="4" placeholder="Напиши тёплое письмо. Покажем через неделю."></textarea><button class="btn btn-secondary" id="letter-save">Отложить на неделю</button><div id="letter-status" style="margin-top: 8px; font-size: 13px; color: var(--text-sec);"></div></div>
-            <div style="background: var(--card); padding: 20px; border-radius: 20px; margin-top: 12px; text-align: left;"><p style="font-size: 14px; color: var(--text-sec); margin: 0 0 8px;">Кризисные телефоны</p><a href="tel:88002000122" class="btn btn-secondary" style="display: block; text-decoration: none; text-align: center;">📞 8-800-2000-122</a><a href="tel:84953268054" class="btn btn-secondary" style="display: block; text-decoration: none; text-align: center;">📞 8-495-326-80-54</a></div>
+            <div style="background: var(--card); padding: 20px; border-radius: 20px; margin-top: 20px;">
+                <p style="font-size: 16px; font-weight: 600; margin: 0;">Привет, <span id="profile-name">друг</span> 👋</p>
+            </div>
+            <div style="background: var(--card); padding: 20px; border-radius: 20px; margin-top: 12px; text-align: left;">
+                <p style="font-size: 14px; color: var(--text-sec); margin: 0 0 8px;">Тема</p>
+                <button class="btn btn-secondary" id="theme-toggle-2" style="margin-top: 0;">🌙 Тёмная тема</button>
+            </div>
+            <div style="background: var(--card); padding: 20px; border-radius: 20px; margin-top: 12px; text-align: left;">
+                <p style="font-size: 14px; color: var(--text-sec); margin: 0 0 8px;">Письмо себе</p>
+                <textarea id="letter-input" rows="4" placeholder="Напиши тёплое письмо. Покажем через неделю."></textarea>
+                <button class="btn btn-secondary" id="letter-save">Отложить на неделю</button>
+                <div id="letter-status" style="margin-top: 8px; font-size: 13px; color: var(--text-sec);"></div>
+            </div>
+            <div style="background: var(--card); padding: 20px; border-radius: 20px; margin-top: 12px; text-align: left;">
+                <p style="font-size: 14px; color: var(--text-sec); margin: 0 0 8px;">Кризисные телефоны</p>
+                <a href="tel:88002000122" class="btn btn-secondary" style="display: block; text-decoration: none; text-align: center; margin-bottom: 8px;">📞 8-800-2000-122</a>
+                <a href="tel:84953268054" class="btn btn-secondary" style="display: block; text-decoration: none; text-align: center;">📞 8-495-326-80-54</a>
+            </div>
         </div>
     </div>
 
@@ -304,22 +442,18 @@
             </div>
         </div>
     </div>
-
-    <script>
+        <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // ===== ХРАНИЛИЩЕ =====
             const store = {
                 get: (k, d) => { try { const v = localStorage.getItem('ostrov_' + k); return v ? JSON.parse(v) : d; } catch(e) { return d; } },
                 set: (k, v) => { try { localStorage.setItem('ostrov_' + k, JSON.stringify(v)); } catch(e) {} }
             };
+
+            // ===== ТЕМА =====
             const savedTheme = store.get('theme', null);
             if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
-            function toggleTheme() {
-                const cur = document.documentElement.getAttribute('data-theme');
-                const next = cur === 'dark' ? 'light' : 'dark';
-                document.documentElement.setAttribute('data-theme', next);
-                store.set('theme', next);
-                updateThemeBtns();
-            }
+            
             function updateThemeBtns() {
                 const cur = document.documentElement.getAttribute('data-theme');
                 const t = document.getElementById('theme-toggle');
@@ -327,10 +461,18 @@
                 if (t) t.textContent = cur === 'dark' ? '☀️' : '🌙';
                 if (t2) t2.textContent = cur === 'dark' ? '☀️ Светлая тема' : '🌙 Тёмная тема';
             }
+            function toggleTheme() {
+                const cur = document.documentElement.getAttribute('data-theme');
+                const next = cur === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', next);
+                store.set('theme', next);
+                updateThemeBtns();
+            }
             document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
             document.getElementById('theme-toggle-2').addEventListener('click', toggleTheme);
             updateThemeBtns();
 
+            // ===== ИМЯ =====
             let userName = store.get('name', '');
             function applyName() {
                 const g = document.getElementById('greeting');
@@ -338,10 +480,11 @@
                 const hour = new Date().getHours();
                 let base = hour < 12 ? 'Доброе утро' : hour < 18 ? 'Добрый день' : 'Добрый вечер';
                 if (userName) base += ', ' + userName;
-                g.innerText = base + '!';
+                if (g) g.innerText = base + '!';
                 if (pn) pn.textContent = userName || 'друг';
             }
             applyName();
+
             const onboarding = document.getElementById('onboarding');
             document.getElementById('start-btn').addEventListener('click', function() {
                 document.getElementById('splash').classList.add('hidden');
@@ -352,19 +495,25 @@
                 if (!v) return;
                 userName = v; store.set('name', v); applyName(); onboarding.style.display = 'none';
             });
-            document.getElementById('onboarding-name').addEventListener('keydown', function(e) { if (e.key === 'Enter') document.getElementById('onboarding-save').click(); });
+            document.getElementById('onboarding-name').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') document.getElementById('onboarding-save').click();
+            });
 
+            // ===== НАВИГАЦИЯ =====
             window.openScreen = function(name) {
                 document.querySelectorAll('.inner-screen').forEach(s => s.classList.remove('active'));
                 const target = document.getElementById(`screen-${name}`);
                 if (target) { target.classList.add('active'); target.scrollTop = 0; }
-                if (name === 'favorites') renderFavorites();
-                if (name === 'wins') renderWins();
-                if (name === 'sleep-tracker') renderSleep();
-                if (name === 'profile') renderLetter();
+                if (name === 'favorites' && typeof renderFavorites === 'function') renderFavorites();
+                if (name === 'wins' && typeof renderWins === 'function') renderWins();
+                if (name === 'sleep-tracker' && typeof renderSleep === 'function') renderSleep();
+                if (name === 'profile' && typeof renderLetter === 'function') renderLetter();
             }
-            window.closeScreens = function() { document.querySelectorAll('.inner-screen').forEach(s => s.classList.remove('active')); }
+            window.closeScreens = function() {
+                document.querySelectorAll('.inner-screen').forEach(s => s.classList.remove('active'));
+            }
 
+            // ===== ПРОГРЕСС ДНЯ =====
             const todayKey = () => new Date().toISOString().slice(0, 10);
             function getDayProgress() { return store.get('progress_' + todayKey(), []); }
             function markDone(id) { const arr = getDayProgress(); if (!arr.includes(id)) { arr.push(id); store.set('progress_' + todayKey(), arr); } renderProgress(); }
@@ -375,6 +524,7 @@
             }
             renderProgress();
 
+            // ===== КАЛЕНДАРЬ НАСТРОЕНИЯ =====
             function renderMoodCalendar() {
                 const el = document.getElementById('mood-calendar'); if (!el) return;
                 const moods = store.get('moods', {}); el.innerHTML = ''; const days = []; const now = new Date();
@@ -387,26 +537,318 @@
                 });
             }
             renderMoodCalendar();
-
+                        // ===== ДЫХАНИЕ =====
             async function runBreathing(circleId, textId, btn, phasesArray, cycles, practiceId) {
-                if (btn.disabled) return; btn.disabled = true;
-                const text = document.getElementById(textId); const circle = document.getElementById(circleId); btn.style.display = 'none';
+                if (btn.disabled) return; 
+                btn.disabled = true;
+                const text = document.getElementById(textId); 
+                const circle = document.getElementById(circleId); 
+                btn.style.display = 'none';
                 const sleep = ms => new Promise(r => setTimeout(r, ms));
+                
                 for (let i = 0; i < cycles; i++) {
                     for (let p = 0; p < phasesArray.length; p++) {
                         text.innerText = phasesArray[p].name;
                         circle.style.transform = phasesArray[p].scale ? 'scale(1.3)' : 'scale(1)';
                         if (navigator.vibrate) { try { navigator.vibrate(30); } catch(e) {} }
-                        for (let s = phasesArray[p].sec; s > 0; s--) { circle.innerText = s; await sleep(1000); }
+                        for (let s = phasesArray[p].sec; s > 0; s--) { 
+                            circle.innerText = s; 
+                            await sleep(1000); 
+                        }
                     }
                 }
-                text.innerText = "Завершено"; circle.innerText = "✓"; btn.style.display = 'block'; btn.innerText = "Повторить"; btn.disabled = false;
+                text.innerText = "Завершено"; 
+                circle.innerText = "✓"; 
+                btn.style.display = 'block'; 
+                btn.innerText = "Повторить"; 
+                btn.disabled = false;
                 if (practiceId) markDone(practiceId);
                 document.getElementById('mood-modal').style.display = 'flex';
             }
 
-            document.getElementById('breath-btn').addEventListener('click', function() { runBreathing('breath-circle', 'breath-text', this, [{name: "Вдох", sec: 4, scale: true}, {name: "Задержка", sec: 4, scale: true}, {name: "Выдох", sec: 4, scale: false}, {name: "Задержка", sec: 4, scale: false}], 4, 'breath'); });
-            document.getElementById('tac-btn').addEventListener('click', function() { runBreathing('tac-circle', 'tac-text', this, [{name: "Вдох", sec: 4, scale: true}, {name: "Задержка", sec: 4, scale: true}, {name: "Выдох", sec: 4, scale: false}, {name: "Задержка", sec: 2, scale: false}], 4, 'tactical'); });
-            document.getElementById('sleep-btn').addEventListener('click', function() { runBreathing('sleep-circle', 'sleep-text', this, [{name: "Вдох", sec: 4, scale: true}, {name: "Задержка", sec: 7, scale: true}, {name: "Выдох", sec: 8, scale: false}], 4, 'sleep'); });
-            document.getElementById('energy-btn').addEventListener('click', function() { runBreathing('energy-circle', 'energy-text', this, [{name: "Вдох", sec: 2, scale: true}, {name: "Выдох", sec: 2, scale: false}], 15, 'energy'); });
-            document.getElementById('panic-btn').addEventListener('click', function() { runBreathing('panic-circle', 'panic-text', this, [{name: "Вдох", sec: 4, scale: true}, {name: "Выдох
+            document.getElementById('breath-btn').addEventListener('click', function() { 
+                runBreathing('breath-circle', 'breath-text', this, [{name: "Вдох", sec: 4, scale: true}, {name: "Задержка", sec: 4, scale: true}, {name: "Выдох", sec: 4, scale: false}, {name: "Задержка", sec: 4, scale: false}], 4, 'breath'); 
+            });
+            document.getElementById('tac-btn').addEventListener('click', function() { 
+                runBreathing('tac-circle', 'tac-text', this, [{name: "Вдох", sec: 4, scale: true}, {name: "Задержка", sec: 4, scale: true}, {name: "Выдох", sec: 4, scale: false}, {name: "Задержка", sec: 2, scale: false}], 4, 'tactical'); 
+            });
+            document.getElementById('sleep-btn').addEventListener('click', function() { 
+                runBreathing('sleep-circle', 'sleep-text', this, [{name: "Вдох", sec: 4, scale: true}, {name: "Задержка", sec: 7, scale: true}, {name: "Выдох", sec: 8, scale: false}], 4, 'sleep'); 
+            });
+            document.getElementById('energy-btn').addEventListener('click', function() { 
+                runBreathing('energy-circle', 'energy-text', this, [{name: "Вдох", sec: 2, scale: true}, {name: "Выдох", sec: 2, scale: false}], 15, 'energy'); 
+            });
+            document.getElementById('panic-btn').addEventListener('click', function() { 
+                runBreathing('panic-circle', 'panic-text', this, [{name: "Вдох", sec: 4, scale: true}, {name: "Выдох", sec: 6, scale: false}], 9, 'panic'); 
+            });
+
+            // ===== МОДАЛКА НАСТРОЕНИЯ =====
+            document.querySelectorAll('.mood-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const score = parseInt(this.dataset.score);
+                    const moods = store.get('moods', {});
+                    moods[todayKey()] = score;
+                    store.set('moods', moods);
+                    renderMoodCalendar();
+                    document.getElementById('mood-modal').style.display = 'none';
+                });
+            });
+                        // ===== КПТ =====
+            document.getElementById('cbt-btn').addEventListener('click', function() {
+                const entry = {
+                    thought: document.getElementById('cbt-thought').value,
+                    emotion: document.getElementById('cbt-emotion').value,
+                    forFacts: document.getElementById('cbt-for').value,
+                    against: document.getElementById('cbt-against').value,
+                    friend: document.getElementById('cbt-friend').value,
+                    date: new Date().toISOString()
+                };
+                if (!entry.thought) return;
+                const list = store.get('cbt', []); list.push(entry); store.set('cbt', list);
+                document.getElementById('cbt-status').innerText = "Сохранено ✓";
+                document.querySelectorAll('#screen-cbt input').forEach(i => i.value = "");
+                markDone('cbt');
+            });
+
+            // ===== ЗАЗЕМЛЕНИЕ =====
+            const prompts = ["Назови 5 вещей, которые видишь", "Назови 4 вещи, которые ощущаешь", "Назови 3 звука", "Назови 2 запаха", "Назови 1 вкус"];
+            let step = 0;
+            document.getElementById('ground-btn').addEventListener('click', function() {
+                const val = document.getElementById('ground-input').value;
+                if (!val) return;
+                step++;
+                if (step >= prompts.length) {
+                    document.getElementById('ground-prompt').innerText = "Ты вернулся в момент. Молодец.";
+                    document.getElementById('ground-input').style.display = 'none';
+                    this.style.display = 'none';
+                    document.getElementById('ground-ai').style.display = 'block';
+                    document.getElementById('ground-ai-text').innerText = "Ты справился с упражнением. Это самое главное.";
+                    markDone('grounding');
+                } else {
+                    document.getElementById('ground-prompt').innerText = prompts[step];
+                    document.getElementById('ground-input').value = "";
+                }
+            });
+
+            // ===== ДНЕВНИК =====
+            document.getElementById('diary-btn').addEventListener('click', function() {
+                const text = document.getElementById('diary-input').value;
+                if (!text) return;
+                const list = store.get('diary', []); list.push({ text, date: new Date().toISOString() }); store.set('diary', list);
+                document.getElementById('diary-status').innerText = "Сохранено ✓";
+                document.getElementById('diary-input').value = "";
+                markDone('diary');
+            });
+
+            // ===== БЛАГОДАРНОСТЬ =====
+            document.getElementById('grat-btn').addEventListener('click', function() {
+                const text = document.getElementById('grat-input').value;
+                if (!text) return;
+                const list = store.get('gratitude', []); list.push({ text, date: new Date().toISOString() }); store.set('gratitude', list);
+                document.getElementById('grat-status').innerText = "Сохранено ✓";
+                document.getElementById('grat-input').value = "";
+                markDone('gratitude');
+            });
+
+            // ===== ЧЕКЛИСТ ЗАБОТЫ =====
+            function renderStreak() {
+                const streak = store.get('streak', { count: 0, last: null });
+                const el = document.getElementById('streak-num-inner');
+                if (el) el.innerText = streak.count;
+            }
+            renderStreak();
+            document.getElementById('habit-btn-inner').addEventListener('click', function() {
+                const streak = store.get('streak', { count: 0, last: null });
+                const today = todayKey();
+                if (streak.last === today) { alert('Уже отмечено сегодня!'); return; }
+                const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
+                if (streak.last === yesterday.toISOString().slice(0, 10)) streak.count++; else streak.count = 1;
+                streak.last = today; store.set('streak', streak); renderStreak(); markDone('habit');
+            });
+
+            // ===== КОЛЕСО ЭМОЦИЙ =====
+            const emotionTips = {
+                joy: "Радость — важно замечать и проживать. Что помогло ей появиться?",
+                sad: "Грусть — это сигнал, что что-то важно. Позволь себе побыть с ней. Дневник может помочь.",
+                anger: "Злость — это защита границ. Что именно нарушилось? Дыхание 4-4-4-4 поможет снизить накал.",
+                fear: "Страх — это про безопасность. Заземление 5-4-3-2-1 вернёт тебя в «здесь и сейчас».",
+                anxiety: "Тревога — это про будущее. Попробуй дыхание 4-7-8 или выпиши мысли в дневник.",
+                shame: "Стыд — тяжёлое чувство. Ты не обязан быть идеальным. Напиши себе тёплое письмо.",
+                lonely: "Одиночество — это потребность в контакте. Можно написать близкому или в дневник.",
+                tired: "Усталость — тело просит отдыха. Это не слабость. Дай себе паузу."
+            };
+            document.querySelectorAll('.emotion-chip').forEach(chip => {
+                chip.addEventListener('click', function() {
+                    const tip = emotionTips[this.dataset.emotion] || '';
+                    const box = document.getElementById('emotion-tip');
+                    box.style.display = 'block'; box.innerText = tip;
+                });
+            });
+
+            // ===== ИЗБРАННОЕ =====
+            const practiceNames = { breath: 'Коробочное дыхание', tactical: 'Тактическое дыхание', sleep: 'Дыхание 4-7-8', energy: 'Энергия', cbt: 'КПТ', grounding: 'Заземление', diary: 'Дневник', gratitude: 'Благодарность', habit: 'Чеклист заботы' };
+            function getFavorites() { return store.get('favorites', []); }
+            function toggleFav(id) {
+                let favs = getFavorites();
+                if (favs.includes(id)) favs = favs.filter(f => f !== id); else favs.push(id);
+                store.set('favorites', favs); renderFavStars();
+            }
+            function renderFavStars() {
+                const favs = getFavorites();
+                document.querySelectorAll('.tile[data-practice]').forEach(tile => {
+                    const id = tile.dataset.practice;
+                    let star = tile.querySelector('.tile-fav');
+                    if (!star) {
+                        star = document.createElement('span'); star.className = 'tile-fav'; star.innerText = '★';
+                        star.addEventListener('click', function(e) { e.stopPropagation(); toggleFav(id); });
+                        tile.appendChild(star);
+                    }
+                    star.classList.toggle('on', favs.includes(id));
+                });
+            }
+            renderFavStars();
+            function renderFavorites() {
+                const el = document.getElementById('favorites-list'); if (!el) return;
+                const favs = getFavorites();
+                if (!favs.length) { el.innerHTML = '<p style="color: var(--text-sec); text-align: center;">Пока пусто. Нажми ★ на плитке, чтобы добавить.</p>'; return; }
+                el.innerHTML = favs.map(id => `<div class="tile tile-white tile-wide" style="margin-bottom: 10px;" onclick="openScreen('${id}')"><div class="tile-icon" style="background: var(--tile-blue);">★</div><div style="flex: 1;"><div class="tile-title">${practiceNames[id] || id}</div></div></div>`).join('');
+            }
+                        // ===== СВЕЧА =====
+            let candleInterval = null;
+            document.getElementById('candle-btn').addEventListener('click', function() {
+                if (candleInterval) { clearInterval(candleInterval); candleInterval = null; this.innerText = 'Начать'; return; }
+                let sec = 180; const timer = document.getElementById('candle-timer'); const btn = this;
+                btn.innerText = 'Остановить';
+                candleInterval = setInterval(() => {
+                    sec--; const m = Math.floor(sec / 60); const s = sec % 60;
+                    timer.innerText = m + ':' + String(s).padStart(2, '0');
+                    if (sec <= 0) {
+                        clearInterval(candleInterval); candleInterval = null; btn.innerText = 'Начать'; timer.innerText = '3:00';
+                        document.getElementById('mood-modal').style.display = 'flex';
+                    }
+                }, 1000);
+            });
+
+            // ===== СКАНИРОВАНИЕ ТЕЛА =====
+            const bodySteps = ["Стопы. Почувствуй, как они касаются пола.", "Голени и колени. Заметь напряжение.", "Бёдра. Расслабь их.", "Живот. Дыши в него мягко.", "Грудь. Почувствуй, как она поднимается.", "Руки. Отпусти плечи.", "Шея. Мягко поверни голову.", "Лицо. Расслабь челюсть и лоб.", "Всё тело целиком. Ты здесь."];
+            let bodyStep = 0;
+            document.getElementById('body-btn').addEventListener('click', function() {
+                if (bodyStep >= bodySteps.length) {
+                    bodyStep = 0; this.innerText = 'Начать';
+                    document.getElementById('body-text').innerText = 'Нажми «Начать»'; document.getElementById('body-progress').innerText = ''; return;
+                }
+                const btn = this; btn.innerText = 'Дальше';
+                document.getElementById('body-text').innerText = bodySteps[bodyStep];
+                document.getElementById('body-progress').innerText = (bodyStep + 1) + ' из ' + bodySteps.length;
+                bodyStep++;
+                if (bodyStep === bodySteps.length) { btn.innerText = 'Заново'; markDone('body'); }
+            });
+
+            // ===== КОПИЛКА ПОБЕД =====
+            function renderWins() {
+                const el = document.getElementById('wins-list'); if (!el) return;
+                const wins = store.get('wins', []);
+                if (!wins.length) { el.innerHTML = '<p style="color: var(--text-sec); text-align: center;">Пока пусто. Добавь первое достижение.</p>'; return; }
+                el.innerHTML = wins.slice().reverse().map(w => `<div style="background: var(--card); padding: 14px 18px; border-radius: 14px; margin-bottom: 8px; font-size: 15px;">🏆 ${w}</div>`).join('');
+            }
+            document.getElementById('win-btn').addEventListener('click', function() {
+                const v = document.getElementById('win-input').value.trim(); if (!v) return;
+                const wins = store.get('wins', []); wins.push(v); store.set('wins', wins);
+                document.getElementById('win-input').value = ''; renderWins();
+            });
+
+            // ===== ТРЕКЕР СНА =====
+            let sleepQuality = 3;
+            document.querySelectorAll('.sleep-quality').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    sleepQuality = parseInt(this.dataset.q);
+                    document.querySelectorAll('.sleep-quality').forEach(b => b.style.background = '');
+                    this.style.background = 'var(--tile-green)';
+                });
+            });
+            function renderSleep() {
+                const el = document.getElementById('sleep-list'); if (!el) return;
+                const list = store.get('sleep', []);
+                if (!list.length) { el.innerHTML = '<p style="color: var(--text-sec); text-align: center;">Пока нет записей.</p>'; return; }
+                const emoji = { 1: '😫', 2: '😕', 3: '😐', 4: '🙂', 5: '😴' };
+                el.innerHTML = list.slice().reverse().map(s => `<div style="background: var(--card); padding: 12px 16px; border-radius: 14px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 13px; color: var(--text-sec);">${s.date}</span><span>${emoji[s.quality] || ''} ${s.bed || '?'}–${s.wake || '?'}</span></div>`).join('');
+            }
+            document.getElementById('sleep-save').addEventListener('click', function() {
+                const bed = document.getElementById('sleep-bed').value; const wake = document.getElementById('sleep-wake').value;
+                if (!bed || !wake) { alert('Заполни время'); return; }
+                const list = store.get('sleep', []); list.push({ bed, wake, quality: sleepQuality, date: todayKey() });
+                store.set('sleep', list); renderSleep();
+                document.getElementById('sleep-bed').value = ''; document.getElementById('sleep-wake').value = '';
+            });
+
+            // ===== АФФИРМАЦИИ =====
+            const affirmations = ["Ты справляешься лучше, чем тебе кажется.", "Ты имеешь право на отдых.", "Твои чувства важны и имеют смысл.", "Ты не обязан быть идеальным, чтобы быть достойным любви.", "Маленькие шаги — тоже прогресс.", "Ты можешь сказать «нет» без вины.", "Забота о себе — это не эгоизм.", "Даже если сегодня тяжело — это пройдёт.", "Ты уже сделал важное: открыл это приложение.", "Ты достоин доброты, особенно от себя самого.", "Не всё зависит от тебя. И это нормально.", "Ты можешь начинать заново столько, сколько нужно.", "Сравнение с другими не делает тебя хуже.", "Ты — не свои мысли. Ты больше.", "Сегодня достаточно просто быть."];
+            function showAffirmation() { const el = document.getElementById('affirmation-text'); if (el) el.innerText = affirmations[Math.floor(Math.random() * affirmations.length)]; }
+            document.getElementById('affirmation-btn').addEventListener('click', showAffirmation);
+            showAffirmation();
+
+            // ===== ПИСЬМО СЕБЕ =====
+            function renderLetter() {
+                const status = document.getElementById('letter-status'); if (!status) return;
+                const letter = store.get('letter', null);
+                if (letter) {
+                    const showAt = new Date(letter.showAt);
+                    if (new Date() >= showAt) {
+                        status.innerHTML = '<b>Твоё письмо:</b><br>' + letter.text.replace(/\n/g, '<br>') + '<br><button class="btn btn-secondary" id="letter-clear" style="margin-top: 8px;">Удалить письмо</button>';
+                        const clearBtn = document.getElementById('letter-clear'); if (clearBtn) clearBtn.addEventListener('click', function() { store.set('letter', null); renderLetter(); });
+                    } else {
+                        const days = Math.ceil((showAt - new Date()) / (1000 * 60 * 60 * 24)); status.innerText = `Письмо откроется через ${days} дн.`;
+                    }
+                }
+            }
+            document.getElementById('letter-save').addEventListener('click', function() {
+                const text = document.getElementById('letter-input').value.trim(); if (!text) return;
+                const showAt = new Date(); showAt.setDate(showAt.getDate() + 7);
+                store.set('letter', { text, showAt: showAt.toISOString() });
+                document.getElementById('letter-input').value = ''; renderLetter();
+            });
+
+            // ===== МУЗЫКА =====
+            const Music = (function() {
+                let ctx = null, master = null, nodes = [], playing = false, currentScene = null;
+                function ramp(param, value, time) { time = time || 1.5; const now = ctx.currentTime; param.cancelScheduledValues(now); param.setValueAtTime(param.value, now); param.linearRampToValueAtTime(value, now + time); }
+                function createNoiseBuffer(seconds) { seconds = seconds || 3; const buf = ctx.createBuffer(1, ctx.sampleRate * seconds, ctx.sampleRate); const data = buf.getChannelData(0); for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1; return buf; }
+                function noiseSource(type, freq, q, volume) { const src = ctx.createBufferSource(); src.buffer = createNoiseBuffer(3); src.loop = true; const filter = ctx.createBiquadFilter(); filter.type = type; filter.frequency.value = freq; filter.Q.value = q || 0.7; const gain = ctx.createGain(); gain.gain.value = 0; src.connect(filter).connect(gain).connect(master); src.start(); nodes.push(src, filter, gain); ramp(gain.gain, volume, 3); return gain; }
+                function createPad(freq, detune, volume) { const osc = ctx.createOscillator(); osc.type = 'sine'; osc.frequency.value = freq; osc.detune.value = detune || 0; const gain = ctx.createGain(); gain.gain.value = 0; osc.connect(gain).connect(master); osc.start(); nodes.push(osc, gain); ramp(gain.gain, volume || 0.05, 3); return gain; }
+                function addLFO(target, rate, depth) { const lfo = ctx.createOscillator(); lfo.frequency.value = rate || 0.08; const lfoGain = ctx.createGain(); lfoGain.gain.value = depth || 0.01; lfo.connect(lfoGain).connect(target.gain); lfo.start(); nodes.push(lfo, lfoGain); }
+                async function start(scene) {
+                    if (playing && currentScene === scene) return;
+                    if (!ctx || ctx.state === 'closed') { ctx = new (window.AudioContext || window.webkitAudioContext)(); master = ctx.createGain(); master.gain.value = 0; master.connect(ctx.destination); }
+                    if (ctx.state === 'suspended') await ctx.resume();
+                    stopNodes(); currentScene = scene; playing = true; ramp(master.gain, 0.5, 2);
+                    if (scene === 'rain') { noiseSource('lowpass', 1200, 0.6, 0.09); noiseSource('highpass', 4000, 0.5, 0.02); const dropOsc = createPad(880, 0, 0.01); addLFO(dropOsc, 7, 0.008); }
+                    else if (scene === 'waves') { const w = noiseSource('lowpass', 500, 0.8, 0.12); addLFO(w, 0.12, 0.06); noiseSource('lowpass', 200, 1.0, 0.05); }
+                    else { const chord = [createPad(220.00, -4, 0.05), createPad(261.63, 3, 0.045), createPad(329.63, -2, 0.04), createPad(110.00, 0, 0.06)]; chord.forEach(function(p, i) { addLFO(p, 0.05 + i * 0.02, 0.012); }); noiseSource('lowpass', 600, 0.7, 0.03); }
+                }
+                function stopNodes() { nodes.forEach(function(n) { try { if (n.stop) n.stop(); n.disconnect(); } catch(e) {} }); nodes = []; }
+                async function stop() {
+                    if (!playing) return; playing = false; currentScene = null; if (master) ramp(master.gain, 0, 1.2);
+                    setTimeout(function() { stopNodes(); if (master) { try { master.disconnect(); } catch(e){} } master = null; if (ctx) { try { ctx.close(); } catch(e){} } ctx = null; }, 1400);
+                }
+                return { play: async function(scene) { if (playing && currentScene === scene) { await stop(); return false; } await start(scene); return true; }, isPlaying: function() { return playing; } };
+            })();
+
+            const musicBtn = document.getElementById('music-toggle');
+            const menu = document.createElement('div'); menu.id = 'music-menu';
+            [['rain', '🌧 Дождь'], ['waves', '🌊 Волны'], ['ambient', '🎵 Эмбиент']].forEach(function(item) {
+                const btn = document.createElement('button'); btn.textContent = item[1]; btn.dataset.scene = item[0];
+                btn.addEventListener('click', async function() { const nowPlaying = await Music.play(item[0]); musicBtn.textContent = nowPlaying ? '🔇' : '🎵'; menu.style.display = 'none'; });
+                menu.appendChild(btn);
+            });
+            document.body.appendChild(menu);
+            musicBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (Music.isPlaying()) { Music.play(null); musicBtn.textContent = '🎵'; menu.style.display = 'none'; }
+                else { menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex'; }
+            });
+            document.addEventListener('click', function(e) { if (!menu.contains(e.target) && e.target !== musicBtn) menu.style.display = 'none'; });
+
+        });
+    </script>
+</body>
+</html>
