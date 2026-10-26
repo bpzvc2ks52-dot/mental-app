@@ -81,16 +81,9 @@
         .emotion-chip { padding: 16px; border-radius: 16px; background: var(--card); border: 1px solid var(--border); cursor: pointer; font-weight: 600; font-size: 15px; transition: transform 0.2s; }
         .emotion-chip:active { transform: scale(0.95); }
         .emotion-tip { background: var(--tile-purple); padding: 16px; border-radius: 16px; margin-top: 16px; display: none; text-align: left; animation: fadeIn 0.4s ease; }
-        
-        .candle-container { width: 120px; height: 160px; margin: 20px auto; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; }
-        .candle-wax { width: 40px; height: 80px; background: linear-gradient(to right, #f5f5f5, #ffffff 50%, #e0e0e0); border-radius: 5px; position: relative; box-shadow: inset -5px 0 10px rgba(0,0,0,0.1); }
-        .candle-wick { width: 2px; height: 10px; background: #333; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); }
-        .candle-flame { width: 20px; height: 35px; background: radial-gradient(ellipse at bottom, #fff 0%, #ffeb3b 40%, #ff9800 80%, transparent 100%); border-radius: 50% 50% 20% 20% / 60% 60% 40% 40%; position: absolute; top: -45px; left: 50%; transform: translateX(-50%); filter: drop-shadow(0 0 15px #ff9800); animation: flicker 0.1s infinite alternate; }
-        @keyframes flicker { 0% { transform: translateX(-50%) scale(1) skewX(-2deg); opacity: 0.9; } 50% { transform: translateX(-48%) scale(1.05) skewX(2deg); opacity: 1; } 100% { transform: translateX(-52%) scale(0.95) skewX(-1deg); opacity: 0.95; } }
-        
         #mood-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
         .modal-card { background: var(--card); width: 90%; max-width: 340px; border-radius: 24px; padding: 28px; text-align: center; animation: fadeIn 0.3s ease; }
-        @media (prefers-reduced-motion: reduce) { .fade-in, .splash-icon, .tile, .inner-screen, .breath-circle, .candle-flame { animation: none !important; transition: none !important; } }
+        @media (prefers-reduced-motion: reduce) { .fade-in, .splash-icon, .tile, .inner-screen, .breath-circle { animation: none !important; transition: none !important; } }
     </style>
 </head>
 <body>
@@ -128,6 +121,14 @@
                 <div>
                     <div class="progress-text" id="progress-text">Сегодня: 0 из 5</div>
                     <div style="font-size: 12px; color: var(--text-sec); margin-top: 2px;">маленькие шаги — большие перемены</div>
+                </div>
+            </div>
+
+            <div class="section-title">Ассистент</div>
+            <div class="bento-grid" style="grid-template-columns: 1fr;">
+                <div class="tile tile-white tile-wide" onclick="openScreen('assistant')" style="background: linear-gradient(135deg, var(--tile-blue) 0%, var(--tile-purple) 100%);">
+                    <div class="tile-icon" style="background: white;">🤖</div>
+                    <div style="flex: 1;"><div class="tile-title">Умный помощник</div><div class="tile-desc">подберём практики под твоё состояние</div></div>
                 </div>
             </div>
 
@@ -178,7 +179,6 @@
             <div class="section-title">Ещё</div>
             <div class="bento-grid">
                 <div class="tile tile-peach" onclick="openScreen('emotions')"><div class="tile-icon">🎡</div><div><div class="tile-title">Колесо эмоций</div><div class="tile-desc">назови чувство</div></div></div>
-                <div class="tile tile-blue" onclick="openScreen('candle')"><div class="tile-icon">🕯</div><div><div class="tile-title">Свеча</div><div class="tile-desc">медитация на пламя</div></div></div>
                 <div class="tile tile-purple" onclick="openScreen('body')"><div class="tile-icon">🧘</div><div><div class="tile-title">Тело</div><div class="tile-desc">сканирование</div></div></div>
                 <div class="tile tile-green" onclick="openScreen('wins')"><div class="tile-icon">🏆</div><div><div class="tile-title">Копилка побед</div><div class="tile-desc">маленькие достижения</div></div></div>
                 <div class="tile tile-pink" onclick="openScreen('sleep-tracker')"><div class="tile-icon">😴</div><div><div class="tile-title">Трекер сна</div><div class="tile-desc">как спалось</div></div></div>
@@ -246,6 +246,22 @@
             <div class="breath-circle" id="energy-circle" style="background: var(--tile-green); border-color: var(--tile-green-icon); color: #2e7d32;">2</div>
             <div id="energy-text" style="font-weight: 700; font-size: 18px; margin-bottom: 20px;">Готов?</div>
             <button class="btn" id="energy-btn">Начать</button>
+        </div>
+    </div>
+
+    <div id="screen-assistant" class="inner-screen">
+        <div class="back-btn" onclick="closeScreens()">← Назад</div>
+        <div class="inner-content">
+            <h2 style="font-size: 24px;">Как ты сейчас?</h2>
+            <p style="color: var(--text-sec); margin-bottom: 20px;">Выбери состояние, и я подберу план.</p>
+            <div class="emotion-wheel" id="assistant-states">
+                <div class="emotion-chip" data-state="anxious">😰 Тревожно</div>
+                <div class="emotion-chip" data-state="tired">😴 Устал(а)</div>
+                <div class="emotion-chip" data-state="sad">😢 Грустно</div>
+                <div class="emotion-chip" data-state="angry">😠 Злюсь</div>
+                <div class="emotion-chip" data-state="ok">🙂 Всё хорошо</div>
+            </div>
+            <div id="assistant-result" style="margin-top: 20px; text-align: left; display: none; background: var(--card); padding: 20px; border-radius: 20px;"></div>
         </div>
     </div>
         <div id="screen-cbt" class="inner-screen">
@@ -329,20 +345,6 @@
         </div>
     </div>
 
-    <div id="screen-candle" class="inner-screen">
-        <div class="back-btn" onclick="closeScreens()">← Назад</div>
-        <div class="inner-content">
-            <h2 style="font-size: 24px;">Медитация на свечу</h2>
-            <p style="color: var(--text-sec); margin-bottom: 16px;">Смотри на пламя 3 минуты. Просто дыши.</p>
-            <div class="candle-container">
-                <div class="candle-wax"><div class="candle-wick"></div></div>
-                <div class="candle-flame" id="candle-flame-el"></div>
-            </div>
-            <div style="font-size: 32px; font-weight: 800; margin: 20px 0;" id="candle-timer">3:00</div>
-            <button class="btn" id="candle-btn">Начать</button>
-        </div>
-    </div>
-
     <div id="screen-body" class="inner-screen">
         <div class="back-btn" onclick="closeScreens()">← Назад</div>
         <div class="inner-content">
@@ -419,6 +421,14 @@
                 <button class="btn btn-secondary" id="letter-save">Отложить на неделю</button>
                 <div id="letter-status" style="margin-top: 8px; font-size: 13px; color: var(--text-sec);"></div>
             </div>
+        </div>
+    </div>
+
+    <div id="day-details-modal" style="position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 2000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
+        <div style="background: var(--card); width: 90%; max-width: 380px; border-radius: 24px; padding: 24px; text-align: left; max-height: 80vh; overflow-y: auto; position: relative;">
+            <button onclick="document.getElementById('day-details-modal').style.display='none'" style="position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-sec);">×</button>
+            <h3 style="margin-top: 0; margin-bottom: 16px;" id="day-details-title">День</h3>
+            <div id="day-details-content" style="font-size: 15px; line-height: 1.6;"></div>
         </div>
     </div>
 
@@ -550,7 +560,7 @@
                 
                 for (let d = 1; d <= daysInMonth; d++) {
                     const cell = document.createElement('div');
-                    cell.style.cssText = 'aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-size: 12px; background: rgba(128,128,128,0.08);';
+                    cell.style.cssText = 'aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-size: 12px; background: rgba(128,128,128,0.08); cursor: pointer;';
                     cell.innerText = d;
                     
                     const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
@@ -560,10 +570,40 @@
                         cell.style.background = 'var(--tile-green)';
                         cell.style.color = '#2e7d32';
                         cell.style.fontWeight = 'bold';
-                        cell.title = `Выполнено: ${dayProgress.length}`;
                     }
+                    
+                    cell.addEventListener('click', () => showDayDetails(dateStr));
                     el.appendChild(cell);
                 }
+            }
+
+            // Функция показа деталей дня
+            function showDayDetails(dateStr) {
+                const moods = store.get('moods', {});
+                const progress = store.get('progress_' + dateStr, []);
+                const sleepList = store.get('sleep', []);
+                const sleepForDay = sleepList.find(s => s.date === dateStr);
+                
+                const emojiMap = { 1: '😭', 2: '😕', 3: '😐', 4: '🙂', 5: '😄' };
+                const moodText = moods[dateStr] ? emojiMap[moods[dateStr]] : 'Нет данных';
+                
+                const names = { breath: 'Дыхание', tactical: 'Дыхание', sleep: 'Дыхание', energy: 'Дыхание', cbt: 'КПТ', grounding: 'Заземление', diary: 'Дневник', gratitude: 'Благодарность', habit: 'Чеклист', body: 'Тело' };
+                const doneList = progress.length ? progress.map(p => `<li>${names[p] || p}</li>`).join('') : '<li>Пока ничего не сделано</li>';
+                
+                let sleepHtml = '';
+                if (sleepForDay) {
+                    const qEmoji = ['😫', '😕', '😐', '🙂', '😴'][sleepForDay.quality - 1] || '';
+                    sleepHtml = `<div style="margin-top: 12px;"><b>Сон:</b> ${qEmoji} (${sleepForDay.bed} – ${sleepForDay.wake})</div>`;
+                }
+                
+                document.getElementById('day-details-title').innerText = `День ${dateStr}`;
+                document.getElementById('day-details-content').innerHTML = `
+                    <div style="font-size: 24px; text-align: center; margin-bottom: 12px;">${moodText}</div>
+                    <div><b>Выполнено практик (${progress.length}):</b><ul style="margin: 8px 0 0 0; padding-left: 20px;">${doneList}</ul></div>
+                    ${sleepHtml}
+                `;
+                
+                document.getElementById('day-details-modal').style.display = 'flex';
             }
                         // ===== ДЫХАНИЕ =====
             async function runBreathing(circleId, textId, btn, phasesArray, cycles, practiceId) {
@@ -704,10 +744,30 @@
                 tired: "Усталость — тело просит отдыха. Это не слабость. Дай себе паузу."
             };
             document.querySelectorAll('.emotion-chip').forEach(chip => {
+                if (chip.closest('#assistant-states')) return;
                 chip.addEventListener('click', function() {
                     const tip = emotionTips[this.dataset.emotion] || '';
                     const box = document.getElementById('emotion-tip');
                     box.style.display = 'block'; box.innerText = tip;
+                });
+            });
+
+            // ===== УМНЫЙ АССИСТЕНТ =====
+            const assistantPlans = {
+                anxious: { title: "При тревоге", steps: ["Сделай дыхание 4-7-8 (успокоит нервную систему)", "Выпиши тревожную мысль в Дневник или КПТ", "Сделай заземление 5-4-3-2-1"] },
+                tired: { title: "При усталости", steps: ["Сделай дыхание 'Энергия' (взбодрит за 1 минуту)", "Выпей воды и разомнись", "Разреши себе отдохнуть без вины — отметь в чеклисте"] },
+                sad: { title: "При грусти", steps: ["Запиши 3 вещи в Благодарность (переключит фокус)", "Сделай дыхание 4-4-4-4", "Напиши себе тёплое письмо в Профиле"] },
+                angry: { title: "При злости", steps: ["Сделай тактическое дыхание (сбросит напряжение)", "Напиши всё, что злит, в Дневник (выплесни)", "Заземлись через ощущения"] },
+                ok: { title: "Отличный день!", steps: ["Закрепи состояние в Чеклисте заботы", "Запиши, что хорошего случилось в Благодарность", "Попробуй сканирование тела для расслабления"] }
+            };
+
+            document.querySelectorAll('#assistant-states .emotion-chip').forEach(chip => {
+                chip.addEventListener('click', function() {
+                    const state = this.dataset.state;
+                    const plan = assistantPlans[state];
+                    const res = document.getElementById('assistant-result');
+                    res.style.display = 'block';
+                    res.innerHTML = `<h3 style="margin-top: 0; color: var(--text);">${plan.title}</h3><ul style="padding-left: 20px; margin-bottom: 0;">${plan.steps.map(s => `<li style="margin-bottom: 8px; font-size: 15px;">${s}</li>`).join('')}</ul>`;
                 });
             });
                         // ===== ИЗБРАННОЕ =====
@@ -738,63 +798,6 @@
                 if (!favs.length) { el.innerHTML = '<p style="color: var(--text-sec); text-align: center;">Пока пусто. Нажми ★ на плитке, чтобы добавить.</p>'; return; }
                 el.innerHTML = favs.map(id => `<div class="tile tile-white tile-wide" style="margin-bottom: 10px;" onclick="openScreen('${id}')"><div class="tile-icon" style="background: var(--tile-blue);">★</div><div style="flex: 1;"><div class="tile-title">${practiceNames[id] || id}</div></div></div>`).join('');
             }
-
-            // ===== СВЕЧА =====
-            let candleInterval = null;
-            let candleAudioCtx = null;
-            let candleNoiseNode = null;
-            let candleAudioGain = null;
-
-            function startCandleCrackle() {
-                if (!candleAudioCtx) candleAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                if (candleAudioCtx.state === 'suspended') candleAudioCtx.resume();
-                
-                const bufferSize = candleAudioCtx.sampleRate * 2;
-                const buffer = candleAudioCtx.createBuffer(1, bufferSize, candleAudioCtx.sampleRate);
-                const data = buffer.getChannelData(0);
-                for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
-
-                candleNoiseNode = candleAudioCtx.createBufferSource();
-                candleNoiseNode.buffer = buffer;
-                candleNoiseNode.loop = true;
-
-                const filter = candleAudioCtx.createBiquadFilter();
-                filter.type = 'bandpass';
-                filter.frequency.value = 1000;
-                filter.Q.value = 0.5;
-
-                candleAudioGain = candleAudioCtx.createGain();
-                candleAudioGain.gain.value = 0.05; // тихий треск
-
-                candleNoiseNode.connect(filter).connect(candleAudioGain).connect(candleAudioCtx.destination);
-                candleNoiseNode.start();
-            }
-
-            function stopCandleCrackle() {
-                if (candleNoiseNode) { try { candleNoiseNode.stop(); candleNoiseNode.disconnect(); } catch(e){} candleNoiseNode = null; }
-                if (candleAudioGain) { try { candleAudioGain.disconnect(); } catch(e){} candleAudioGain = null; }
-            }
-
-            document.getElementById('candle-btn').addEventListener('click', function() {
-                if (candleInterval) { 
-                    clearInterval(candleInterval); candleInterval = null; 
-                    this.innerText = 'Начать'; 
-                    stopCandleCrackle(); 
-                    return; 
-                }
-                startCandleCrackle();
-                let sec = 180; const timer = document.getElementById('candle-timer'); const btn = this;
-                btn.innerText = 'Остановить';
-                candleInterval = setInterval(() => {
-                    sec--; const m = Math.floor(sec / 60); const s = sec % 60;
-                    timer.innerText = m + ':' + String(s).padStart(2, '0');
-                    if (sec <= 0) {
-                        clearInterval(candleInterval); candleInterval = null; btn.innerText = 'Начать'; timer.innerText = '3:00';
-                        stopCandleCrackle();
-                        document.getElementById('mood-modal').style.display = 'flex';
-                    }
-                }, 1000);
-            });
 
             // ===== СКАНИРОВАНИЕ ТЕЛА =====
             const bodySteps = ["Стопы. Почувствуй, как они касаются пола.", "Голени и колени. Заметь напряжение.", "Бёдра. Расслабь их.", "Живот. Дыши в него мягко.", "Грудь. Почувствуй, как она поднимается.", "Руки. Отпусти плечи.", "Шея. Мягко поверни голову.", "Лицо. Расслабь челюсть и лоб.", "Всё тело целиком. Ты здесь."];
