@@ -77,18 +77,20 @@
         .mood-calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 12px; }
         .mood-day { aspect-ratio: 1; border-radius: 8px; background: rgba(128,128,128,0.08); display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--text-sec); }
         .mood-day.has-mood { font-size: 18px; }
-        .panic-btn { background: #e57373; color: white; border: none; padding: 18px; border-radius: 20px; font-size: 17px; font-weight: 700; width: 100%; cursor: pointer; margin-top: 20px; box-shadow: 0 6px 24px rgba(229,115,115,0.3); transition: transform 0.2s; }
-        .panic-btn:active { transform: scale(0.96); }
         .emotion-wheel { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 16px; }
         .emotion-chip { padding: 16px; border-radius: 16px; background: var(--card); border: 1px solid var(--border); cursor: pointer; font-weight: 600; font-size: 15px; transition: transform 0.2s; }
         .emotion-chip:active { transform: scale(0.95); }
         .emotion-tip { background: var(--tile-purple); padding: 16px; border-radius: 16px; margin-top: 16px; display: none; text-align: left; animation: fadeIn 0.4s ease; }
-        .candle-flame { width: 60px; height: 90px; margin: 40px auto; position: relative; }
-        .candle-flame::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 30px; height: 50px; background: radial-gradient(ellipse at bottom, #ffeb3b, #ff9800 50%, transparent 75%); border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; animation: flicker 0.3s infinite alternate; filter: blur(1px); }
-        @keyframes flicker { from { transform: translateX(-50%) scale(1) rotate(-2deg); } to { transform: translateX(-50%) scale(1.05) rotate(2deg); } }
+        
+        .candle-container { width: 120px; height: 160px; margin: 20px auto; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; }
+        .candle-wax { width: 40px; height: 80px; background: linear-gradient(to right, #f5f5f5, #ffffff 50%, #e0e0e0); border-radius: 5px; position: relative; box-shadow: inset -5px 0 10px rgba(0,0,0,0.1); }
+        .candle-wick { width: 2px; height: 10px; background: #333; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); }
+        .candle-flame { width: 20px; height: 35px; background: radial-gradient(ellipse at bottom, #fff 0%, #ffeb3b 40%, #ff9800 80%, transparent 100%); border-radius: 50% 50% 20% 20% / 60% 60% 40% 40%; position: absolute; top: -45px; left: 50%; transform: translateX(-50%); filter: drop-shadow(0 0 15px #ff9800); animation: flicker 0.1s infinite alternate; }
+        @keyframes flicker { 0% { transform: translateX(-50%) scale(1) skewX(-2deg); opacity: 0.9; } 50% { transform: translateX(-48%) scale(1.05) skewX(2deg); opacity: 1; } 100% { transform: translateX(-52%) scale(0.95) skewX(-1deg); opacity: 0.95; } }
+        
         #mood-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
         .modal-card { background: var(--card); width: 90%; max-width: 340px; border-radius: 24px; padding: 28px; text-align: center; animation: fadeIn 0.3s ease; }
-        @media (prefers-reduced-motion: reduce) { .fade-in, .splash-icon, .tile, .inner-screen, .breath-circle, .candle-flame::before { animation: none !important; transition: none !important; } }
+        @media (prefers-reduced-motion: reduce) { .fade-in, .splash-icon, .tile, .inner-screen, .breath-circle, .candle-flame { animation: none !important; transition: none !important; } }
     </style>
 </head>
 <body>
@@ -128,8 +130,6 @@
                     <div style="font-size: 12px; color: var(--text-sec); margin-top: 2px;">маленькие шаги — большие перемены</div>
                 </div>
             </div>
-
-            <button class="panic-btn" onclick="openScreen('panic')">🆘 Мне плохо сейчас</button>
 
             <div class="section-title">Дыхательные упражнения</div>
             <div class="bento-grid">
@@ -195,7 +195,8 @@
             <div class="nav-item" data-nav="profile" onclick="openScreen('profile')"><div class="nav-icon">👤</div><div>Профиль</div></div>
         </div>
     </div>
-        <div id="screen-favorites" class="inner-screen">
+
+    <div id="screen-favorites" class="inner-screen">
         <div class="back-btn" onclick="closeScreens()">← Назад</div>
         <div class="inner-content">
             <h2 style="font-size: 24px;">Избранное</h2>
@@ -245,22 +246,6 @@
             <div class="breath-circle" id="energy-circle" style="background: var(--tile-green); border-color: var(--tile-green-icon); color: #2e7d32;">2</div>
             <div id="energy-text" style="font-weight: 700; font-size: 18px; margin-bottom: 20px;">Готов?</div>
             <button class="btn" id="energy-btn">Начать</button>
-        </div>
-    </div>
-
-    <div id="screen-panic" class="inner-screen">
-        <div class="back-btn" onclick="closeScreens()">← Назад</div>
-        <div class="inner-content">
-            <h2 style="font-size: 26px; color: #e57373;">Ты в безопасности</h2>
-            <p style="color: var(--text-sec); margin-bottom: 24px; line-height: 1.5;">Это пройдёт. Давай подышим вместе 90 секунд.</p>
-            <div class="breath-circle" id="panic-circle" style="background: #fce4e4; border-color: #e57373; color: #c62828;">4</div>
-            <div id="panic-text" style="font-weight: 700; font-size: 18px; margin-bottom: 20px;">Нажми «Начать»</div>
-            <button class="btn" id="panic-btn" style="background: #e57373;">Начать</button>
-            <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border);">
-                <p style="font-size: 14px; color: var(--text-sec); margin-bottom: 12px;">Если совсем тяжело — позвони:</p>
-                <a href="tel:88002000122" class="btn btn-secondary" style="display: block; text-decoration: none; text-align: center; margin-top: 8px;">📞 8-800-2000-122</a>
-                <a href="tel:84953268054" class="btn btn-secondary" style="display: block; text-decoration: none; text-align: center; margin-top: 8px;">📞 8-495-326-80-54</a>
-            </div>
         </div>
     </div>
         <div id="screen-cbt" class="inner-screen">
@@ -324,7 +309,8 @@
             <button class="btn" id="habit-btn-inner">Отметить день</button>
         </div>
     </div>
-        <div id="screen-emotions" class="inner-screen">
+
+    <div id="screen-emotions" class="inner-screen">
         <div class="back-btn" onclick="closeScreens()">← Назад</div>
         <div class="inner-content">
             <h2 style="font-size: 24px;">Колесо эмоций</h2>
@@ -348,7 +334,10 @@
         <div class="inner-content">
             <h2 style="font-size: 24px;">Медитация на свечу</h2>
             <p style="color: var(--text-sec); margin-bottom: 16px;">Смотри на пламя 3 минуты. Просто дыши.</p>
-            <div class="candle-flame"></div>
+            <div class="candle-container">
+                <div class="candle-wax"><div class="candle-wick"></div></div>
+                <div class="candle-flame" id="candle-flame-el"></div>
+            </div>
             <div style="font-size: 32px; font-weight: 800; margin: 20px 0;" id="candle-timer">3:00</div>
             <button class="btn" id="candle-btn">Начать</button>
         </div>
@@ -404,28 +393,31 @@
             <button class="btn" id="affirmation-btn">Другая</button>
         </div>
     </div>
-
-    <div id="screen-profile" class="inner-screen">
+        <div id="screen-profile" class="inner-screen">
         <div class="back-btn" onclick="closeScreens()">← Назад</div>
         <div class="inner-content">
             <h2 style="font-size: 24px;">Профиль</h2>
+            
             <div style="background: var(--card); padding: 20px; border-radius: 20px; margin-top: 20px;">
                 <p style="font-size: 16px; font-weight: 600; margin: 0;">Привет, <span id="profile-name">друг</span> 👋</p>
             </div>
+
+            <div style="background: var(--card); padding: 20px; border-radius: 20px; margin-top: 12px; text-align: left;">
+                <p style="font-size: 14px; color: var(--text-sec); margin: 0 0 8px;">Твой календарь активности</p>
+                <div id="profile-calendar" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 12px;"></div>
+                <div style="font-size: 12px; color: var(--text-sec); margin-top: 8px; text-align: center;">Зелёная клетка — были практики</div>
+            </div>
+
             <div style="background: var(--card); padding: 20px; border-radius: 20px; margin-top: 12px; text-align: left;">
                 <p style="font-size: 14px; color: var(--text-sec); margin: 0 0 8px;">Тема</p>
                 <button class="btn btn-secondary" id="theme-toggle-2" style="margin-top: 0;">🌙 Тёмная тема</button>
             </div>
+
             <div style="background: var(--card); padding: 20px; border-radius: 20px; margin-top: 12px; text-align: left;">
                 <p style="font-size: 14px; color: var(--text-sec); margin: 0 0 8px;">Письмо себе</p>
                 <textarea id="letter-input" rows="4" placeholder="Напиши тёплое письмо. Покажем через неделю."></textarea>
                 <button class="btn btn-secondary" id="letter-save">Отложить на неделю</button>
                 <div id="letter-status" style="margin-top: 8px; font-size: 13px; color: var(--text-sec);"></div>
-            </div>
-            <div style="background: var(--card); padding: 20px; border-radius: 20px; margin-top: 12px; text-align: left;">
-                <p style="font-size: 14px; color: var(--text-sec); margin: 0 0 8px;">Кризисные телефоны</p>
-                <a href="tel:88002000122" class="btn btn-secondary" style="display: block; text-decoration: none; text-align: center; margin-bottom: 8px;">📞 8-800-2000-122</a>
-                <a href="tel:84953268054" class="btn btn-secondary" style="display: block; text-decoration: none; text-align: center;">📞 8-495-326-80-54</a>
             </div>
         </div>
     </div>
@@ -507,6 +499,7 @@
                 if (name === 'favorites' && typeof renderFavorites === 'function') renderFavorites();
                 if (name === 'wins' && typeof renderWins === 'function') renderWins();
                 if (name === 'sleep-tracker' && typeof renderSleep === 'function') renderSleep();
+                if (name === 'profile' && typeof renderProfileCalendar === 'function') renderProfileCalendar();
                 if (name === 'profile' && typeof renderLetter === 'function') renderLetter();
             }
             window.closeScreens = function() {
@@ -524,7 +517,7 @@
             }
             renderProgress();
 
-            // ===== КАЛЕНДАРЬ НАСТРОЕНИЯ =====
+            // ===== КАЛЕНДАРЬ НАСТРОЕНИЯ (на главной) =====
             function renderMoodCalendar() {
                 const el = document.getElementById('mood-calendar'); if (!el) return;
                 const moods = store.get('moods', {}); el.innerHTML = ''; const days = []; const now = new Date();
@@ -537,6 +530,41 @@
                 });
             }
             renderMoodCalendar();
+
+            // ===== КАЛЕНДАРЬ АКТИВНОСТИ (в профиле) =====
+            function renderProfileCalendar() {
+                const el = document.getElementById('profile-calendar');
+                if (!el) return;
+                el.innerHTML = '';
+                const now = new Date();
+                const currentMonth = now.getMonth();
+                const currentYear = now.getFullYear();
+                
+                const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+                const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+                
+                for (let i = 0; i < (firstDay === 0 ? 6 : firstDay - 1); i++) {
+                    const empty = document.createElement('div');
+                    el.appendChild(empty);
+                }
+                
+                for (let d = 1; d <= daysInMonth; d++) {
+                    const cell = document.createElement('div');
+                    cell.style.cssText = 'aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-size: 12px; background: rgba(128,128,128,0.08);';
+                    cell.innerText = d;
+                    
+                    const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                    const dayProgress = store.get('progress_' + dateStr, []);
+                    
+                    if (dayProgress.length > 0) {
+                        cell.style.background = 'var(--tile-green)';
+                        cell.style.color = '#2e7d32';
+                        cell.style.fontWeight = 'bold';
+                        cell.title = `Выполнено: ${dayProgress.length}`;
+                    }
+                    el.appendChild(cell);
+                }
+            }
                         // ===== ДЫХАНИЕ =====
             async function runBreathing(circleId, textId, btn, phasesArray, cycles, practiceId) {
                 if (btn.disabled) return; 
@@ -578,9 +606,6 @@
             document.getElementById('energy-btn').addEventListener('click', function() { 
                 runBreathing('energy-circle', 'energy-text', this, [{name: "Вдох", sec: 2, scale: true}, {name: "Выдох", sec: 2, scale: false}], 15, 'energy'); 
             });
-            document.getElementById('panic-btn').addEventListener('click', function() { 
-                runBreathing('panic-circle', 'panic-text', this, [{name: "Вдох", sec: 4, scale: true}, {name: "Выдох", sec: 6, scale: false}], 9, 'panic'); 
-            });
 
             // ===== МОДАЛКА НАСТРОЕНИЯ =====
             document.querySelectorAll('.mood-btn').forEach(btn => {
@@ -593,7 +618,8 @@
                     document.getElementById('mood-modal').style.display = 'none';
                 });
             });
-                        // ===== КПТ =====
+
+            // ===== КПТ =====
             document.getElementById('cbt-btn').addEventListener('click', function() {
                 const entry = {
                     thought: document.getElementById('cbt-thought').value,
@@ -684,8 +710,7 @@
                     box.style.display = 'block'; box.innerText = tip;
                 });
             });
-
-            // ===== ИЗБРАННОЕ =====
+                        // ===== ИЗБРАННОЕ =====
             const practiceNames = { breath: 'Коробочное дыхание', tactical: 'Тактическое дыхание', sleep: 'Дыхание 4-7-8', energy: 'Энергия', cbt: 'КПТ', grounding: 'Заземление', diary: 'Дневник', gratitude: 'Благодарность', habit: 'Чеклист заботы' };
             function getFavorites() { return store.get('favorites', []); }
             function toggleFav(id) {
@@ -713,10 +738,51 @@
                 if (!favs.length) { el.innerHTML = '<p style="color: var(--text-sec); text-align: center;">Пока пусто. Нажми ★ на плитке, чтобы добавить.</p>'; return; }
                 el.innerHTML = favs.map(id => `<div class="tile tile-white tile-wide" style="margin-bottom: 10px;" onclick="openScreen('${id}')"><div class="tile-icon" style="background: var(--tile-blue);">★</div><div style="flex: 1;"><div class="tile-title">${practiceNames[id] || id}</div></div></div>`).join('');
             }
-                        // ===== СВЕЧА =====
+
+            // ===== СВЕЧА =====
             let candleInterval = null;
+            let candleAudioCtx = null;
+            let candleNoiseNode = null;
+            let candleAudioGain = null;
+
+            function startCandleCrackle() {
+                if (!candleAudioCtx) candleAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (candleAudioCtx.state === 'suspended') candleAudioCtx.resume();
+                
+                const bufferSize = candleAudioCtx.sampleRate * 2;
+                const buffer = candleAudioCtx.createBuffer(1, bufferSize, candleAudioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+
+                candleNoiseNode = candleAudioCtx.createBufferSource();
+                candleNoiseNode.buffer = buffer;
+                candleNoiseNode.loop = true;
+
+                const filter = candleAudioCtx.createBiquadFilter();
+                filter.type = 'bandpass';
+                filter.frequency.value = 1000;
+                filter.Q.value = 0.5;
+
+                candleAudioGain = candleAudioCtx.createGain();
+                candleAudioGain.gain.value = 0.05; // тихий треск
+
+                candleNoiseNode.connect(filter).connect(candleAudioGain).connect(candleAudioCtx.destination);
+                candleNoiseNode.start();
+            }
+
+            function stopCandleCrackle() {
+                if (candleNoiseNode) { try { candleNoiseNode.stop(); candleNoiseNode.disconnect(); } catch(e){} candleNoiseNode = null; }
+                if (candleAudioGain) { try { candleAudioGain.disconnect(); } catch(e){} candleAudioGain = null; }
+            }
+
             document.getElementById('candle-btn').addEventListener('click', function() {
-                if (candleInterval) { clearInterval(candleInterval); candleInterval = null; this.innerText = 'Начать'; return; }
+                if (candleInterval) { 
+                    clearInterval(candleInterval); candleInterval = null; 
+                    this.innerText = 'Начать'; 
+                    stopCandleCrackle(); 
+                    return; 
+                }
+                startCandleCrackle();
                 let sec = 180; const timer = document.getElementById('candle-timer'); const btn = this;
                 btn.innerText = 'Остановить';
                 candleInterval = setInterval(() => {
@@ -724,6 +790,7 @@
                     timer.innerText = m + ':' + String(s).padStart(2, '0');
                     if (sec <= 0) {
                         clearInterval(candleInterval); candleInterval = null; btn.innerText = 'Начать'; timer.innerText = '3:00';
+                        stopCandleCrackle();
                         document.getElementById('mood-modal').style.display = 'flex';
                     }
                 }, 1000);
