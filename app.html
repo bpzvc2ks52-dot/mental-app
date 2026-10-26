@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="theme-color" content="#f9f7f4">
     <title>Остров добра</title>
     <style>
         :root { --bg: #f9f7f4; --text: #3a2e2a; --text-sec: #8c7b75; --tile-blue: #eef5f9; --tile-blue-icon: #90caf9; --tile-purple: #f6f1fa; --tile-purple-icon: #ce93d8; --tile-peach: #fdf4ed; --tile-peach-icon: #ffb74d; --tile-pink: #fcf1f1; --tile-pink-icon: #f48fb1; --tile-green: #f1f8f1; --tile-green-icon: #a5d6a7; --card: #ffffff; --radius: 24px; --nav-bg: rgba(255,255,255,0.85); --border: rgba(0,0,0,0.02); }
@@ -50,7 +49,7 @@
         .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sec); font-size: 10px; font-weight: 600; cursor: pointer; width: 25%; transition: color 0.2s; }
         .nav-item.active { color: var(--text); }
         .nav-icon { font-size: 22px; margin-bottom: 4px; }
-                .inner-screen { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 500; flex-direction: column; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); padding-bottom: env(safe-area-inset-bottom, 0px); }
+        .inner-screen { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 500; flex-direction: column; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); padding-bottom: env(safe-area-inset-bottom, 0px); }
         .inner-screen.active { display: flex; transform: translateX(0); }
         .back-btn { padding: 20px; font-size: 16px; font-weight: 600; color: var(--text); cursor: pointer; flex-shrink: 0; }
         .inner-content { padding: 0 24px 40px; text-align: center; }
@@ -74,9 +73,6 @@
         .progress-ring .bg { stroke: rgba(128,128,128,0.15); }
         .progress-ring .fg { stroke: var(--tile-green-icon); stroke-linecap: round; transition: stroke-dashoffset 0.6s ease; }
         .progress-text { font-size: 14px; font-weight: 600; }
-        .mood-calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 12px; }
-        .mood-day { aspect-ratio: 1; border-radius: 8px; background: rgba(128,128,128,0.08); display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--text-sec); }
-        .mood-day.has-mood { font-size: 18px; }
         .emotion-wheel { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 16px; }
         .emotion-chip { padding: 16px; border-radius: 16px; background: var(--card); border: 1px solid var(--border); cursor: pointer; font-weight: 600; font-size: 15px; transition: transform 0.2s; }
         .emotion-chip:active { transform: scale(0.95); }
@@ -87,18 +83,10 @@
     </style>
 </head>
 <body>
-    <div id="splash">
-        <div class="splash-icon">🌿</div>
-        <div class="splash-title">Остров добра</div>
-        <div class="splash-sub">Твой уютный уголок заботы.</div>
-        <button class="splash-btn" id="start-btn">Начать путь</button>
-    </div>
+    <div id="splash"><div class="splash-icon">🌿</div><div class="splash-title">Остров добра</div><div class="splash-sub">Твой уютный уголок заботы.</div><button class="splash-btn" id="start-btn">Начать путь</button></div>
     <div id="onboarding" style="position: fixed; inset: 0; background: var(--bg); z-index: 9998; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 32px; text-align: center;">
-        <div style="font-size: 60px; margin-bottom: 20px;">👋</div>
-        <h2 style="font-size: 24px; margin-bottom: 8px;">Как тебя зовут?</h2>
-        <p style="color: var(--text-sec); margin-bottom: 24px;">Чтобы обращаться по имени.</p>
-        <input type="text" id="onboarding-name" placeholder="Твоё имя" style="max-width: 300px;">
-        <button class="btn" id="onboarding-save" style="max-width: 300px;">Продолжить</button>
+        <div style="font-size: 60px; margin-bottom: 20px;">👋</div><h2 style="font-size: 24px; margin-bottom: 8px;">Как тебя зовут?</h2><p style="color: var(--text-sec); margin-bottom: 24px;">Чтобы обращаться по имени.</p>
+        <input type="text" id="onboarding-name" placeholder="Твоё имя" style="max-width: 300px;"><button class="btn" id="onboarding-save" style="max-width: 300px;">Продолжить</button>
     </div>
     <button id="music-toggle" aria-label="Включить музыку">🎵</button>
         <div id="main-screen">
@@ -124,11 +112,15 @@
                 </div>
             </div>
 
-            <div class="section-title">Ассистент</div>
+            <div class="section-title">Ассистент и планы</div>
             <div class="bento-grid" style="grid-template-columns: 1fr;">
                 <div class="tile tile-white tile-wide" onclick="openScreen('assistant')" style="background: linear-gradient(135deg, var(--tile-blue) 0%, var(--tile-purple) 100%);">
                     <div class="tile-icon" style="background: white;">🤖</div>
                     <div style="flex: 1;"><div class="tile-title">Умный помощник</div><div class="tile-desc">подберём практики под твоё состояние</div></div>
+                </div>
+                <div class="tile tile-white tile-wide" onclick="openScreen('reminders')">
+                    <div class="tile-icon" style="background: var(--tile-peach);">⏰</div>
+                    <div style="flex: 1;"><div class="tile-title">Напоминания</div><div class="tile-desc">запиши дела и не забудь о них</div></div>
                 </div>
             </div>
 
@@ -184,9 +176,6 @@
                 <div class="tile tile-pink" onclick="openScreen('sleep-tracker')"><div class="tile-icon">😴</div><div><div class="tile-title">Трекер сна</div><div class="tile-desc">как спалось</div></div></div>
                 <div class="tile tile-white" onclick="openScreen('affirmations')"><div class="tile-icon" style="background: var(--tile-peach);">💬</div><div><div class="tile-title">Аффирмации</div><div class="tile-desc">тёплые слова</div></div></div>
             </div>
-
-            <div class="section-title">Календарь настроения</div>
-            <div class="mood-calendar" id="mood-calendar"></div>
         </div>
 
         <div class="bottom-nav">
@@ -262,6 +251,18 @@
                 <div class="emotion-chip" data-state="ok">🙂 Всё хорошо</div>
             </div>
             <div id="assistant-result" style="margin-top: 20px; text-align: left; display: none; background: var(--card); padding: 20px; border-radius: 20px;"></div>
+        </div>
+    </div>
+
+    <div id="screen-reminders" class="inner-screen">
+        <div class="back-btn" onclick="closeScreens()">← Назад</div>
+        <div class="inner-content">
+            <h2 style="font-size: 24px;">Мои напоминания</h2>
+            <p style="color: var(--text-sec); margin-bottom: 20px;">О чём нельзя забыть?</p>
+            <input type="text" id="reminder-text" placeholder="Например: выпить воды">
+            <input type="time" id="reminder-time">
+            <button class="btn" id="reminder-save">Добавить напоминание</button>
+            <div id="reminders-list" style="text-align: left; margin-top: 20px;"></div>
         </div>
     </div>
         <div id="screen-cbt" class="inner-screen">
@@ -395,26 +396,22 @@
             <button class="btn" id="affirmation-btn">Другая</button>
         </div>
     </div>
-        <div id="screen-profile" class="inner-screen">
+
+    <div id="screen-profile" class="inner-screen">
         <div class="back-btn" onclick="closeScreens()">← Назад</div>
         <div class="inner-content">
             <h2 style="font-size: 24px;">Профиль</h2>
-            
             <div style="background: var(--card); padding: 20px; border-radius: 20px; margin-top: 20px;">
                 <p style="font-size: 16px; font-weight: 600; margin: 0;">Привет, <span id="profile-name">друг</span> 👋</p>
             </div>
-
-            <div style="background: var(--card); padding: 20px; border-radius: 20px; margin-top: 12px; text-align: left;">
-                <p style="font-size: 14px; color: var(--text-sec); margin: 0 0 8px;">Твой календарь активности</p>
-                <div id="profile-calendar" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 12px;"></div>
-                <div style="font-size: 12px; color: var(--text-sec); margin-top: 8px; text-align: center;">Зелёная клетка — были практики</div>
+            <div style="background: var(--card); padding: 16px; border-radius: 20px; margin-top: 12px; text-align: left;">
+                <p style="font-size: 14px; color: var(--text-sec); margin: 0 0 8px;">Календарь активности</p>
+                <div id="profile-calendar" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;"></div>
             </div>
-
             <div style="background: var(--card); padding: 20px; border-radius: 20px; margin-top: 12px; text-align: left;">
                 <p style="font-size: 14px; color: var(--text-sec); margin: 0 0 8px;">Тема</p>
                 <button class="btn btn-secondary" id="theme-toggle-2" style="margin-top: 0;">🌙 Тёмная тема</button>
             </div>
-
             <div style="background: var(--card); padding: 20px; border-radius: 20px; margin-top: 12px; text-align: left;">
                 <p style="font-size: 14px; color: var(--text-sec); margin: 0 0 8px;">Письмо себе</p>
                 <textarea id="letter-input" rows="4" placeholder="Напиши тёплое письмо. Покажем через неделю."></textarea>
@@ -511,6 +508,7 @@
                 if (name === 'sleep-tracker' && typeof renderSleep === 'function') renderSleep();
                 if (name === 'profile' && typeof renderProfileCalendar === 'function') renderProfileCalendar();
                 if (name === 'profile' && typeof renderLetter === 'function') renderLetter();
+                if (name === 'reminders' && typeof renderReminders === 'function') renderReminders();
             }
             window.closeScreens = function() {
                 document.querySelectorAll('.inner-screen').forEach(s => s.classList.remove('active'));
@@ -527,20 +525,6 @@
             }
             renderProgress();
 
-            // ===== КАЛЕНДАРЬ НАСТРОЕНИЯ (на главной) =====
-            function renderMoodCalendar() {
-                const el = document.getElementById('mood-calendar'); if (!el) return;
-                const moods = store.get('moods', {}); el.innerHTML = ''; const days = []; const now = new Date();
-                for (let i = 27; i >= 0; i--) { const d = new Date(now); d.setDate(now.getDate() - i); days.push(d.toISOString().slice(0, 10)); }
-                const emoji = { 1: '😭', 2: '😕', 3: '😐', 4: '🙂', 5: '😄' };
-                days.forEach(key => {
-                    const cell = document.createElement('div'); cell.className = 'mood-day';
-                    if (moods[key]) { cell.classList.add('has-mood'); cell.textContent = emoji[moods[key]] || '·'; } else { cell.textContent = key.slice(8); }
-                    el.appendChild(cell);
-                });
-            }
-            renderMoodCalendar();
-
             // ===== КАЛЕНДАРЬ АКТИВНОСТИ (в профиле) =====
             function renderProfileCalendar() {
                 const el = document.getElementById('profile-calendar');
@@ -549,60 +533,45 @@
                 const now = new Date();
                 const currentMonth = now.getMonth();
                 const currentYear = now.getFullYear();
-                
                 const firstDay = new Date(currentYear, currentMonth, 1).getDay();
                 const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
                 
                 for (let i = 0; i < (firstDay === 0 ? 6 : firstDay - 1); i++) {
-                    const empty = document.createElement('div');
-                    el.appendChild(empty);
+                    el.appendChild(document.createElement('div'));
                 }
                 
                 for (let d = 1; d <= daysInMonth; d++) {
                     const cell = document.createElement('div');
-                    cell.style.cssText = 'aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-size: 12px; background: rgba(128,128,128,0.08); cursor: pointer;';
+                    cell.style.cssText = 'aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 4px; font-size: 10px; background: rgba(128,128,128,0.08); cursor: pointer;';
                     cell.innerText = d;
-                    
                     const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
                     const dayProgress = store.get('progress_' + dateStr, []);
-                    
                     if (dayProgress.length > 0) {
                         cell.style.background = 'var(--tile-green)';
                         cell.style.color = '#2e7d32';
                         cell.style.fontWeight = 'bold';
                     }
-                    
                     cell.addEventListener('click', () => showDayDetails(dateStr));
                     el.appendChild(cell);
                 }
             }
 
-            // Функция показа деталей дня
             function showDayDetails(dateStr) {
                 const moods = store.get('moods', {});
                 const progress = store.get('progress_' + dateStr, []);
                 const sleepList = store.get('sleep', []);
                 const sleepForDay = sleepList.find(s => s.date === dateStr);
-                
                 const emojiMap = { 1: '😭', 2: '😕', 3: '😐', 4: '🙂', 5: '😄' };
                 const moodText = moods[dateStr] ? emojiMap[moods[dateStr]] : 'Нет данных';
-                
                 const names = { breath: 'Дыхание', tactical: 'Дыхание', sleep: 'Дыхание', energy: 'Дыхание', cbt: 'КПТ', grounding: 'Заземление', diary: 'Дневник', gratitude: 'Благодарность', habit: 'Чеклист', body: 'Тело' };
                 const doneList = progress.length ? progress.map(p => `<li>${names[p] || p}</li>`).join('') : '<li>Пока ничего не сделано</li>';
-                
                 let sleepHtml = '';
                 if (sleepForDay) {
                     const qEmoji = ['😫', '😕', '😐', '🙂', '😴'][sleepForDay.quality - 1] || '';
                     sleepHtml = `<div style="margin-top: 12px;"><b>Сон:</b> ${qEmoji} (${sleepForDay.bed} – ${sleepForDay.wake})</div>`;
                 }
-                
                 document.getElementById('day-details-title').innerText = `День ${dateStr}`;
-                document.getElementById('day-details-content').innerHTML = `
-                    <div style="font-size: 24px; text-align: center; margin-bottom: 12px;">${moodText}</div>
-                    <div><b>Выполнено практик (${progress.length}):</b><ul style="margin: 8px 0 0 0; padding-left: 20px;">${doneList}</ul></div>
-                    ${sleepHtml}
-                `;
-                
+                document.getElementById('day-details-content').innerHTML = `<div style="font-size: 24px; text-align: center; margin-bottom: 12px;">${moodText}</div><div><b>Выполнено практик (${progress.length}):</b><ul style="margin: 8px 0 0 0; padding-left: 20px;">${doneList}</ul></div>${sleepHtml}`;
                 document.getElementById('day-details-modal').style.display = 'flex';
             }
                         // ===== ДЫХАНИЕ =====
@@ -654,7 +623,6 @@
                     const moods = store.get('moods', {});
                     moods[todayKey()] = score;
                     store.set('moods', moods);
-                    renderMoodCalendar();
                     document.getElementById('mood-modal').style.display = 'none';
                 });
             });
@@ -743,8 +711,7 @@
                 lonely: "Одиночество — это потребность в контакте. Можно написать близкому или в дневник.",
                 tired: "Усталость — тело просит отдыха. Это не слабость. Дай себе паузу."
             };
-            document.querySelectorAll('.emotion-chip').forEach(chip => {
-                if (chip.closest('#assistant-states')) return;
+            document.querySelectorAll('#screen-emotions .emotion-chip').forEach(chip => {
                 chip.addEventListener('click', function() {
                     const tip = emotionTips[this.dataset.emotion] || '';
                     const box = document.getElementById('emotion-tip');
@@ -878,6 +845,57 @@
                 document.getElementById('letter-input').value = ''; renderLetter();
             });
 
+            // ===== НАПОМИНАНИЯ =====
+            function renderReminders() {
+                const el = document.getElementById('reminders-list'); if (!el) return;
+                const list = store.get('reminders', []);
+                if (!list.length) { el.innerHTML = '<p style="color: var(--text-sec); text-align: center;">Пока нет напоминаний.</p>'; return; }
+                el.innerHTML = list.map((r, i) => `
+                    <div style="background: var(--card); padding: 16px; border-radius: 16px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-weight: 600;">${r.text}</div>
+                            <div style="font-size: 13px; color: var(--text-sec);">в ${r.time}</div>
+                        </div>
+                        <button onclick="deleteReminder(${i})" style="background:none; border:none; font-size: 18px; cursor:pointer;">❌</button>
+                    </div>
+                `).join('');
+            }
+
+            window.deleteReminder = function(index) {
+                const list = store.get('reminders', []);
+                list.splice(index, 1);
+                store.set('reminders', list);
+                renderReminders();
+            };
+
+            document.getElementById('reminder-save').addEventListener('click', function() {
+                const text = document.getElementById('reminder-text').value.trim();
+                const time = document.getElementById('reminder-time').value;
+                if (!text || !time) { alert('Заполни текст и время'); return; }
+                const list = store.get('reminders', []);
+                list.push({ text, time });
+                store.set('reminders', list);
+                document.getElementById('reminder-text').value = '';
+                document.getElementById('reminder-time').value = '';
+                renderReminders();
+                if ('Notification' in window && Notification.permission !== 'granted') Notification.requestPermission();
+            });
+
+            setInterval(() => {
+                if ('Notification' in window && Notification.permission === 'granted') {
+                    const now = new Date();
+                    const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+                    const list = store.get('reminders', []);
+                    list.forEach(r => {
+                        if (r.time === currentTime && !r.notified) {
+                            new Notification('Остров добра', { body: r.text });
+                            r.notified = true;
+                            store.set('reminders', list);
+                        }
+                    });
+                }
+            }, 60000);
+
             // ===== МУЗЫКА =====
             const Music = (function() {
                 let ctx = null, master = null, nodes = [], playing = false, currentScene = null;
@@ -893,6 +911,7 @@
                     stopNodes(); currentScene = scene; playing = true; ramp(master.gain, 0.5, 2);
                     if (scene === 'rain') { noiseSource('lowpass', 1200, 0.6, 0.09); noiseSource('highpass', 4000, 0.5, 0.02); const dropOsc = createPad(880, 0, 0.01); addLFO(dropOsc, 7, 0.008); }
                     else if (scene === 'waves') { const w = noiseSource('lowpass', 500, 0.8, 0.12); addLFO(w, 0.12, 0.06); noiseSource('lowpass', 200, 1.0, 0.05); }
+                    else if (scene === 'fire') { const fireNoise = noiseSource('lowpass', 800, 0.5, 0.15); addLFO(fireNoise, 2, 0.1); const rumble = noiseSource('lowpass', 150, 1.0, 0.08); addLFO(rumble, 0.5, 0.05); }
                     else { const chord = [createPad(220.00, -4, 0.05), createPad(261.63, 3, 0.045), createPad(329.63, -2, 0.04), createPad(110.00, 0, 0.06)]; chord.forEach(function(p, i) { addLFO(p, 0.05 + i * 0.02, 0.012); }); noiseSource('lowpass', 600, 0.7, 0.03); }
                 }
                 function stopNodes() { nodes.forEach(function(n) { try { if (n.stop) n.stop(); n.disconnect(); } catch(e) {} }); nodes = []; }
@@ -905,7 +924,7 @@
 
             const musicBtn = document.getElementById('music-toggle');
             const menu = document.createElement('div'); menu.id = 'music-menu';
-            [['rain', '🌧 Дождь'], ['waves', '🌊 Волны'], ['ambient', '🎵 Эмбиент']].forEach(function(item) {
+            [['rain', '🌧 Дождь'], ['waves', '🌊 Волны'], ['ambient', '🎵 Эмбиент'], ['fire', '🔥 Костёр']].forEach(function(item) {
                 const btn = document.createElement('button'); btn.textContent = item[1]; btn.dataset.scene = item[0];
                 btn.addEventListener('click', async function() { const nowPlaying = await Music.play(item[0]); musicBtn.textContent = nowPlaying ? '🔇' : '🎵'; menu.style.display = 'none'; });
                 menu.appendChild(btn);
