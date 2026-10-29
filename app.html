@@ -5,154 +5,186 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Остров добра</title>
     <style>
+        /* ЦВЕТОВАЯ ПАЛИТРА 2026 */
         :root { 
-            --bg: #f9f7f4; --text: #3a2e2a; --text-sec: #8c7b75; 
-            --tile-blue: #eef5f9; --tile-blue-icon: #90caf9; 
-            --tile-purple: #f6f1fa; --tile-purple-icon: #ce93d8; 
-            --tile-peach: #fdf4ed; --tile-peach-icon: #ffb74d; 
-            --tile-pink: #fcf1f1; --tile-pink-icon: #f48fb1; 
-            --tile-green: #f1f8f1; --tile-green-icon: #a5d6a7; 
-            --card: #ffffff; --radius: 24px; --nav-bg: rgba(255,255,255,0.85); 
-            --border: rgba(0,0,0,0.02);
+            --bg: #f0f4f8; 
+            --text: #1c2b36; 
+            --text-sec: #6b8294; 
+            --card: rgba(255, 255, 255, 0.65); 
+            --card-border: rgba(255, 255, 255, 0.9);
+            --nav-bg: rgba(255, 255, 255, 0.8);
+            --glass-blur: blur(24px);
+            
+            --tile-blue: linear-gradient(135deg, #e0f2fe, #bae6fd); --tile-blue-icon: #0284c7; 
+            --tile-purple: linear-gradient(135deg, #f3e8ff, #e9d5ff); --tile-purple-icon: #9333ea; 
+            --tile-peach: linear-gradient(135deg, #ffedd5, #fed7aa); --tile-peach-icon: #ea580c; 
+            --tile-pink: linear-gradient(135deg, #ffe4e6, #fecdd3); --tile-pink-icon: #e11d48; 
+            --tile-green: linear-gradient(135deg, #dcfce7, #bbf7d0); --tile-green-icon: #16a34a; 
+            
+            --shadow: 0 8px 32px rgba(14, 165, 233, 0.08);
             --font-size-base: 16px;
         }
+        
         html[data-theme="dark"] { 
-            --bg: #1a1715; --text: #f0e9e4; --text-sec: #a89a94; 
-            --tile-blue: #1e2a33; --tile-blue-icon: #64b5f6; 
-            --tile-purple: #241f2e; --tile-purple-icon: #ba68c8; 
-            --tile-peach: #2e2419; --tile-peach-icon: #ffa726; 
-            --tile-pink: #2e1f22; --tile-pink-icon: #f06292; 
-            --tile-green: #1c2a1c; --tile-green-icon: #81c784; 
-            --card: #241f1c; --nav-bg: rgba(36,31,28,0.85); 
-            --border: rgba(255,255,255,0.06);
+            --bg: #080808; 
+            --text: #ffffff; 
+            --text-sec: #888888; 
+            --card: rgba(20, 20, 20, 0.65); 
+            --card-border: rgba(255, 255, 255, 0.05);
+            --nav-bg: rgba(15, 15, 15, 0.8);
+            
+            --tile-blue: linear-gradient(135deg, #0f172a, #1e293b); --tile-blue-icon: #38bdf8; 
+            --tile-purple: linear-gradient(135deg, #2e1065, #4c1d95); --tile-purple-icon: #c084fc; 
+            --tile-peach: linear-gradient(135deg, #431407, #7c2d12); --tile-peach-icon: #fdba74; 
+            --tile-pink: linear-gradient(135deg, #4c0519, #881337); --tile-pink-icon: #fb7185; 
+            --tile-green: linear-gradient(135deg, #064e3b, #065f46); --tile-green-icon: #6ee7b7; 
+            
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
             --font-size-base: 18px;
         }
+        
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        html, body { margin: 0; padding: 0; width: 100%; min-height: 100%; min-height: 100dvh; background-color: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: var(--font-size-base); letter-spacing: -0.2px; overscroll-behavior-y: none; transition: background-color 0.4s ease, color 0.4s ease, font-size 0.4s ease; }
-        body { position: relative; display: flex; flex-direction: column; height: 100dvh; overflow: hidden; }
         
-        .fade-in { animation: fadeIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        html, body { 
+            margin: 0; padding: 0; width: 100%; min-height: 100dvh; 
+            background-color: var(--bg); color: var(--text); 
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif; 
+            font-size: var(--font-size-base); letter-spacing: -0.3px; 
+            overscroll-behavior-y: none; 
+            transition: background-color 0.5s ease, color 0.5s ease, font-size 0.3s ease; 
+        }
         
-        #splash { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.8s ease, transform 0.8s ease; }
-        #splash.hidden { opacity: 0; transform: scale(1.05); pointer-events: none; }
-        .splash-icon { font-size: 70px; margin-bottom: 16px; animation: float 4s infinite ease-in-out; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
-        .splash-title { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
-        .splash-sub { font-size: 15px; color: var(--text-sec); margin-bottom: 30px; }
-        .splash-btn { background: var(--text); color: var(--bg); border: none; padding: 16px 40px; border-radius: 100px; font-size: 16px; font-weight: 700; cursor: pointer; transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
-        .splash-btn:active { transform: scale(0.92); opacity: 0.8; }
+        /* Анимация появления (плавный въезд) */
+        .fade-in { animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
         
-        #main-screen { display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden; }
-        .header { padding: 30px 24px 10px; z-index: 10; flex-shrink: 0; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
-        .greeting { font-size: 26px; font-weight: 800; margin-bottom: 6px; }
-        .greeting-sub { font-size: 15px; color: var(--text-sec); line-height: 1.4; }
-        .header-actions { display: flex; gap: 8px; flex-shrink: 0; }
-        .icon-btn { width: 40px; height: 40px; border-radius: 50%; border: none; background: var(--card); box-shadow: 0 4px 16px rgba(0,0,0,0.06); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.3s ease; }
-        .icon-btn:active { transform: scale(0.9); }
+        #splash { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.6s ease, transform 0.6s ease; }
+        #splash.hidden { opacity: 0; transform: scale(1.1); pointer-events: none; }
+        .splash-icon { font-size: 80px; margin-bottom: 20px; animation: float 4s infinite cubic-bezier(0.4, 0, 0.2, 1); }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        .splash-title { font-size: 32px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.5px; }
+        .splash-sub { font-size: 16px; color: var(--text-sec); margin-bottom: 40px; }
+        .splash-btn { background: var(--text); color: var(--bg); border: none; padding: 18px 48px; border-radius: 100px; font-size: 17px; font-weight: 700; cursor: pointer; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .splash-btn:active { transform: scale(0.92); }
         
-        .content { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; padding: 10px 20px 140px; padding-bottom: calc(140px + env(safe-area-inset-bottom, 0px)); scroll-behavior: smooth; }
-        .section-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; margin-top: 20px; color: var(--text-sec); }
+        #main-screen { display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden; position: relative; }
         
+        /* Аврора-эффект на фоне (светящиеся пятна) */
+        #main-screen::before { content: ''; position: absolute; top: -100px; left: -100px; width: 300px; height: 300px; background: var(--tile-blue-icon); opacity: 0.1; filter: blur(80px); z-index: 0; border-radius: 50%; pointer-events: none; }
+        html[data-theme="dark"] #main-screen::before { opacity: 0.05; }
+
+        .header { padding: 40px 24px 15px; z-index: 10; flex-shrink: 0; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; position: relative; }
+        .greeting { font-size: 28px; font-weight: 800; margin-bottom: 6px; letter-spacing: -0.5px; }
+        .greeting-sub { font-size: 15px; color: var(--text-sec); line-height: 1.4; font-weight: 500; }
+        .header-actions { display: flex; gap: 10px; flex-shrink: 0; }
+        .icon-btn { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--card-border); background: var(--card); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); box-shadow: 0 4px 12px rgba(0,0,0,0.03); font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .icon-btn:active { transform: scale(0.85); }
+        
+        .content { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; padding: 10px 20px 140px; padding-bottom: calc(140px + env(safe-area-inset-bottom, 0px)); scroll-behavior: smooth; position: relative; z-index: 1; }
+        .section-title { font-size: 18px; font-weight: 800; margin-bottom: 14px; margin-top: 24px; color: var(--text); letter-spacing: -0.3px; }
+        
+        /* Тактильные карточки (Bento) */
         .bento-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-        .tile { border-radius: var(--radius); padding: 20px; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; background: var(--card); transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease, background-color 0.4s ease; }
-        .tile:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.06); transform: translateY(-2px); }
-        .tile:active { transform: scale(0.96); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-        .tile-wide { grid-column: span 2; flex-direction: row; align-items: center; gap: 16px; min-height: 80px; }
-        .tile-icon { width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 20px; background: rgba(255,255,255,0.6); flex-shrink: 0; }
-        html[data-theme="dark"] .tile-icon { background: rgba(0,0,0,0.2); }
-        .tile-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
-        .tile-desc { font-size: 12px; color: var(--text-sec); line-height: 1.3; }
-        .tile-fav { position: absolute; top: 10px; right: 10px; font-size: 16px; opacity: 0.3; cursor: pointer; padding: 4px; transition: opacity 0.3s; }
-        .tile-fav.on { opacity: 1; }
+        .tile { border-radius: 28px; padding: 22px; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; background: var(--card); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid var(--card-border); box-shadow: var(--shadow); transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease, background-color 0.4s ease; }
+        .tile:active { transform: scale(0.94); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .tile-wide { grid-column: span 2; flex-direction: row; align-items: center; gap: 18px; min-height: 85px; }
+        .tile-icon { width: 48px; height: 48px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 22px; background: rgba(255,255,255,0.5); flex-shrink: 0; }
+        html[data-theme="dark"] .tile-icon { background: rgba(0,0,0,0.3); }
+        .tile-title { font-size: 17px; font-weight: 800; margin-bottom: 4px; letter-spacing: -0.3px; }
+        .tile-desc { font-size: 13px; color: var(--text-sec); line-height: 1.3; font-weight: 500; }
         
-        .tile-blue { background: var(--tile-blue); } .tile-blue .tile-icon { color: var(--tile-blue-icon); }
-        .tile-purple { background: var(--tile-purple); } .tile-purple .tile-icon { color: var(--tile-purple-icon); }
-        .tile-peach { background: var(--tile-peach); } .tile-peach .tile-icon { color: var(--tile-peach-icon); }
-        .tile-pink { background: var(--tile-pink); } .tile-pink .tile-icon { color: var(--tile-pink-icon); }
-        .tile-green { background: var(--tile-green); } .tile-green .tile-icon { color: var(--tile-green-icon); }
-        .tile-white { background: var(--card); box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid var(--border); }
+        /* Градиентные плитки */
+        .tile-blue { background: var(--tile-blue); border: none; color: #0c4a6e; } .tile-blue .tile-icon { color: var(--tile-blue-icon); background: rgba(255,255,255,0.6); }
+        html[data-theme="dark"] .tile-blue { color: #e0f2fe; } html[data-theme="dark"] .tile-blue .tile-icon { background: rgba(0,0,0,0.2); }
+        .tile-purple { background: var(--tile-purple); border: none; color: #4c1d95; } .tile-purple .tile-icon { color: var(--tile-purple-icon); background: rgba(255,255,255,0.6); }
+        html[data-theme="dark"] .tile-purple { color: #f3e8ff; } html[data-theme="dark"] .tile-purple .tile-icon { background: rgba(0,0,0,0.2); }
+        .tile-pink { background: var(--tile-pink); border: none; color: #881337; } .tile-pink .tile-icon { color: var(--tile-pink-icon); background: rgba(255,255,255,0.6); }
+        html[data-theme="dark"] .tile-pink { color: #ffe4e6; } html[data-theme="dark"] .tile-pink .tile-icon { background: rgba(0,0,0,0.2); }
+        .tile-green { background: var(--tile-green); border: none; color: #064e3b; } .tile-green .tile-icon { color: var(--tile-green-icon); background: rgba(255,255,255,0.6); }
+        html[data-theme="dark"] .tile-green { color: #dcfce7; } html[data-theme="dark"] .tile-green .tile-icon { background: rgba(0,0,0,0.2); }
+        .tile-white { background: var(--card); color: var(--text); }
 
-        .bottom-nav { position: fixed; left: 24px; right: 24px; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); background: var(--nav-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 32px; display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 10px 40px rgba(0,0,0,0.08); border: 1px solid var(--border); z-index: 100; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sec); font-size: 10px; font-weight: 600; cursor: pointer; width: 25%; transition: color 0.3s; }
+        /* Нижняя навигация (плавающее стекло) */
+        .bottom-nav { position: fixed; left: 20px; right: 20px; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); background: var(--nav-bg); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border-radius: 36px; display: flex; justify-content: space-around; padding: 14px 0; box-shadow: 0 10px 40px rgba(0,0,0,0.08); border: 1px solid var(--card-border); z-index: 100; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sec); font-size: 11px; font-weight: 700; cursor: pointer; width: 33%; transition: color 0.3s; }
         .nav-item.active { color: var(--text); }
-        .nav-icon { font-size: 22px; margin-bottom: 4px; }
-
-        .inner-screen { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 500; flex-direction: column; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; transform: translateX(100%); opacity: 0; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease; padding-bottom: env(safe-area-inset-bottom, 0px); }
+        .nav-icon { font-size: 24px; margin-bottom: 6px; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .nav-item:active .nav-icon { transform: scale(1.2); }
+        
+        .inner-screen { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 500; flex-direction: column; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; transform: translateX(100%); opacity: 0; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease; padding-bottom: env(safe-area-inset-bottom, 0px); }
         .inner-screen.active { display: flex; transform: translateX(0); opacity: 1; }
-        .back-btn { padding: 20px; font-size: 16px; font-weight: 600; color: var(--text); cursor: pointer; flex-shrink: 0; transition: opacity 0.3s; }
+        .back-btn { padding: 24px; font-size: 17px; font-weight: 700; color: var(--text); cursor: pointer; flex-shrink: 0; transition: opacity 0.3s; }
         .back-btn:active { opacity: 0.5; }
         .inner-content { padding: 0 24px 40px; text-align: center; }
         
-        .breath-circle { width: 150px; height: 150px; border-radius: 50%; background: var(--tile-blue); border: 3px solid var(--tile-blue-icon); display: flex; align-items: center; justify-content: center; font-size: 38px; font-weight: 700; color: #1565c0; margin: 20px auto; transition: transform 4s ease-in-out; }
-        html[data-theme="dark"] .breath-circle { color: #90caf9; }
+        .breath-circle { width: 170px; height: 170px; border-radius: 50%; background: var(--tile-blue); border: 4px solid rgba(255,255,255,0.5); display: flex; align-items: center; justify-content: center; font-size: 42px; font-weight: 800; color: #0c4a6e; margin: 30px auto; transition: transform 4s ease-in-out; box-shadow: 0 10px 30px rgba(2,132,199,0.15); }
         
-        .btn { background: var(--text); color: var(--bg); border: none; padding: 16px; border-radius: 20px; font-size: 16px; font-weight: 600; width: 100%; cursor: pointer; margin-top: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease; }
-        .btn:active { transform: scale(0.96); box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
-        .btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+        /* Кнопки */
+        .btn { background: var(--text); color: var(--bg); border: none; padding: 18px; border-radius: 20px; font-size: 17px; font-weight: 700; width: 100%; cursor: pointer; margin-top: 16px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease; }
+        .btn:active { transform: scale(0.94); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--card-border); backdrop-filter: blur(10px); }
         .btn-premium { background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%); color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.2); font-weight: 800; }
         
-        input, textarea { width: 100%; padding: 16px; border-radius: 16px; border: 1px solid #e0d6d0; background: var(--card); color: var(--text); font-size: 16px; margin-bottom: 12px; font-family: inherit; resize: none; outline: none; transition: border-color 0.3s ease; }
-        html[data-theme="dark"] input, html[data-theme="dark"] textarea { border-color: #3a302c; }
+        input, textarea { width: 100%; padding: 18px; border-radius: 20px; border: 1px solid var(--card-border); background: var(--card); color: var(--text); font-size: 16px; margin-bottom: 16px; font-family: inherit; resize: none; outline: none; transition: border-color 0.3s ease, background 0.3s ease; backdrop-filter: blur(10px); }
         input:focus, textarea:focus { border-color: var(--text); }
         
-        .ai-box { background: var(--tile-purple); padding: 16px; border-radius: 16px; margin-top: 16px; display: none; text-align: left; animation: fadeIn 0.4s ease; }
-        #music-toggle { position: fixed; top: calc(20px + env(safe-area-inset-top, 0px)); right: 20px; z-index: 200; width: 48px; height: 48px; border-radius: 50%; border: none; background: var(--card); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: 0 4px 20px rgba(0,0,0,0.08); font-size: 22px; cursor: pointer; transition: transform 0.3s; }
-        #music-toggle:active { transform: scale(0.9); }
-        #music-menu { position: fixed; top: calc(76px + env(safe-area-inset-top, 0px)); right: 20px; z-index: 200; background: var(--card); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 16px; padding: 8px; box-shadow: 0 8px 30px rgba(0,0,0,0.12); display: none; flex-direction: column; gap: 4px; min-width: 180px; }
-        #music-menu button { border: none; background: transparent; padding: 10px 14px; font-size: 15px; text-align: left; border-radius: 10px; cursor: pointer; color: var(--text); font-family: inherit; transition: background 0.2s; }
+        .ai-box { background: var(--card); padding: 20px; border-radius: 20px; margin-top: 16px; display: none; text-align: left; animation: fadeIn 0.4s ease; border: 1px solid var(--card-border); backdrop-filter: blur(10px); }
+        
+        #music-toggle { position: fixed; top: calc(24px + env(safe-area-inset-top, 0px)); right: 24px; z-index: 200; width: 52px; height: 52px; border-radius: 50%; border: 1px solid var(--card-border); background: var(--card); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); font-size: 24px; cursor: pointer; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); display: flex; align-items: center; justify-content: center; }
+        #music-toggle:active { transform: scale(0.85); }
+        #music-menu { position: fixed; top: calc(86px + env(safe-area-inset-top, 0px)); right: 24px; z-index: 200; background: var(--card); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-radius: 20px; padding: 10px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); display: none; flex-direction: column; gap: 4px; min-width: 180px; border: 1px solid var(--card-border); }
+        #music-menu button { border: none; background: transparent; padding: 14px 16px; font-size: 16px; font-weight: 600; text-align: left; border-radius: 14px; cursor: pointer; color: var(--text); font-family: inherit; transition: background 0.2s; }
         #music-menu button:hover { background: rgba(128,128,128,0.1); }
         
-        .progress-ring-wrap { display: flex; align-items: center; gap: 14px; background: var(--card); padding: 16px 20px; border-radius: 20px; margin-top: 12px; border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
-        .progress-ring { width: 56px; height: 56px; flex-shrink: 0; }
-        .progress-ring circle { fill: none; stroke-width: 6; }
+        .progress-ring-wrap { display: flex; align-items: center; gap: 16px; background: var(--card); padding: 20px 24px; border-radius: 28px; margin-top: 16px; border: 1px solid var(--card-border); box-shadow: var(--shadow); backdrop-filter: blur(20px); }
+        .progress-ring { width: 64px; height: 64px; flex-shrink: 0; }
+        .progress-ring circle { fill: none; stroke-width: 7; }
         .progress-ring .bg { stroke: rgba(128,128,128,0.15); }
-        .progress-ring .fg { stroke: var(--tile-green-icon); stroke-linecap: round; transition: stroke-dashoffset 0.6s ease; }
-        .progress-text { font-size: 14px; font-weight: 600; }
+        .progress-ring .fg { stroke: var(--tile-blue-icon); stroke-linecap: round; transition: stroke-dashoffset 0.6s ease; }
+        .progress-text { font-size: 16px; font-weight: 800; }
         
-        .emotion-wheel { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 16px; }
-        .emotion-chip { padding: 16px; border-radius: 16px; background: var(--card); border: 1px solid var(--border); cursor: pointer; font-weight: 600; font-size: 15px; transition: transform 0.2s, box-shadow 0.2s; }
-        .emotion-chip:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        .emotion-chip:active { transform: scale(0.95); }
-        .emotion-tip { background: var(--tile-purple); padding: 16px; border-radius: 16px; margin-top: 16px; display: none; text-align: left; animation: fadeIn 0.4s ease; line-height: 1.5; }
+        .emotion-wheel { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 20px; }
+        .emotion-chip { padding: 20px 16px; border-radius: 20px; background: var(--card); border: 1px solid var(--card-border); cursor: pointer; font-weight: 700; font-size: 16px; transition: transform 0.2s, box-shadow 0.2s; backdrop-filter: blur(10px); }
+        .emotion-chip:hover { box-shadow: var(--shadow); }
+        .emotion-chip:active { transform: scale(0.94); }
+        .emotion-tip { background: var(--card); padding: 20px; border-radius: 20px; margin-top: 20px; display: none; text-align: left; animation: fadeIn 0.4s ease; line-height: 1.6; border: 1px solid var(--card-border); box-shadow: var(--shadow); }
         
-        #mood-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
-        .modal-card { background: var(--card); width: 90%; max-width: 340px; border-radius: 24px; padding: 28px; text-align: center; animation: fadeIn 0.3s ease; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+        #mood-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
+        .modal-card { background: var(--card); width: 90%; max-width: 340px; border-radius: 32px; padding: 32px; text-align: center; animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 20px 60px rgba(0,0,0,0.2); border: 1px solid var(--card-border); backdrop-filter: blur(30px); }
         
-        /* Стили для колеса баланса */
-        .balance-row { margin-bottom: 16px; }
-        .balance-row-label { display: flex; justify-content: space-between; font-size: 14px; font-weight: 600; margin-bottom: 6px; }
-        .balance-row-label span:last-child { color: var(--tile-purple-icon); font-weight: 800; }
-        input[type=range] { -webkit-appearance: none; width: 100%; height: 8px; border-radius: 4px; background: rgba(128,128,128,0.1); outline: none; margin: 0; padding: 0; border: none; }
-        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--tile-purple-icon); cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.2); transition: transform 0.2s; }
+        .balance-row { margin-bottom: 18px; }
+        .balance-row-label { display: flex; justify-content: space-between; font-size: 15px; font-weight: 700; margin-bottom: 10px; }
+        .balance-row-label span:last-child { color: var(--text); font-weight: 800; }
+        input[type=range] { -webkit-appearance: none; width: 100%; height: 10px; border-radius: 5px; background: rgba(128,128,128,0.15); outline: none; margin: 0; padding: 0; border: none; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 26px; height: 26px; border-radius: 50%; background: var(--text); cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: transform 0.2s; }
         input[type=range]::-webkit-slider-thumb:active { transform: scale(1.2); }
-        input[type=range]::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: var(--tile-purple-icon); cursor: pointer; border: none; box-shadow: 0 2px 6px rgba(0,0,0,0.2); transition: transform 0.2s; }
-        .balance-chart-wrap { display: flex; justify-content: center; align-items: center; margin: 20px 0; padding: 10px; }
-        .balance-chart { width: 100%; max-width: 320px; height: auto; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.05)); overflow: visible; }
-        .balance-chart polygon { fill: none; stroke: var(--border); stroke-width: 1; }
-        .balance-chart .data-polygon { fill: rgba(206, 147, 216, 0.3); stroke: var(--tile-purple-icon); stroke-width: 2; stroke-linejoin: round; transition: all 0.4s ease; }
-        .balance-chart text { font-size: 10px; fill: var(--text-sec); font-weight: 600; text-anchor: middle; dominant-baseline: middle; }
+        .balance-chart-wrap { display: flex; justify-content: center; align-items: center; margin: 24px 0; padding: 10px; }
+        .balance-chart { width: 100%; max-width: 320px; height: auto; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.05)); overflow: visible; }
+        .balance-chart polygon { fill: none; stroke: var(--card-border); stroke-width: 1.5; }
+        .balance-chart .data-polygon { fill: var(--card-border); stroke: var(--text); stroke-width: 2.5; stroke-linejoin: round; transition: all 0.4s ease; }
+        .balance-chart text { font-size: 11px; fill: var(--text-sec); font-weight: 700; text-anchor: middle; dominant-baseline: middle; }
 
-        /* Стили для рулетки времени */
-        .wheel-picker-wrap { display: flex; justify-content: center; align-items: center; gap: 10px; height: 160px; overflow: hidden; position: relative; margin-bottom: 20px; background: var(--card); border-radius: 16px; border: 1px solid var(--border); }
-        .wheel-picker-wrap::before, .wheel-picker-wrap::after { content: ''; position: absolute; left: 0; right: 0; height: 50px; z-index: 2; pointer-events: none; }
+        .wheel-picker-wrap { display: flex; justify-content: center; align-items: center; gap: 12px; height: 180px; overflow: hidden; position: relative; margin-bottom: 24px; background: var(--card); border-radius: 24px; border: 1px solid var(--card-border); box-shadow: var(--shadow); }
+        .wheel-picker-wrap::before, .wheel-picker-wrap::after { content: ''; position: absolute; left: 0; right: 0; height: 60px; z-index: 2; pointer-events: none; }
         .wheel-picker-wrap::before { top: 0; background: linear-gradient(to bottom, var(--card), transparent); }
         .wheel-picker-wrap::after { bottom: 0; background: linear-gradient(to top, var(--card), transparent); }
-        .wheel-col { height: 100%; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; -ms-overflow-style: none; text-align: center; padding: 55px 0; }
+        .wheel-col { height: 100%; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; -ms-overflow-style: none; text-align: center; padding: 65px 0; }
         .wheel-col::-webkit-scrollbar { display: none; }
-        .wheel-item { height: 50px; line-height: 50px; scroll-snap-align: center; font-size: 22px; font-weight: 700; color: var(--text-sec); transition: color 0.2s, transform 0.2s; cursor: pointer; padding: 0 15px; }
-        .wheel-item.selected { color: var(--text); transform: scale(1.1); }
-        .wheel-highlight { position: absolute; top: 50%; left: 10px; right: 10px; height: 50px; transform: translateY(-50%); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: rgba(128,128,128,0.05); border-radius: 8px; pointer-events: none; z-index: 1; }
-        .wheel-colon { font-size: 24px; font-weight: 800; z-index: 2; }
+        .wheel-item { height: 50px; line-height: 50px; scroll-snap-align: center; font-size: 24px; font-weight: 800; color: var(--text-sec); transition: color 0.2s, transform 0.2s; cursor: pointer; padding: 0 20px; }
+        .wheel-item.selected { color: var(--text); transform: scale(1.15); }
+        .wheel-highlight { position: absolute; top: 50%; left: 15px; right: 15px; height: 50px; transform: translateY(-50%); border-top: 1px solid var(--card-border); border-bottom: 1px solid var(--card-border); background: rgba(128,128,128,0.05); border-radius: 12px; pointer-events: none; z-index: 1; }
+        .wheel-colon { font-size: 28px; font-weight: 800; z-index: 2; color: var(--text); }
 
         @media (prefers-reduced-motion: reduce) { .fade-in, .splash-icon, .tile, .inner-screen, .breath-circle { animation: none !important; transition: none !important; } }
     </style>
 </head>
 <body>
     <div id="splash"><div class="splash-icon">🌿</div><div class="splash-title">Остров добра</div><div class="splash-sub">Твой уютный уголок заботы.</div><button class="splash-btn" id="start-btn">Начать путь</button></div>
-    <div id="onboarding" style="position: fixed; inset: 0; background: var(--bg); z-index: 9998; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 32px; text-align: center;">
-        <div style="font-size: 60px; margin-bottom: 20px;">👋</div><h2 style="font-size: 24px; margin-bottom: 8px;">Как тебя зовут?</h2><p style="color: var(--text-sec); margin-bottom: 24px;">Чтобы обращаться по имени.</p>
-        <input type="text" id="onboarding-name" placeholder="Твоё имя" style="max-width: 300px;"><button class="btn" id="onboarding-save" style="max-width: 300px;">Продолжить</button>
+    <div id="onboarding" style="position: fixed; inset: 0; background: var(--bg); z-index: 9998; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 32px; text-align: center; backdrop-filter: blur(20px);">
+        <div style="font-size: 70px; margin-bottom: 24px; animation: float 3s infinite;">👋</div>
+        <h2 style="font-size: 28px; font-weight: 800; margin-bottom: 8px;">Как тебя зовут?</h2>
+        <p style="color: var(--text-sec); margin-bottom: 32px; font-size: 16px;">Чтобы обращаться по имени.</p>
+        <input type="text" id="onboarding-name" placeholder="Твоё имя" style="max-width: 320px; text-align: center; font-size: 18px; font-weight: 600;"><button class="btn" id="onboarding-save" style="max-width: 320px;">Продолжить</button>
     </div>
     <button id="music-toggle" aria-label="Включить музыку">🎵</button>
         <div id="main-screen">
@@ -174,7 +206,7 @@
                 </svg>
                 <div>
                     <div class="progress-text" id="progress-text">Сегодня: 0 из 5</div>
-                    <div style="font-size: 12px; color: var(--text-sec); margin-top: 2px;">маленькие шаги — большие перемены</div>
+                    <div style="font-size: 13px; color: var(--text-sec); margin-top: 4px; font-weight: 500;">маленькие шаги — большие перемены</div>
                 </div>
             </div>
 
@@ -183,22 +215,22 @@
                 <div class="tile tile-white tile-wide" onclick="openScreen('meditations')" style="background: linear-gradient(135deg, #2a1b38 0%, #4a2c5a 100%); color: white; border: none;">
                     <div class="tile-icon" style="background: rgba(255,255,255,0.2); color: white;">🧘‍♀️</div>
                     <div style="flex: 1;"><div class="tile-title" style="color: white;">Медитации</div><div class="tile-desc" style="color: rgba(255,255,255,0.8);">глубокое расслабление и сон</div></div>
-                    <div style="font-size: 20px;">👑</div>
+                    <div style="font-size: 22px;">👑</div>
                 </div>
                 <div class="tile tile-white tile-wide" onclick="openScreen('stats')">
-                    <div class="tile-icon" style="background: var(--tile-green);">📊</div>
+                    <div class="tile-icon" style="background: var(--tile-blue); color: var(--tile-blue-icon);">📊</div>
                     <div style="flex: 1;"><div class="tile-title">Моя статистика</div><div class="tile-desc">твой прогресс в цифрах</div></div>
                 </div>
             </div>
 
             <div class="section-title">Ассистент и планы</div>
             <div class="bento-grid" style="grid-template-columns: 1fr;">
-                <div class="tile tile-white tile-wide" onclick="openScreen('assistant')" style="background: linear-gradient(135deg, var(--tile-blue) 0%, var(--tile-purple) 100%);">
+                <div class="tile tile-white tile-wide" onclick="openScreen('assistant')" style="background: var(--tile-blue); color: #0c4a6e; border: none;">
                     <div class="tile-icon" style="background: white;">🤖</div>
-                    <div style="flex: 1;"><div class="tile-title">Умный помощник</div><div class="tile-desc">подберём практики</div></div>
+                    <div style="flex: 1;"><div class="tile-title">Умный помощник</div><div class="tile-desc" style="color: #0c4a6e; opacity: 0.7;">подберём практики</div></div>
                 </div>
                 <div class="tile tile-white tile-wide" onclick="openScreen('reminders')">
-                    <div class="tile-icon" style="background: var(--tile-peach);">⏰</div>
+                    <div class="tile-icon" style="background: var(--tile-peach); color: var(--tile-peach-icon);">⏰</div>
                     <div style="flex: 1;"><div class="tile-title">Напоминания</div><div class="tile-desc">запиши дела</div></div>
                 </div>
             </div>
@@ -207,55 +239,55 @@
             <div class="bento-grid">
                 <div class="tile tile-blue" data-practice="breath" onclick="openScreen('breath')">
                     <div class="tile-icon">🎁</div>
-                    <div><div class="tile-title">Коробочное</div><div class="tile-desc">дыхание 4-4-4-4</div></div>
+                    <div><div class="tile-title">Коробочное</div><div class="tile-desc" style="color: inherit; opacity: 0.8;">дыхание 4-4-4-4</div></div>
                 </div>
                 <div class="tile tile-purple" data-practice="tactical" onclick="openScreen('tactical')">
                     <div class="tile-icon">🎯</div>
-                    <div><div class="tile-title">Тактическое</div><div class="tile-desc">для концентрации</div></div>
+                    <div><div class="tile-title">Тактическое</div><div class="tile-desc" style="color: inherit; opacity: 0.8;">для концентрации</div></div>
                 </div>
                 <div class="tile tile-pink" data-practice="sleep" onclick="openScreen('sleep')">
                     <div class="tile-icon">🌙</div>
-                    <div><div class="tile-title">Дыхание 4-7-8</div><div class="tile-desc">для сна и покоя</div></div>
+                    <div><div class="tile-title">Дыхание 4-7-8</div><div class="tile-desc" style="color: inherit; opacity: 0.8;">для сна и покоя</div></div>
                 </div>
                 <div class="tile tile-green" data-practice="energy" onclick="openScreen('energy')">
                     <div class="tile-icon">⚡</div>
-                    <div><div class="tile-title">Энергия</div><div class="tile-desc">быстро взбодриться</div></div>
+                    <div><div class="tile-title">Энергия</div><div class="tile-desc" style="color: inherit; opacity: 0.8;">быстро взбодриться</div></div>
                 </div>
             </div>
 
             <div class="section-title">На каждый день</div>
             <div class="bento-grid" style="grid-template-columns: 1fr;">
                 <div class="tile tile-white tile-wide" data-practice="cbt" onclick="openScreen('cbt')">
-                    <div class="tile-icon" style="background: var(--tile-blue);">🧠</div>
+                    <div class="tile-icon" style="background: var(--tile-blue); color: var(--tile-blue-icon);">🧠</div>
                     <div style="flex: 1;"><div class="tile-title">КПТ (Мысли)</div><div class="tile-desc">разбери мысль по фактам</div></div>
                 </div>
                 <div class="tile tile-white tile-wide" data-practice="grounding" onclick="openScreen('grounding')">
-                    <div class="tile-icon" style="background: var(--tile-purple);">📝</div>
+                    <div class="tile-icon" style="background: var(--tile-purple); color: var(--tile-purple-icon);">📝</div>
                     <div style="flex: 1;"><div class="tile-title">Заземление</div><div class="tile-desc">здесь и сейчас</div></div>
                 </div>
                 <div class="tile tile-white tile-wide" data-practice="diary" onclick="openScreen('diary')">
-                    <div class="tile-icon" style="background: var(--tile-peach);">📖</div>
+                    <div class="tile-icon" style="background: var(--tile-peach); color: var(--tile-peach-icon);">📖</div>
                     <div style="flex: 1;"><div class="tile-title">Дневник</div><div class="tile-desc">выплесни мысли</div></div>
                 </div>
                 <div class="tile tile-white tile-wide" data-practice="gratitude" onclick="openScreen('gratitude')">
-                    <div class="tile-icon" style="background: var(--tile-green);">🙏</div>
+                    <div class="tile-icon" style="background: var(--tile-green); color: var(--tile-green-icon);">🙏</div>
                     <div style="flex: 1;"><div class="tile-title">Благодарность</div><div class="tile-desc">3 хорошие вещи</div></div>
                 </div>
                 <div class="tile tile-white tile-wide" data-practice="habit" onclick="openScreen('habit')">
-                    <div class="tile-icon" style="background: var(--tile-pink);">✅</div>
+                    <div class="tile-icon" style="background: var(--tile-pink); color: var(--tile-pink-icon);">✅</div>
                     <div style="flex: 1;"><div class="tile-title">Чеклист заботы</div><div class="tile-desc">отметь день</div></div>
                 </div>
             </div>
 
             <div class="section-title">Ещё</div>
             <div class="bento-grid">
-                <div class="tile tile-peach" onclick="openScreen('emotions')"><div class="tile-icon">🎡</div><div><div class="tile-title">Эмоции</div><div class="tile-desc">назови чувство</div></div></div>
-                <div class="tile tile-purple" onclick="openScreen('body')"><div class="tile-icon">🧘</div><div><div class="tile-title">Тело</div><div class="tile-desc">сканирование</div></div></div>
-                <div class="tile tile-green" onclick="openScreen('wins')"><div class="tile-icon">🏆</div><div><div class="tile-title">Победы</div><div class="tile-desc">достижения</div></div></div>
-                <div class="tile tile-pink" onclick="openScreen('sleep-tracker')"><div class="tile-icon">😴</div><div><div class="tile-title">Сон</div><div class="tile-desc">как спалось</div></div></div>
-                <div class="tile tile-blue" onclick="openScreen('sleep-diary')"><div class="tile-icon">💭</div><div><div class="tile-title">Сны</div><div class="tile-desc">запиши сон</div></div></div>
-                <div class="tile tile-white" onclick="openScreen('wheel-balance')"><div class="tile-icon" style="background: var(--tile-peach);">⚖️</div><div><div class="tile-title">Баланс</div><div class="tile-desc">сферы жизни</div></div></div>
-                <div class="tile tile-white" onclick="openScreen('affirmations')"><div class="tile-icon" style="background: var(--tile-purple);">💬</div><div><div class="tile-title">Аффирмации</div><div class="tile-desc">тёплые слова</div></div></div>
+                <div class="tile tile-peach" onclick="openScreen('emotions')"><div class="tile-icon">🎡</div><div><div class="tile-title">Эмоции</div><div class="tile-desc" style="color: inherit; opacity: 0.8;">назови чувство</div></div></div>
+                <div class="tile tile-purple" onclick="openScreen('body')"><div class="tile-icon">🧘</div><div><div class="tile-title">Тело</div><div class="tile-desc" style="color: inherit; opacity: 0.8;">сканирование</div></div></div>
+                <div class="tile tile-green" onclick="openScreen('wins')"><div class="tile-icon">🏆</div><div><div class="tile-title">Победы</div><div class="tile-desc" style="color: inherit; opacity: 0.8;">достижения</div></div></div>
+                <div class="tile tile-pink" onclick="openScreen('sleep-tracker')"><div class="tile-icon">😴</div><div><div class="tile-title">Сон</div><div class="tile-desc" style="color: inherit; opacity: 0.8;">как спалось</div></div></div>
+                <div class="tile tile-blue" onclick="openScreen('sleep-diary')"><div class="tile-icon">💭</div><div><div class="tile-title">Сны</div><div class="tile-desc" style="color: inherit; opacity: 0.8;">запиши сон</div></div></div>
+                <div class="tile tile-white" onclick="openScreen('wheel-balance')"><div class="tile-icon" style="background: var(--tile-peach); color: var(--tile-peach-icon);">⚖️</div><div><div class="tile-title">Баланс</div><div class="tile-desc">сферы жизни</div></div></div>
+                <div class="tile tile-white" onclick="openScreen('affirmations')"><div class="tile-icon" style="background: var(--tile-purple); color: var(--tile-purple-icon);">💬</div><div><div class="tile-title">Аффирмации</div><div class="tile-desc">тёплые слова</div></div></div>
             </div>
         </div>
 
@@ -269,8 +301,8 @@
     <div id="screen-favorites" class="inner-screen">
         <div class="back-btn" onclick="closeScreens()">← Назад</div>
         <div class="inner-content">
-            <h2 style="font-size: 24px;">Избранное</h2>
-            <p style="color: var(--text-sec); margin-bottom: 20px;">Твои любимые практики.</p>
+            <h2 style="font-size: 28px; font-weight: 800;">Избранное</h2>
+            <p style="color: var(--text-sec); margin-bottom: 24px; font-size: 16px;">Твои любимые практики.</p>
             <div id="favorites-list" style="text-align: left;"></div>
         </div>
     </div>
@@ -278,10 +310,10 @@
     <div id="screen-breath" class="inner-screen">
         <div class="back-btn" onclick="closeScreens()">← Назад</div>
         <div class="inner-content">
-            <h2 style="font-size: 24px;">Коробочное дыхание</h2>
-            <p style="color: var(--text-sec); margin-bottom: 30px;">Сними напряжение за 2 минуты.</p>
+            <h2 style="font-size: 28px; font-weight: 800;">Коробочное дыхание</h2>
+            <p style="color: var(--text-sec); margin-bottom: 30px; font-size: 16px;">Сними напряжение за 2 минуты.</p>
             <div class="breath-circle" id="breath-circle">4</div>
-            <div id="breath-text" style="font-weight: 700; font-size: 18px; margin-bottom: 20px;">Готов?</div>
+            <div id="breath-text" style="font-weight: 700; font-size: 20px; margin-bottom: 24px;">Готов?</div>
             <button class="btn" id="breath-btn">Начать</button>
         </div>
     </div>
@@ -289,10 +321,10 @@
     <div id="screen-tactical" class="inner-screen">
         <div class="back-btn" onclick="closeScreens()">← Назад</div>
         <div class="inner-content">
-            <h2 style="font-size: 24px;">Тактическое дыхание</h2>
-            <p style="color: var(--text-sec); margin-bottom: 30px;">Схема 4-4-4-2 для фокуса.</p>
-            <div class="breath-circle" id="tac-circle" style="background: var(--tile-purple); border-color: var(--tile-purple-icon); color: #4a148c;">4</div>
-            <div id="tac-text" style="font-weight: 700; font-size: 18px; margin-bottom: 20px;">Готов?</div>
+            <h2 style="font-size: 28px; font-weight: 800;">Тактическое дыхание</h2>
+            <p style="color: var(--text-sec); margin-bottom: 30px; font-size: 16px;">Схема 4-4-4-2 для фокуса.</p>
+            <div class="breath-circle" id="tac-circle" style="background: var(--tile-purple); color: #4a148c;">4</div>
+            <div id="tac-text" style="font-weight: 700; font-size: 20px; margin-bottom: 24px;">Готов?</div>
             <button class="btn" id="tac-btn">Начать</button>
         </div>
     </div>
@@ -300,10 +332,10 @@
     <div id="screen-sleep" class="inner-screen">
         <div class="back-btn" onclick="closeScreens()">← Назад</div>
         <div class="inner-content">
-            <h2 style="font-size: 24px;">Дыхание 4-7-8</h2>
-            <p style="color: var(--text-sec); margin-bottom: 30px;">Для глубокого расслабления.</p>
-            <div class="breath-circle" id="sleep-circle" style="background: var(--tile-pink); border-color: var(--tile-pink-icon); color: #880e4f;">4</div>
-            <div id="sleep-text" style="font-weight: 700; font-size: 18px; margin-bottom: 20px;">Готов?</div>
+            <h2 style="font-size: 28px; font-weight: 800;">Дыхание 4-7-8</h2>
+            <p style="color: var(--text-sec); margin-bottom: 30px; font-size: 16px;">Для глубокого расслабления.</p>
+            <div class="breath-circle" id="sleep-circle" style="background: var(--tile-pink); color: #880e4f;">4</div>
+            <div id="sleep-text" style="font-weight: 700; font-size: 20px; margin-bottom: 24px;">Готов?</div>
             <button class="btn" id="sleep-btn">Начать</button>
         </div>
     </div>
@@ -311,10 +343,10 @@
     <div id="screen-energy" class="inner-screen">
         <div class="back-btn" onclick="closeScreens()">← Назад</div>
         <div class="inner-content">
-            <h2 style="font-size: 24px;">Энергия</h2>
-            <p style="color: var(--text-sec); margin-bottom: 30px;">Активное дыхание для бодрости. 60 секунд.</p>
-            <div class="breath-circle" id="energy-circle" style="background: var(--tile-green); border-color: var(--tile-green-icon); color: #2e7d32;">2</div>
-            <div id="energy-text" style="font-weight: 700; font-size: 18px; margin-bottom: 20px;">Готов?</div>
+            <h2 style="font-size: 28px; font-weight: 800;">Энергия</h2>
+            <p style="color: var(--text-sec); margin-bottom: 30px; font-size: 16px;">Активное дыхание для бодрости. 60 секунд.</p>
+            <div class="breath-circle" id="energy-circle" style="background: var(--tile-green); color: #2e7d32;">2</div>
+            <div id="energy-text" style="font-weight: 700; font-size: 20px; margin-bottom: 24px;">Готов?</div>
             <button class="btn" id="energy-btn">Начать</button>
         </div>
     </div>
@@ -322,8 +354,8 @@
     <div id="screen-assistant" class="inner-screen">
         <div class="back-btn" onclick="closeScreens()">← Назад</div>
         <div class="inner-content">
-            <h2 style="font-size: 24px;">Как ты сейчас?</h2>
-            <p style="color: var(--text-sec); margin-bottom: 20px;">Выбери состояние, и я подберу план.</p>
+            <h2 style="font-size: 28px; font-weight: 800;">Как ты сейчас?</h2>
+            <p style="color: var(--text-sec); margin-bottom: 24px; font-size: 16px;">Выбери состояние, и я подберу план.</p>
             <div class="emotion-wheel" id="assistant-states">
                 <div class="emotion-chip" data-state="anxious">😰 Тревожно</div>
                 <div class="emotion-chip" data-state="tired">😴 Устал(а)</div>
@@ -331,15 +363,15 @@
                 <div class="emotion-chip" data-state="angry">😠 Злюсь</div>
                 <div class="emotion-chip" data-state="ok">🙂 Всё хорошо</div>
             </div>
-            <div id="assistant-result" style="margin-top: 20px; text-align: left; display: none; background: var(--card); padding: 20px; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05);"></div>
+            <div id="assistant-result" style="margin-top: 24px; text-align: left; display: none; background: var(--card); padding: 24px; border-radius: 24px; box-shadow: var(--shadow); border: 1px solid var(--card-border); backdrop-filter: blur(10px);"></div>
         </div>
     </div>
 
     <div id="screen-reminders" class="inner-screen">
         <div class="back-btn" onclick="closeScreens()">← Назад</div>
         <div class="inner-content">
-            <h2 style="font-size: 24px;">Мои напоминания</h2>
-            <p style="color: var(--text-sec); margin-bottom: 20px;">О чём нельзя забыть?</p>
+            <h2 style="font-size: 28px; font-weight: 800;">Мои напоминания</h2>
+            <p style="color: var(--text-sec); margin-bottom: 24px; font-size: 16px;">О чём нельзя забыть?</p>
             <input type="text" id="reminder-text" placeholder="Например: выпить воды">
             
             <div class="wheel-picker-wrap">
@@ -350,27 +382,27 @@
             </div>
 
             <button class="btn" id="reminder-save">Добавить напоминание</button>
-            <div id="reminders-list" style="text-align: left; margin-top: 20px;"></div>
+            <div id="reminders-list" style="text-align: left; margin-top: 24px;"></div>
         </div>
     </div>
         <div id="screen-meditations" class="inner-screen">
         <div class="back-btn" onclick="closeScreens()">← Назад</div>
         <div class="inner-content">
-            <h2 style="font-size: 24px;">Библиотека медитаций</h2>
-            <p style="color: var(--text-sec); margin-bottom: 20px;">Глубокие аудио-практики для сна и спокойствия.</p>
+            <h2 style="font-size: 28px; font-weight: 800;">Библиотека медитаций</h2>
+            <p style="color: var(--text-sec); margin-bottom: 24px; font-size: 16px;">Глубокие аудио-практики для сна и спокойствия.</p>
             <div class="bento-grid" style="grid-template-columns: 1fr;">
                 <div class="tile tile-white tile-wide" onclick="alert('Доступно в Premium!')">
-                    <div class="tile-icon" style="background: var(--tile-purple);">🌙</div>
+                    <div class="tile-icon" style="background: var(--tile-purple); color: var(--tile-purple-icon);">🌙</div>
                     <div style="flex: 1;"><div class="tile-title">Глубокий сон</div><div class="tile-desc">10 минут, текст под шум дождя</div></div>
                     <div>👑</div>
                 </div>
                 <div class="tile tile-white tile-wide" onclick="alert('Доступно в Premium!')">
-                    <div class="tile-icon" style="background: var(--tile-blue);">🌊</div>
+                    <div class="tile-icon" style="background: var(--tile-blue); color: var(--tile-blue-icon);">🌊</div>
                     <div style="flex: 1;"><div class="tile-title">Утреннее спокойствие</div><div class="tile-desc">5 минут, настрой на день</div></div>
                     <div>👑</div>
                 </div>
                 <div class="tile tile-white tile-wide" onclick="alert('Доступно в Premium!')">
-                    <div class="tile-icon" style="background: var(--tile-green);">🌱</div>
+                    <div class="tile-icon" style="background: var(--tile-green); color: var(--tile-green-icon);">🌱</div>
                     <div style="flex: 1;"><div class="tile-title">Уверенность</div><div class="tile-desc">7 минут, работа с самооценкой</div></div>
                     <div>👑</div>
                 </div>
@@ -382,20 +414,20 @@
     <div id="screen-stats" class="inner-screen">
         <div class="back-btn" onclick="closeScreens()">← Назад</div>
         <div class="inner-content">
-            <h2 style="font-size: 24px;">Моя статистика</h2>
-            <p style="color: var(--text-sec); margin-bottom: 20px;">Глубокая аналитика твоего прогресса.</p>
-            <div style="background: var(--card); padding: 20px; border-radius: 20px; text-align: left; box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
-                <p style="font-size: 14px; color: var(--text-sec); margin: 0 0 8px;">Настроение за неделю</p>
-                <div id="stats-chart" style="display: flex; align-items: flex-end; gap: 8px; height: 120px; margin-top: 16px;"></div>
+            <h2 style="font-size: 28px; font-weight: 800;">Моя статистика</h2>
+            <p style="color: var(--text-sec); margin-bottom: 24px; font-size: 16px;">Глубокая аналитика твоего прогресса.</p>
+            <div style="background: var(--card); padding: 24px; border-radius: 24px; text-align: left; box-shadow: var(--shadow); border: 1px solid var(--card-border);">
+                <p style="font-size: 15px; color: var(--text-sec); margin: 0 0 16px; font-weight: 600;">Настроение за неделю</p>
+                <div id="stats-chart" style="display: flex; align-items: flex-end; gap: 10px; height: 120px;"></div>
             </div>
             <div class="bento-grid" style="margin-top: 16px;">
-                <div class="tile tile-white" style="flex-direction: column; align-items: flex-start; padding: 16px;">
-                    <div style="font-size: 24px; font-weight: 800; color: var(--tile-green-icon);" id="stats-practices">0</div>
-                    <div style="font-size: 12px; color: var(--text-sec);">практик выполнено</div>
+                <div class="tile tile-white" style="flex-direction: column; align-items: flex-start; padding: 20px;">
+                    <div style="font-size: 28px; font-weight: 800; color: var(--tile-green-icon);" id="stats-practices">0</div>
+                    <div style="font-size: 13px; color: var(--text-sec); font-weight: 500;">практик выполнено</div>
                 </div>
-                <div class="tile tile-white" style="flex-direction: column; align-items: flex-start; padding: 16px;">
-                    <div style="font-size: 24px; font-weight: 800; color: var(--tile-blue-icon);" id="stats-sleep">0</div>
-                    <div style="font-size: 12px; color: var(--text-sec);">дней хорошего сна</div>
+                <div class="tile tile-white" style="flex-direction: column; align-items: flex-start; padding: 20px;">
+                    <div style="font-size: 28px; font-weight: 800; color: var(--tile-blue-icon);" id="stats-sleep">0</div>
+                    <div style="font-size: 13px; color: var(--text-sec); font-weight: 500;">дней хорошего сна</div>
                 </div>
             </div>
             <button class="btn btn-premium" style="margin-top: 24px;" onclick="alert('Скоро тут можно будет разблокировать премиум!')">Скоро тут можно будет разблокировать премиум</button>
@@ -405,52 +437,52 @@
     <div id="screen-sleep-diary" class="inner-screen">
         <div class="back-btn" onclick="closeScreens()">← Назад</div>
         <div class="inner-content">
-            <h2 style="font-size: 24px;">Дневник снов</h2>
-            <p style="color: var(--text-sec); margin-bottom: 20px;">Запиши сон, чтобы понять его послание.</p>
+            <h2 style="font-size: 28px; font-weight: 800;">Дневник снов</h2>
+            <p style="color: var(--text-sec); margin-bottom: 24px; font-size: 16px;">Запиши сон, чтобы понять его послание.</p>
             <textarea id="dream-input" rows="4" placeholder="Что тебе приснилось?"></textarea>
             <input type="text" id="dream-tag" placeholder="Ключевой символ (вода, полёт, падение...)">
             <button class="btn" id="dream-save">Сохранить сон</button>
-            <div id="dreams-list" style="text-align: left; margin-top: 20px;"></div>
+            <div id="dreams-list" style="text-align: left; margin-top: 24px;"></div>
         </div>
     </div>
 
     <div id="screen-wheel-balance" class="inner-screen">
         <div class="back-btn" onclick="closeScreens()">← Назад</div>
         <div class="inner-content">
-            <h2 style="font-size: 24px;">Колесо баланса</h2>
-            <p style="color: var(--text-sec); margin-bottom: 20px;">Оцени 8 сфер жизни от 1 до 10.</p>
+            <h2 style="font-size: 28px; font-weight: 800;">Колесо баланса</h2>
+            <p style="color: var(--text-sec); margin-bottom: 24px; font-size: 16px;">Оцени 8 сфер жизни от 1 до 10.</p>
             <div style="text-align: left;" id="balance-inputs"></div>
-            <button class="btn" id="balance-save" style="margin-top: 20px;">Посмотреть результат</button>
-            <div id="balance-result" style="margin-top: 24px; display: none; background: var(--card); padding: 20px; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05);"></div>
+            <button class="btn" id="balance-save" style="margin-top: 24px;">Посмотреть результат</button>
+            <div id="balance-result" style="margin-top: 24px; display: none; background: var(--card); padding: 24px; border-radius: 24px; box-shadow: var(--shadow); border: 1px solid var(--card-border);"></div>
         </div>
     </div>
 
     <div id="screen-cbt" class="inner-screen">
         <div class="back-btn" onclick="closeScreens()">← Назад</div>
         <div class="inner-content" style="text-align: left;">
-            <h2 style="font-size: 24px; text-align: center;">КПТ-анализ</h2>
-            <p style="color: var(--text-sec); margin-bottom: 20px; text-align: center;">Разбери мысль по фактам.</p>
+            <h2 style="font-size: 28px; font-weight: 800; text-align: center;">КПТ-анализ</h2>
+            <p style="color: var(--text-sec); margin-bottom: 24px; text-align: center; font-size: 16px;">Разбери мысль по фактам.</p>
             <input type="text" id="cbt-thought" placeholder="Тревожная мысль">
             <input type="text" id="cbt-emotion" placeholder="Какая эмоция?">
             <input type="text" id="cbt-for" placeholder="Факты ЗА">
             <input type="text" id="cbt-against" placeholder="Факты ПРОТИВ">
             <input type="text" id="cbt-friend" placeholder="Что бы ты сказал другу?">
             <button class="btn" id="cbt-btn">Записать</button>
-            <div id="cbt-status" style="margin-top: 10px; text-align: center; color: var(--text-sec); font-weight: 600;"></div>
+            <div id="cbt-status" style="margin-top: 12px; text-align: center; color: var(--text-sec); font-weight: 600;"></div>
         </div>
     </div>
 
     <div id="screen-grounding" class="inner-screen">
         <div class="back-btn" onclick="closeScreens()">← Назад</div>
         <div class="inner-content" style="text-align: left;">
-            <h2 style="font-size: 24px;">Заземление</h2>
-            <p style="color: var(--text-sec); margin-bottom: 20px;">Вернись в момент "здесь и сейчас".</p>
-            <div id="ground-prompt" style="font-weight: 700; margin-bottom: 10px; font-size: 18px;">Назови 5 вещей, которые видишь</div>
+            <h2 style="font-size: 28px; font-weight: 800;">Заземление</h2>
+            <p style="color: var(--text-sec); margin-bottom: 24px; font-size: 16px;">Вернись в момент "здесь и сейчас".</p>
+            <div id="ground-prompt" style="font-weight: 700; margin-bottom: 12px; font-size: 20px;">Назови 5 вещей, которые видишь</div>
             <input type="text" id="ground-input" placeholder="Напиши...">
             <button class="btn" id="ground-btn">Далее</button>
             <div id="ground-ai" class="ai-box">
-                <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; margin-bottom: 6px; color: var(--tile-purple-icon);">✨ Совет от ИИ</div>
-                <span id="ground-ai-text"></span>
+                <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; color: var(--tile-purple-icon); letter-spacing: 0.5px;">✨ Совет от ИИ</div>
+                <span id="ground-ai-text" style="font-weight: 500;"></span>
             </div>
         </div>
     </div>
@@ -458,31 +490,31 @@
     <div id="screen-diary" class="inner-screen">
         <div class="back-btn" onclick="closeScreens()">← Назад</div>
         <div class="inner-content">
-            <h2 style="font-size: 24px;">Дневник</h2>
-            <p style="color: var(--text-sec); margin-bottom: 20px;">Выплесни мысли на бумагу.</p>
+            <h2 style="font-size: 28px; font-weight: 800;">Дневник</h2>
+            <p style="color: var(--text-sec); margin-bottom: 24px; font-size: 16px;">Выплесни мысли на бумагу.</p>
             <textarea id="diary-input" rows="6" placeholder="Что тебя беспокоит?"></textarea>
             <button class="btn" id="diary-btn">Сохранить</button>
-            <div id="diary-status" style="margin-top: 10px; color: var(--text-sec); font-weight: 600;"></div>
+            <div id="diary-status" style="margin-top: 12px; color: var(--text-sec); font-weight: 600;"></div>
         </div>
     </div>
 
     <div id="screen-gratitude" class="inner-screen">
         <div class="back-btn" onclick="closeScreens()">← Назад</div>
         <div class="inner-content">
-            <h2 style="font-size: 24px;">Благодарность</h2>
-            <p style="color: var(--text-sec); margin-bottom: 20px;">Запиши 3 вещи, за которые ты благодарен.</p>
+            <h2 style="font-size: 28px; font-weight: 800;">Благодарность</h2>
+            <p style="color: var(--text-sec); margin-bottom: 24px; font-size: 16px;">Запиши 3 вещи, за которые ты благодарен.</p>
             <textarea id="grat-input" rows="4" placeholder="1. ...&#10;2. ...&#10;3. ..."></textarea>
             <button class="btn" id="grat-btn">Сохранить</button>
-            <div id="grat-status" style="margin-top: 10px; color: var(--text-sec); font-weight: 600;"></div>
+            <div id="grat-status" style="margin-top: 12px; color: var(--text-sec); font-weight: 600;"></div>
         </div>
     </div>
 
     <div id="screen-habit" class="inner-screen">
         <div class="back-btn" onclick="closeScreens()">← Назад</div>
         <div class="inner-content">
-            <h2 style="font-size: 24px;">Чеклист заботы</h2>
-            <p style="color: var(--text-sec); margin-bottom: 20px;">Отметь день, когда ты позаботился о себе.</p>
-            <div style="font-size: 64px; font-weight: 800; margin: 20px 0;" id="streak-num-inner">0</div>
+            <h2 style="font-size: 28px; font-weight: 800;">Чеклист заботы</h2>
+            <p style="color: var(--text-sec); margin-bottom: 24px; font-size: 16px;">Отметь день, когда ты позаботился о себе.</p>
+            <div style="font-size: 80px; font-weight: 800; margin: 30px 0;" id="streak-num-inner">0</div>
             <button class="btn" id="habit-btn-inner">Отметить день</button>
         </div>
     </div>
@@ -490,8 +522,8 @@
     <div id="screen-emotions" class="inner-screen">
         <div class="back-btn" onclick="closeScreens()">← Назад</div>
         <div class="inner-content">
-            <h2 style="font-size: 24px;">Колесо эмоций</h2>
-            <p style="color: var(--text-sec); margin-bottom: 16px;">Что ты сейчас чувствуешь?</p>
+            <h2 style="font-size: 28px; font-weight: 800;">Колесо эмоций</h2>
+            <p style="color: var(--text-sec); margin-bottom: 20px; font-size: 16px;">Что ты сейчас чувствуешь?</p>
             <div class="emotion-wheel">
                 <div class="emotion-chip" data-emotion="joy">😊 Радость</div>
                 <div class="emotion-chip" data-emotion="sad">😢 Грусть</div>
@@ -509,10 +541,10 @@
     <div id="screen-body" class="inner-screen">
         <div class="back-btn" onclick="closeScreens()">← Назад</div>
         <div class="inner-content">
-            <h2 style="font-size: 24px;">Сканирование тела</h2>
-            <p style="color: var(--text-sec); margin-bottom: 20px;">Веди внимание от стоп к голове.</p>
-            <div style="background: var(--card); padding: 24px; border-radius: 20px; min-height: 120px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 600; box-shadow: 0 4px 20px rgba(0,0,0,0.03);" id="body-text">Нажми «Начать»</div>
-            <div style="font-size: 14px; color: var(--text-sec); margin-top: 12px;" id="body-progress"></div>
+            <h2 style="font-size: 28px; font-weight: 800;">Сканирование тела</h2>
+            <p style="color: var(--text-sec); margin-bottom: 24px; font-size: 16px;">Веди внимание от стоп к голове.</p>
+            <div style="background: var(--card); padding: 32px; border-radius: 24px; min-height: 140px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 600; box-shadow: var(--shadow); border: 1px solid var(--card-border);" id="body-text">Нажми «Начать»</div>
+            <div style="font-size: 14px; color: var(--text-sec); margin-top: 16px; font-weight: 600;" id="body-progress"></div>
             <button class="btn" id="body-btn">Начать</button>
         </div>
     </div>
@@ -520,22 +552,22 @@
     <div id="screen-wins" class="inner-screen">
         <div class="back-btn" onclick="closeScreens()">← Назад</div>
         <div class="inner-content">
-            <h2 style="font-size: 24px;">Копилка побед</h2>
-            <p style="color: var(--text-sec); margin-bottom: 20px;">Маленькие достижения тоже считаются.</p>
+            <h2 style="font-size: 28px; font-weight: 800;">Копилка побед</h2>
+            <p style="color: var(--text-sec); margin-bottom: 24px; font-size: 16px;">Маленькие достижения тоже считаются.</p>
             <input type="text" id="win-input" placeholder="Что сегодня получилось?">
             <button class="btn" id="win-btn">Добавить</button>
-            <div id="wins-list" style="text-align: left; margin-top: 20px;"></div>
+            <div id="wins-list" style="text-align: left; margin-top: 24px;"></div>
         </div>
     </div>
 
     <div id="screen-sleep-tracker" class="inner-screen">
         <div class="back-btn" onclick="closeScreens()">← Назад</div>
         <div class="inner-content">
-            <h2 style="font-size: 24px;">Трекер сна</h2>
-            <p style="color: var(--text-sec); margin-bottom: 20px;">Как спалось этой ночью?</p>
-            <input type="time" id="sleep-bed" placeholder="Лёг">
-            <input type="time" id="sleep-wake" placeholder="Встал">
-            <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+            <h2 style="font-size: 28px; font-weight: 800;">Трекер сна</h2>
+            <p style="color: var(--text-sec); margin-bottom: 24px; font-size: 16px;">Как спалось этой ночью?</p>
+            <input type="time" id="sleep-bed" placeholder="Лёг" style="color-scheme: light dark;">
+            <input type="time" id="sleep-wake" placeholder="Встал" style="color-scheme: light dark;">
+            <div style="display: flex; gap: 10px; margin-bottom: 16px;">
                 <button class="btn btn-secondary sleep-quality" data-q="1">😫</button>
                 <button class="btn btn-secondary sleep-quality" data-q="2">😕</button>
                 <button class="btn btn-secondary sleep-quality" data-q="3">😐</button>
@@ -543,16 +575,16 @@
                 <button class="btn btn-secondary sleep-quality" data-q="5">😴</button>
             </div>
             <button class="btn" id="sleep-save">Сохранить</button>
-            <div id="sleep-list" style="text-align: left; margin-top: 20px;"></div>
+            <div id="sleep-list" style="text-align: left; margin-top: 24px;"></div>
         </div>
     </div>
 
     <div id="screen-affirmations" class="inner-screen">
         <div class="back-btn" onclick="closeScreens()">← Назад</div>
         <div class="inner-content">
-            <h2 style="font-size: 24px;">Аффирмации</h2>
-            <p style="color: var(--text-sec); margin-bottom: 20px;">Тёплые слова для тебя.</p>
-            <div style="background: var(--tile-purple); padding: 32px 24px; border-radius: 24px; font-size: 20px; font-weight: 600; line-height: 1.5; min-height: 140px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(0,0,0,0.03);" id="affirmation-text">Нажми «Другая», чтобы получить тёплые слова</div>
+            <h2 style="font-size: 28px; font-weight: 800;">Аффирмации</h2>
+            <p style="color: var(--text-sec); margin-bottom: 24px; font-size: 16px;">Тёплые слова для тебя.</p>
+            <div style="background: var(--card); padding: 40px 24px; border-radius: 32px; font-size: 22px; font-weight: 700; line-height: 1.5; min-height: 180px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow); border: 1px solid var(--card-border);" id="affirmation-text">Нажми «Другая», чтобы получить тёплые слова</div>
             <button class="btn" id="affirmation-btn">Другая</button>
         </div>
     </div>
@@ -560,55 +592,55 @@
     <div id="screen-profile" class="inner-screen">
         <div class="back-btn" onclick="closeScreens()">← Назад</div>
         <div class="inner-content">
-            <h2 style="font-size: 24px;">Профиль</h2>
+            <h2 style="font-size: 28px; font-weight: 800;">Профиль</h2>
             
-            <div style="background: var(--card); padding: 20px; border-radius: 20px; margin-top: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
-                <p style="font-size: 16px; font-weight: 600; margin: 0;">Привет, <span id="profile-name">друг</span> 👋</p>
-                <p style="font-size: 13px; color: var(--text-sec); margin-top: 4px;">Статус: <span id="profile-status" style="font-weight: bold; color: var(--text-sec);">Бесплатный</span></p>
+            <div style="background: var(--card); padding: 24px; border-radius: 24px; margin-top: 24px; box-shadow: var(--shadow); border: 1px solid var(--card-border);">
+                <p style="font-size: 18px; font-weight: 800; margin: 0;">Привет, <span id="profile-name">друг</span> 👋</p>
+                <p style="font-size: 14px; color: var(--text-sec); margin-top: 6px; font-weight: 500;">Статус: <span id="profile-status" style="font-weight: 800; color: var(--text-sec);">Бесплатный</span></p>
             </div>
 
-            <div style="background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%); padding: 20px; border-radius: 20px; margin-top: 12px; text-align: left; color: white; box-shadow: 0 8px 24px rgba(255,140,0,0.3);">
-                <p style="font-size: 16px; font-weight: 800; margin: 0 0 4px;">Остров Premium</p>
-                <p style="font-size: 13px; margin: 0 0 12px; opacity: 0.9;">Безлимитные практики, все медитации, умный помощник и глубокая статистика.</p>
+            <div style="background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%); padding: 24px; border-radius: 24px; margin-top: 16px; text-align: left; color: white; box-shadow: 0 10px 30px rgba(255,140,0,0.3);">
+                <p style="font-size: 18px; font-weight: 800; margin: 0 0 6px;">Остров Premium</p>
+                <p style="font-size: 14px; margin: 0 0 16px; opacity: 0.9; font-weight: 500; line-height: 1.4;">Безлимитные практики, все медитации, умный помощник и глубокая статистика.</p>
                 <button class="btn" style="background: white; color: #c67100; margin-top: 0; font-weight: 800;" onclick="alert('Скоро тут можно будет разблокировать премиум!')">Скоро тут можно будет разблокировать премиум</button>
             </div>
 
-            <div style="background: var(--card); padding: 16px; border-radius: 20px; margin-top: 12px; text-align: left; box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
-                <p style="font-size: 14px; color: var(--text-sec); margin: 0 0 8px;">Календарь активности</p>
-                <div id="profile-calendar" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;"></div>
+            <div style="background: var(--card); padding: 20px; border-radius: 24px; margin-top: 16px; text-align: left; box-shadow: var(--shadow); border: 1px solid var(--card-border);">
+                <p style="font-size: 15px; color: var(--text-sec); margin: 0 0 12px; font-weight: 600;">Календарь активности</p>
+                <div id="profile-calendar" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px;"></div>
             </div>
 
-            <div style="background: var(--card); padding: 20px; border-radius: 20px; margin-top: 12px; text-align: left; box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
-                <p style="font-size: 14px; color: var(--text-sec); margin: 0 0 8px;">Тема</p>
+            <div style="background: var(--card); padding: 20px; border-radius: 24px; margin-top: 16px; text-align: left; box-shadow: var(--shadow); border: 1px solid var(--card-border);">
+                <p style="font-size: 15px; color: var(--text-sec); margin: 0 0 12px; font-weight: 600;">Тема</p>
                 <button class="btn btn-secondary" id="theme-toggle-2" style="margin-top: 0;">🌙 Тёмная тема</button>
             </div>
 
-            <div style="background: var(--card); padding: 20px; border-radius: 20px; margin-top: 12px; text-align: left; box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
-                <p style="font-size: 14px; color: var(--text-sec); margin: 0 0 8px;">Письмо себе</p>
+            <div style="background: var(--card); padding: 20px; border-radius: 24px; margin-top: 16px; text-align: left; box-shadow: var(--shadow); border: 1px solid var(--card-border);">
+                <p style="font-size: 15px; color: var(--text-sec); margin: 0 0 12px; font-weight: 600;">Письмо себе</p>
                 <textarea id="letter-input" rows="4" placeholder="Напиши тёплое письмо. Покажем через неделю."></textarea>
                 <button class="btn btn-secondary" id="letter-save">Отложить на неделю</button>
-                <div id="letter-status" style="margin-top: 8px; font-size: 13px; color: var(--text-sec);"></div>
+                <div id="letter-status" style="margin-top: 10px; font-size: 14px; color: var(--text-sec); font-weight: 500;"></div>
             </div>
         </div>
     </div>
 
-    <div id="day-details-modal" style="position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 2000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
-        <div style="background: var(--card); width: 90%; max-width: 380px; border-radius: 24px; padding: 24px; text-align: left; max-height: 80vh; overflow-y: auto; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.1);">
-            <button onclick="document.getElementById('day-details-modal').style.display='none'" style="position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-sec);">×</button>
-            <h3 style="margin-top: 0; margin-bottom: 16px;" id="day-details-title">День</h3>
-            <div id="day-details-content" style="font-size: 15px; line-height: 1.6;"></div>
+    <div id="day-details-modal" style="position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 2000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(8px);">
+        <div style="background: var(--card); width: 90%; max-width: 400px; border-radius: 32px; padding: 28px; text-align: left; max-height: 80vh; overflow-y: auto; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.15); border: 1px solid var(--card-border); backdrop-filter: blur(30px);">
+            <button onclick="document.getElementById('day-details-modal').style.display='none'" style="position: absolute; top: 20px; right: 20px; background: rgba(128,128,128,0.1); border: none; width: 32px; height: 32px; border-radius: 50%; font-size: 20px; cursor: pointer; color: var(--text-sec); display: flex; align-items: center; justify-content: center;">×</button>
+            <h3 style="margin-top: 0; margin-bottom: 20px; font-size: 22px; font-weight: 800;" id="day-details-title">День</h3>
+            <div id="day-details-content" style="font-size: 16px; line-height: 1.6;"></div>
         </div>
     </div>
 
     <div id="mood-modal">
         <div class="modal-card">
-            <h3 style="margin-top: 0;">Как ты себя чувствуешь?</h3>
-            <div style="display: flex; justify-content: space-around; margin-top: 20px;">
-                <button class="mood-btn" data-score="5" style="font-size: 38px; background: none; border: none; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">😄</button>
-                <button class="mood-btn" data-score="4" style="font-size: 38px; background: none; border: none; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">🙂</button>
-                <button class="mood-btn" data-score="3" style="font-size: 38px; background: none; border: none; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">😐</button>
-                <button class="mood-btn" data-score="2" style="font-size: 38px; background: none; border: none; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">😕</button>
-                <button class="mood-btn" data-score="1" style="font-size: 38px; background: none; border: none; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">😭</button>
+            <h3 style="margin-top: 0; font-size: 24px; font-weight: 800;">Как ты себя чувствуешь?</h3>
+            <div style="display: flex; justify-content: space-around; margin-top: 24px;">
+                <button class="mood-btn" data-score="5" style="font-size: 42px; background: none; border: none; cursor: pointer; transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">😄</button>
+                <button class="mood-btn" data-score="4" style="font-size: 42px; background: none; border: none; cursor: pointer; transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">🙂</button>
+                <button class="mood-btn" data-score="3" style="font-size: 42px; background: none; border: none; cursor: pointer; transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">😐</button>
+                <button class="mood-btn" data-score="2" style="font-size: 42px; background: none; border: none; cursor: pointer; transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">😕</button>
+                <button class="mood-btn" data-score="1" style="font-size: 42px; background: none; border: none; cursor: pointer; transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">😭</button>
             </div>
         </div>
     </div>
@@ -726,10 +758,10 @@
                 for (let i = 0; i < (firstDay === 0 ? 6 : firstDay - 1); i++) el.appendChild(document.createElement('div'));
                 for (let d = 1; d <= daysInMonth; d++) {
                     const cell = document.createElement('div');
-                    cell.style.cssText = 'aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 4px; font-size: 10px; background: rgba(128,128,128,0.08); cursor: pointer; transition: transform 0.2s;';
+                    cell.style.cssText = 'aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-size: 12px; background: rgba(128,128,128,0.08); cursor: pointer; transition: transform 0.2s; font-weight: 600;';
                     cell.innerText = d;
                     const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-                    if (store.get('progress_' + dateStr, []).length > 0) { cell.style.background = 'var(--tile-green)'; cell.style.color = '#2e7d32'; cell.style.fontWeight = 'bold'; }
+                    if (store.get('progress_' + dateStr, []).length > 0) { cell.style.background = 'var(--tile-blue-icon)'; cell.style.color = 'white'; cell.style.fontWeight = 'bold'; }
                     cell.addEventListener('click', () => showDayDetails(dateStr));
                     el.appendChild(cell);
                 }
@@ -742,21 +774,20 @@
                 const names = { breath: 'Дыхание', tactical: 'Дыхание', sleep: 'Дыхание', energy: 'Дыхание', cbt: 'КПТ', grounding: 'Заземление', diary: 'Дневник', gratitude: 'Благодарность', habit: 'Чеклист', body: 'Тело', 'sleep-diary': 'Сны', 'wheel-balance': 'Баланс' };
                 const doneList = progress.length ? progress.map(p => `<li>${names[p] || p}</li>`).join('') : '<li>Пока ничего не сделано</li>';
                 
-                let sleepHtml = sleepForDay ? `<div style="margin-top: 12px;"><b>Сон:</b> ${['😫','😕','😐','🙂','😴'][sleepForDay.quality - 1] || ''} (${sleepForDay.bed} – ${sleepForDay.wake})</div>` : '';
+                let sleepHtml = sleepForDay ? `<div style="margin-top: 16px; background: var(--bg); padding: 12px; border-radius: 12px;"><b>Сон:</b> ${['😫','😕','😐','🙂','😴'][sleepForDay.quality - 1] || ''} (${sleepForDay.bed} – ${sleepForDay.wake})</div>` : '';
                 
-                // Достаем записи за этот день
                 const diaryToday = store.get('diary', []).filter(d => d.date.slice(0, 10) === dateStr);
                 const gratToday = store.get('gratitude', []).filter(d => d.date.slice(0, 10) === dateStr);
                 const dreamsToday = store.get('dreams', []).filter(d => d.date.slice(0, 10) === dateStr);
                 
                 let notesHtml = '';
-                if (diaryToday.length) notesHtml += `<div style="margin-top: 16px; background: var(--bg); padding: 12px; border-radius: 12px;"><b>📖 Дневник:</b><br>${diaryToday.map(d => d.text).join('<br><br>')}</div>`;
+                if (diaryToday.length) notesHtml += `<div style="margin-top: 12px; background: var(--bg); padding: 12px; border-radius: 12px;"><b>📖 Дневник:</b><br>${diaryToday.map(d => d.text).join('<br><br>')}</div>`;
                 if (gratToday.length) notesHtml += `<div style="margin-top: 12px; background: var(--bg); padding: 12px; border-radius: 12px;"><b>🙏 Благодарность:</b><br>${gratToday.map(d => d.text).join('<br><br>')}</div>`;
                 if (dreamsToday.length) notesHtml += `<div style="margin-top: 12px; background: var(--bg); padding: 12px; border-radius: 12px;"><b>💭 Сны:</b><br>${dreamsToday.map(d => d.text).join('<br><br>')}</div>`;
 
                 document.getElementById('day-details-title').innerText = `День ${dateStr}`;
                 document.getElementById('day-details-content').innerHTML = `
-                    <div style="font-size: 24px; text-align: center; margin-bottom: 12px;">Настроение: ${moodText}</div>
+                    <div style="font-size: 28px; text-align: center; margin-bottom: 16px;">${moodText}</div>
                     <div><b>Выполнено практик (${progress.length}):</b><ul style="margin: 8px 0 0 0; padding-left: 20px;">${doneList}</ul></div>
                     ${sleepHtml}
                     ${notesHtml}
@@ -771,8 +802,8 @@
                     chart.innerHTML = ''; const moods = store.get('moods', {}); const days = []; const now = new Date();
                     for (let i = 6; i >= 0; i--) { const d = new Date(now); d.setDate(now.getDate() - i); days.push(d.toISOString().slice(0, 10)); }
                     days.forEach(key => {
-                        const score = moods[key] || 0; const height = score ? (score * 20) : 4;
-                        const bar = document.createElement('div'); bar.style.cssText = `flex: 1; height: ${height}px; background: ${score ? 'var(--tile-green-icon)' : 'rgba(128,128,128,0.2)'}; border-radius: 4px; transition: height 0.4s ease;`;
+                        const score = moods[key] || 0; const height = score ? (score * 20) : 6;
+                        const bar = document.createElement('div'); bar.style.cssText = `flex: 1; height: ${height}px; background: ${score ? 'var(--tile-blue-icon)' : 'rgba(128,128,128,0.2)'}; border-radius: 6px; transition: height 0.4s ease;`;
                         chart.appendChild(bar);
                     });
                 }
@@ -789,7 +820,7 @@
                 const sleep = ms => new Promise(r => setTimeout(r, ms));
                 for (let i = 0; i < cycles; i++) {
                     for (let p = 0; p < phasesArray.length; p++) {
-                        text.innerText = phasesArray[p].name; circle.style.transform = phasesArray[p].scale ? 'scale(1.3)' : 'scale(1)';
+                        text.innerText = phasesArray[p].name; circle.style.transform = phasesArray[p].scale ? 'scale(1.25)' : 'scale(1)';
                         if (navigator.vibrate) { try { navigator.vibrate(30); } catch(e) {} }
                         for (let s = phasesArray[p].sec; s > 0; s--) { circle.innerText = s; await sleep(1000); }
                     }
@@ -886,7 +917,7 @@
                 const el = document.getElementById('dreams-list'); if (!el) return;
                 const list = store.get('dreams', []);
                 if (!list.length) { el.innerHTML = '<p style="color: var(--text-sec); text-align: center;">Пока нет записей.</p>'; return; }
-                el.innerHTML = list.slice().reverse().map(d => `<div style="background: var(--card); padding: 16px; border-radius: 16px; margin-bottom: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);"><div style="font-size: 12px; color: var(--text-sec); margin-bottom: 4px;">${new Date(d.date).toLocaleDateString()}</div><div style="font-size: 15px;">${d.text}</div>${d.tag ? `<div style="margin-top: 8px; display: inline-block; background: var(--tile-purple); color: var(--tile-purple-icon); padding: 2px 8px; border-radius: 8px; font-size: 12px;">#${d.tag}</div>` : ''}</div>`).join('');
+                el.innerHTML = list.slice().reverse().map(d => `<div style="background: var(--card); padding: 16px; border-radius: 16px; margin-bottom: 8px; box-shadow: var(--shadow); border: 1px solid var(--card-border);"><div style="font-size: 12px; color: var(--text-sec); margin-bottom: 4px;">${new Date(d.date).toLocaleDateString()}</div><div style="font-size: 15px;">${d.text}</div>${d.tag ? `<div style="margin-top: 8px; display: inline-block; background: var(--tile-purple); color: var(--tile-purple-icon); padding: 2px 8px; border-radius: 8px; font-size: 12px;">#${d.tag}</div>` : ''}</div>`).join('');
             }
             document.getElementById('dream-save').addEventListener('click', function() {
                 const text = document.getElementById('dream-input').value.trim(); const tag = document.getElementById('dream-tag').value.trim();
@@ -904,7 +935,7 @@
                 }
             }
             function drawBalanceChart(vals) {
-                const cx = 100, cy = 100, r = 65; let gridHtml = ''; // Уменьшили радиус, чтобы влезли подписи
+                const cx = 100, cy = 100, r = 65; let gridHtml = '';
                 [0.2, 0.4, 0.6, 0.8, 1].forEach(scale => {
                     const points = [];
                     for (let i = 0; i < 8; i++) { const angle = (Math.PI * 2 * i) / 8 - Math.PI / 2; points.push(`${cx + r * scale * Math.cos(angle)},${cy + r * scale * Math.sin(angle)}`); }
@@ -913,9 +944,8 @@
                 let axesHtml = '';
                 for (let i = 0; i < 8; i++) {
                     const angle = (Math.PI * 2 * i) / 8 - Math.PI / 2; const x2 = cx + r * Math.cos(angle), y2 = cy + r * Math.sin(angle);
-                    const lx = cx + (r + 18) * Math.cos(angle), ly = cy + (r + 18) * Math.sin(angle); // Отодвинули текст чуть дальше
+                    const lx = cx + (r + 18) * Math.cos(angle), ly = cy + (r + 18) * Math.sin(angle);
                     axesHtml += `<line x1="${cx}" y1="${cy}" x2="${x2}" y2="${y2}" stroke="var(--border)" stroke-width="1" />`;
-                    // Разворачиваем текст для левой стороны, чтобы не наезжал
                     let textAnchor = "middle";
                     if (Math.cos(angle) > 0.5) textAnchor = "start";
                     if (Math.cos(angle) < -0.5) textAnchor = "end";
@@ -958,7 +988,7 @@
                 const el = document.getElementById('favorites-list'); if (!el) return;
                 const favs = getFavorites();
                 if (!favs.length) { el.innerHTML = '<p style="color: var(--text-sec); text-align: center;">Пока пусто. Нажми ★ на плитке, чтобы добавить.</p>'; return; }
-                el.innerHTML = favs.map(id => `<div class="tile tile-white tile-wide" style="margin-bottom: 10px;" onclick="openScreen('${id}')"><div class="tile-icon" style="background: var(--tile-blue);">★</div><div style="flex: 1;"><div class="tile-title">${practiceNames[id] || id}</div></div></div>`).join('');
+                el.innerHTML = favs.map(id => `<div class="tile tile-white tile-wide" style="margin-bottom: 12px;" onclick="openScreen('${id}')"><div class="tile-icon" style="background: var(--tile-blue); color: var(--tile-blue-icon);">★</div><div style="flex: 1;"><div class="tile-title">${practiceNames[id] || id}</div></div></div>`).join('');
             }
 
             // ===== СКАНИРОВАНИЕ ТЕЛА =====
@@ -981,7 +1011,7 @@
                 const el = document.getElementById('wins-list'); if (!el) return;
                 const wins = store.get('wins', []);
                 if (!wins.length) { el.innerHTML = '<p style="color: var(--text-sec); text-align: center;">Пока пусто. Добавь первое достижение.</p>'; return; }
-                el.innerHTML = wins.slice().reverse().map(w => `<div style="background: var(--card); padding: 14px 18px; border-radius: 14px; margin-bottom: 8px; font-size: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">🏆 ${w}</div>`).join('');
+                el.innerHTML = wins.slice().reverse().map(w => `<div style="background: var(--card); padding: 16px 20px; border-radius: 16px; margin-bottom: 10px; font-size: 16px; font-weight: 600; box-shadow: var(--shadow); border: 1px solid var(--card-border);">🏆 ${w}</div>`).join('');
             }
             document.getElementById('win-btn').addEventListener('click', function() {
                 const v = document.getElementById('win-input').value.trim(); if (!v) return;
@@ -995,7 +1025,8 @@
                 btn.addEventListener('click', function() {
                     sleepQuality = parseInt(this.dataset.q);
                     document.querySelectorAll('.sleep-quality').forEach(b => b.style.background = '');
-                    this.style.background = 'var(--tile-green)';
+                    this.style.background = 'var(--tile-blue-icon)';
+                    this.style.color = 'white';
                 });
             });
             function renderSleep() {
@@ -1003,7 +1034,7 @@
                 const list = store.get('sleep', []);
                 if (!list.length) { el.innerHTML = '<p style="color: var(--text-sec); text-align: center;">Пока нет записей.</p>'; return; }
                 const emoji = { 1: '😫', 2: '😕', 3: '😐', 4: '🙂', 5: '😴' };
-                el.innerHTML = list.slice().reverse().map(s => `<div style="background: var(--card); padding: 12px 16px; border-radius: 14px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.02);"><span style="font-size: 13px; color: var(--text-sec);">${s.date}</span><span>${emoji[s.quality] || ''} ${s.bed || '?'}–${s.wake || '?'}</span></div>`).join('');
+                el.innerHTML = list.slice().reverse().map(s => `<div style="background: var(--card); padding: 16px 20px; border-radius: 16px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); border: 1px solid var(--card-border);"><span style="font-size: 14px; color: var(--text-sec); font-weight: 600;">${s.date}</span><span style="font-size: 16px; font-weight: 700;">${emoji[s.quality] || ''} ${s.bed || '?'}–${s.wake || '?'}</span></div>`).join('');
             }
             document.getElementById('sleep-save').addEventListener('click', function() {
                 const bed = document.getElementById('sleep-bed').value; const wake = document.getElementById('sleep-wake').value;
@@ -1026,7 +1057,7 @@
                 if (letter) {
                     const showAt = new Date(letter.showAt);
                     if (new Date() >= showAt) {
-                        status.innerHTML = '<b>Твоё письмо:</b><br>' + letter.text.replace(/\n/g, '<br>') + '<br><button class="btn btn-secondary" id="letter-clear" style="margin-top: 8px;">Удалить письмо</button>';
+                        status.innerHTML = '<b>Твоё письмо:</b><br>' + letter.text.replace(/\n/g, '<br>') + '<br><button class="btn btn-secondary" id="letter-clear" style="margin-top: 12px;">Удалить письмо</button>';
                         const clearBtn = document.getElementById('letter-clear'); if (clearBtn) clearBtn.addEventListener('click', function() { store.set('letter', null); renderLetter(); });
                     } else {
                         const days = Math.ceil((showAt - new Date()) / (1000 * 60 * 60 * 24)); status.innerText = `Письмо откроется через ${days} дн.`;
@@ -1056,7 +1087,7 @@
                 const el = document.getElementById(id); if (el) el.addEventListener('click', playDing);
             });
 
-            // ===== НАПОМИНАНИЯ (БАРАБАНЫ) =====
+            // ===== НАПОМИНАНИЯ (РУЛЕТКА) =====
             let selectedHour = 12, selectedMinute = 0;
             
             function initWheels() {
@@ -1076,7 +1107,6 @@
                     minWheel.appendChild(el);
                 }
 
-                // Начальные позиции
                 hourWheel.scrollTop = selectedHour * 50;
                 minWheel.scrollTop = selectedMinute * 50;
 
@@ -1100,7 +1130,6 @@
                     scrollTimeout = setTimeout(() => updateSelected(minWheel, 'minute'), 100);
                 });
 
-                // Инициализация классов
                 updateSelected(hourWheel, 'hour');
                 updateSelected(minWheel, 'minute');
             }
@@ -1110,7 +1139,7 @@
                 const el = document.getElementById('reminders-list'); if (!el) return;
                 const list = store.get('reminders', []);
                 if (!list.length) { el.innerHTML = '<p style="color: var(--text-sec); text-align: center;">Пока нет напоминаний.</p>'; return; }
-                el.innerHTML = list.map((r, i) => `<div style="background: var(--card); padding: 16px; border-radius: 16px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.02);"><div><div style="font-weight: 600;">${r.text}</div><div style="font-size: 13px; color: var(--text-sec);">в ${r.time}</div></div><button onclick="deleteReminder(${i})" style="background:none; border:none; font-size: 18px; cursor:pointer;">❌</button></div>`).join('');
+                el.innerHTML = list.map((r, i) => `<div style="background: var(--card); padding: 16px 20px; border-radius: 16px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); border: 1px solid var(--card-border);"><div><div style="font-weight: 700; font-size: 16px;">${r.text}</div><div style="font-size: 14px; color: var(--text-sec); margin-top: 4px; font-weight: 500;">в ${r.time}</div></div><button onclick="deleteReminder(${i})" style="background:none; border:none; font-size: 20px; cursor:pointer; color: var(--text-sec);">×</button></div>`).join('');
             }
             window.deleteReminder = function(index) { const list = store.get('reminders', []); list.splice(index, 1); store.set('reminders', list); renderReminders(); };
             
