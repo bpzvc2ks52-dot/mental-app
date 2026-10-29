@@ -114,7 +114,7 @@
         .emotion-chip { padding: 16px; border-radius: 16px; background: var(--card); border: 1px solid var(--border); cursor: pointer; font-weight: 600; font-size: 15px; transition: transform 0.2s, box-shadow 0.2s; }
         .emotion-chip:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
         .emotion-chip:active { transform: scale(0.95); }
-        .emotion-tip { background: var(--tile-purple); padding: 16px; border-radius: 16px; margin-top: 16px; display: none; text-align: left; animation: fadeIn 0.4s ease; }
+        .emotion-tip { background: var(--tile-purple); padding: 16px; border-radius: 16px; margin-top: 16px; display: none; text-align: left; animation: fadeIn 0.4s ease; line-height: 1.5; }
         
         #mood-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
         .modal-card { background: var(--card); width: 90%; max-width: 340px; border-radius: 24px; padding: 28px; text-align: center; animation: fadeIn 0.3s ease; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
@@ -128,10 +128,23 @@
         input[type=range]::-webkit-slider-thumb:active { transform: scale(1.2); }
         input[type=range]::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: var(--tile-purple-icon); cursor: pointer; border: none; box-shadow: 0 2px 6px rgba(0,0,0,0.2); transition: transform 0.2s; }
         .balance-chart-wrap { display: flex; justify-content: center; align-items: center; margin: 20px 0; padding: 10px; }
-        .balance-chart { width: 100%; max-width: 280px; height: auto; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.05)); }
+        .balance-chart { width: 100%; max-width: 320px; height: auto; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.05)); overflow: visible; }
         .balance-chart polygon { fill: none; stroke: var(--border); stroke-width: 1; }
         .balance-chart .data-polygon { fill: rgba(206, 147, 216, 0.3); stroke: var(--tile-purple-icon); stroke-width: 2; stroke-linejoin: round; transition: all 0.4s ease; }
-        .balance-chart text { font-size: 8px; fill: var(--text-sec); font-weight: 600; text-anchor: middle; dominant-baseline: middle; }
+        .balance-chart text { font-size: 10px; fill: var(--text-sec); font-weight: 600; text-anchor: middle; dominant-baseline: middle; }
+
+        /* Стили для рулетки времени */
+        .wheel-picker-wrap { display: flex; justify-content: center; align-items: center; gap: 10px; height: 160px; overflow: hidden; position: relative; margin-bottom: 20px; background: var(--card); border-radius: 16px; border: 1px solid var(--border); }
+        .wheel-picker-wrap::before, .wheel-picker-wrap::after { content: ''; position: absolute; left: 0; right: 0; height: 50px; z-index: 2; pointer-events: none; }
+        .wheel-picker-wrap::before { top: 0; background: linear-gradient(to bottom, var(--card), transparent); }
+        .wheel-picker-wrap::after { bottom: 0; background: linear-gradient(to top, var(--card), transparent); }
+        .wheel-col { height: 100%; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; -ms-overflow-style: none; text-align: center; padding: 55px 0; }
+        .wheel-col::-webkit-scrollbar { display: none; }
+        .wheel-item { height: 50px; line-height: 50px; scroll-snap-align: center; font-size: 22px; font-weight: 700; color: var(--text-sec); transition: color 0.2s, transform 0.2s; cursor: pointer; padding: 0 15px; }
+        .wheel-item.selected { color: var(--text); transform: scale(1.1); }
+        .wheel-highlight { position: absolute; top: 50%; left: 10px; right: 10px; height: 50px; transform: translateY(-50%); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: rgba(128,128,128,0.05); border-radius: 8px; pointer-events: none; z-index: 1; }
+        .wheel-colon { font-size: 24px; font-weight: 800; z-index: 2; }
+
         @media (prefers-reduced-motion: reduce) { .fade-in, .splash-icon, .tile, .inner-screen, .breath-circle { animation: none !important; transition: none !important; } }
     </style>
 </head>
@@ -328,7 +341,14 @@
             <h2 style="font-size: 24px;">Мои напоминания</h2>
             <p style="color: var(--text-sec); margin-bottom: 20px;">О чём нельзя забыть?</p>
             <input type="text" id="reminder-text" placeholder="Например: выпить воды">
-            <input type="time" id="reminder-time">
+            
+            <div class="wheel-picker-wrap">
+                <div class="wheel-col" id="hour-wheel"></div>
+                <div class="wheel-colon">:</div>
+                <div class="wheel-col" id="minute-wheel"></div>
+                <div class="wheel-highlight"></div>
+            </div>
+
             <button class="btn" id="reminder-save">Добавить напоминание</button>
             <div id="reminders-list" style="text-align: left; margin-top: 20px;"></div>
         </div>
@@ -718,11 +738,29 @@
             function showDayDetails(dateStr) {
                 const moods = store.get('moods', {}); const progress = store.get('progress_' + dateStr, []); const sleepForDay = store.get('sleep', []).find(s => s.date === dateStr);
                 const emojiMap = { 1: '😭', 2: '😕', 3: '😐', 4: '🙂', 5: '😄' }; const moodText = moods[dateStr] ? emojiMap[moods[dateStr]] : 'Нет данных';
+                
                 const names = { breath: 'Дыхание', tactical: 'Дыхание', sleep: 'Дыхание', energy: 'Дыхание', cbt: 'КПТ', grounding: 'Заземление', diary: 'Дневник', gratitude: 'Благодарность', habit: 'Чеклист', body: 'Тело', 'sleep-diary': 'Сны', 'wheel-balance': 'Баланс' };
                 const doneList = progress.length ? progress.map(p => `<li>${names[p] || p}</li>`).join('') : '<li>Пока ничего не сделано</li>';
+                
                 let sleepHtml = sleepForDay ? `<div style="margin-top: 12px;"><b>Сон:</b> ${['😫','😕','😐','🙂','😴'][sleepForDay.quality - 1] || ''} (${sleepForDay.bed} – ${sleepForDay.wake})</div>` : '';
+                
+                // Достаем записи за этот день
+                const diaryToday = store.get('diary', []).filter(d => d.date.slice(0, 10) === dateStr);
+                const gratToday = store.get('gratitude', []).filter(d => d.date.slice(0, 10) === dateStr);
+                const dreamsToday = store.get('dreams', []).filter(d => d.date.slice(0, 10) === dateStr);
+                
+                let notesHtml = '';
+                if (diaryToday.length) notesHtml += `<div style="margin-top: 16px; background: var(--bg); padding: 12px; border-radius: 12px;"><b>📖 Дневник:</b><br>${diaryToday.map(d => d.text).join('<br><br>')}</div>`;
+                if (gratToday.length) notesHtml += `<div style="margin-top: 12px; background: var(--bg); padding: 12px; border-radius: 12px;"><b>🙏 Благодарность:</b><br>${gratToday.map(d => d.text).join('<br><br>')}</div>`;
+                if (dreamsToday.length) notesHtml += `<div style="margin-top: 12px; background: var(--bg); padding: 12px; border-radius: 12px;"><b>💭 Сны:</b><br>${dreamsToday.map(d => d.text).join('<br><br>')}</div>`;
+
                 document.getElementById('day-details-title').innerText = `День ${dateStr}`;
-                document.getElementById('day-details-content').innerHTML = `<div style="font-size: 24px; text-align: center; margin-bottom: 12px;">${moodText}</div><div><b>Выполнено практик (${progress.length}):</b><ul style="margin: 8px 0 0 0; padding-left: 20px;">${doneList}</ul></div>${sleepHtml}`;
+                document.getElementById('day-details-content').innerHTML = `
+                    <div style="font-size: 24px; text-align: center; margin-bottom: 12px;">Настроение: ${moodText}</div>
+                    <div><b>Выполнено практик (${progress.length}):</b><ul style="margin: 8px 0 0 0; padding-left: 20px;">${doneList}</ul></div>
+                    ${sleepHtml}
+                    ${notesHtml}
+                `;
                 document.getElementById('day-details-modal').style.display = 'flex';
             }
 
@@ -818,10 +856,19 @@
             });
 
             // ===== КОЛЕСО ЭМОЦИЙ =====
-            const emotionTips = { joy: "Радость — важно замечать и проживать.", sad: "Грусть — это сигнал, что что-то важно.", anger: "Злость — это защита границ.", fear: "Страх — это про безопасность.", anxiety: "Тревога — это про будущее.", shame: "Стыд — тяжёлое чувство.", lonely: "Одиночество — это потребность в контакте.", tired: "Усталость — тело просит отдыха." };
+            const emotionTips = { 
+                joy: "<b>Радость — это ресурс.</b><br>• Заметь, что именно вызвало это чувство, и постарайся повторить это в будущем.<br>• Поделись радостью с близким — это усиливает её.<br>• Запиши этот момент в Копилку побед, чтобы возвращаться к нему в трудные дни.", 
+                sad: "<b>Грусть — это сигнал, что что-то важно.</b><br>• Позволь себе побыть с этим чувством, не убегая от него.<br>• Выпиши свои переживания в Дневник — это поможет выпустить пар.<br>• Сделай что-то маленькое и приятное для себя (тёплый чай, плед).", 
+                anger: "<b>Злость — это защита твоих границ.</b><br>• Спроси себя: «Что именно нарушилось? Какая моя потребность не удовлетворена?».<br>• Сделай тактическое дыхание или физическую нагрузку, чтобы сбросить напряжение.<br>• Если злость направлена на человека, попробуй написать ему письмо (но не отправляй).", 
+                fear: "<b>Страх — это про безопасность.</b><br>• Вернись в «здесь и сейчас» через Заземление 5-4-3-2-1.<br>• Отдели реальную угрозу от фантазии: что произойдёт на самом деле?<br>• Сделай дыхание 4-7-8, чтобы успокоить нервную систему.", 
+                anxiety: "<b>Тревога — это страх будущего.</b><br>• Выпиши все «а что, если» в Дневник и посмотри на них со стороны.<br>• Используй КПТ: какие факты ЗА, а какие ПРОТИВ твоей тревоги?<br>• Сделай дыхание 4-7-8 — оно физически снижает уровень кортизола.", 
+                shame: "<b>Стыд — это тяжёлое и важное чувство.</b><br>• Напомни себе: ты не обязан быть идеальным, чтобы быть достойным любви.<br>• Напиши себе тёплое письмо в Профиле — так, как поддержал бы лучшего друга.<br>• Поделись с кем-то, кому доверяешь — часто стыд разрушается в контакте.", 
+                lonely: "<b>Одиночество — это потребность в контакте.</b><br>• Напиши близкому человеку, даже если кажется, что ты его беспокоишь.<br>• Сделай практику «Сканирование тела», чтобы вернуться к себе.<br>• Попробуй выйти на улицу — иногда просто быть среди людей уже помогает.", 
+                tired: "<b>Усталость — тело просит отдыха.</b><br>• Разреши себе отдохнуть без вины — это не слабость, а необходимость.<br>• Сделай дыхание «Энергия» (если нужно взбодриться) или 4-7-8 (если нужно успокоиться).<br>• Отметь день в Чеклисте заботы, даже если просто лежал." 
+            };
             document.querySelectorAll('#screen-emotions .emotion-chip').forEach(chip => {
                 chip.addEventListener('click', function() {
-                    const tip = emotionTips[this.dataset.emotion] || ''; const box = document.getElementById('emotion-tip'); box.style.display = 'block'; box.innerText = tip;
+                    const tip = emotionTips[this.dataset.emotion] || ''; const box = document.getElementById('emotion-tip'); box.style.display = 'block'; box.innerHTML = tip;
                 });
             });
 
@@ -833,29 +880,6 @@
                     res.style.display = 'block'; res.innerHTML = `<h3 style="margin-top: 0;">${plan.title}</h3><ul style="padding-left: 20px;">${plan.steps.map(s => `<li style="margin-bottom: 8px;">${s}</li>`).join('')}</ul>`;
                 });
             });
-
-            // ===== НАПОМИНАНИЯ =====
-            function renderReminders() {
-                const el = document.getElementById('reminders-list'); if (!el) return;
-                const list = store.get('reminders', []);
-                if (!list.length) { el.innerHTML = '<p style="color: var(--text-sec); text-align: center;">Пока нет напоминаний.</p>'; return; }
-                el.innerHTML = list.map((r, i) => `<div style="background: var(--card); padding: 16px; border-radius: 16px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.02);"><div><div style="font-weight: 600;">${r.text}</div><div style="font-size: 13px; color: var(--text-sec);">в ${r.time}</div></div><button onclick="deleteReminder(${i})" style="background:none; border:none; font-size: 18px; cursor:pointer;">❌</button></div>`).join('');
-            }
-            window.deleteReminder = function(index) { const list = store.get('reminders', []); list.splice(index, 1); store.set('reminders', list); renderReminders(); };
-            document.getElementById('reminder-save').addEventListener('click', function() {
-                const text = document.getElementById('reminder-text').value.trim(); const time = document.getElementById('reminder-time').value;
-                if (!text || !time) { alert('Заполни текст и время'); return; }
-                const list = store.get('reminders', []); list.push({ text, time }); store.set('reminders', list);
-                document.getElementById('reminder-text').value = ''; document.getElementById('reminder-time').value = ''; renderReminders();
-                if ('Notification' in window && Notification.permission !== 'granted') Notification.requestPermission();
-            });
-            setInterval(() => {
-                if ('Notification' in window && Notification.permission === 'granted') {
-                    const now = new Date(); const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-                    const list = store.get('reminders', []);
-                    list.forEach(r => { if (r.time === currentTime && !r.notified) { new Notification('Остров добра', { body: r.text }); r.notified = true; store.set('reminders', list); } });
-                }
-            }, 60000);
 
             // ===== ДНЕВНИК СНОВ =====
             function renderDreams() {
@@ -880,7 +904,7 @@
                 }
             }
             function drawBalanceChart(vals) {
-                const cx = 100, cy = 100, r = 80; let gridHtml = '';
+                const cx = 100, cy = 100, r = 65; let gridHtml = ''; // Уменьшили радиус, чтобы влезли подписи
                 [0.2, 0.4, 0.6, 0.8, 1].forEach(scale => {
                     const points = [];
                     for (let i = 0; i < 8; i++) { const angle = (Math.PI * 2 * i) / 8 - Math.PI / 2; points.push(`${cx + r * scale * Math.cos(angle)},${cy + r * scale * Math.sin(angle)}`); }
@@ -889,9 +913,13 @@
                 let axesHtml = '';
                 for (let i = 0; i < 8; i++) {
                     const angle = (Math.PI * 2 * i) / 8 - Math.PI / 2; const x2 = cx + r * Math.cos(angle), y2 = cy + r * Math.sin(angle);
-                    const lx = cx + (r + 15) * Math.cos(angle), ly = cy + (r + 15) * Math.sin(angle);
+                    const lx = cx + (r + 18) * Math.cos(angle), ly = cy + (r + 18) * Math.sin(angle); // Отодвинули текст чуть дальше
                     axesHtml += `<line x1="${cx}" y1="${cy}" x2="${x2}" y2="${y2}" stroke="var(--border)" stroke-width="1" />`;
-                    axesHtml += `<text x="${lx}" y="${ly}">${balanceAreas[i].label}</text>`;
+                    // Разворачиваем текст для левой стороны, чтобы не наезжал
+                    let textAnchor = "middle";
+                    if (Math.cos(angle) > 0.5) textAnchor = "start";
+                    if (Math.cos(angle) < -0.5) textAnchor = "end";
+                    axesHtml += `<text x="${lx}" y="${ly}" text-anchor="${textAnchor}">${balanceAreas[i].label}</text>`;
                 }
                 const dataPoints = vals.map((v, i) => { const angle = (Math.PI * 2 * i) / 8 - Math.PI / 2; const scale = v / 10; return `${cx + r * scale * Math.cos(angle)},${cy + r * scale * Math.sin(angle)}`; }).join(' ');
                 return `<svg class="balance-chart" viewBox="0 0 200 200"><g>${gridHtml}</g><g>${axesHtml}</g><polygon class="data-polygon" points="${dataPoints}" /></svg>`;
@@ -1027,6 +1055,86 @@
             ['diary-btn', 'grat-btn', 'cbt-btn', 'win-btn', 'dream-save'].forEach(id => {
                 const el = document.getElementById(id); if (el) el.addEventListener('click', playDing);
             });
+
+            // ===== НАПОМИНАНИЯ (БАРАБАНЫ) =====
+            let selectedHour = 12, selectedMinute = 0;
+            
+            function initWheels() {
+                const hourWheel = document.getElementById('hour-wheel');
+                const minWheel = document.getElementById('minute-wheel');
+                if (!hourWheel || !minWheel) return;
+
+                hourWheel.innerHTML = ''; minWheel.innerHTML = '';
+                for (let i = 0; i < 24; i++) {
+                    const el = document.createElement('div'); el.className = 'wheel-item'; el.innerText = String(i).padStart(2, '0'); el.dataset.val = i;
+                    el.addEventListener('click', () => { hourWheel.scrollTo({ top: i * 50, behavior: 'smooth' }); });
+                    hourWheel.appendChild(el);
+                }
+                for (let i = 0; i < 60; i++) {
+                    const el = document.createElement('div'); el.className = 'wheel-item'; el.innerText = String(i).padStart(2, '0'); el.dataset.val = i;
+                    el.addEventListener('click', () => { minWheel.scrollTo({ top: i * 50, behavior: 'smooth' }); });
+                    minWheel.appendChild(el);
+                }
+
+                // Начальные позиции
+                hourWheel.scrollTop = selectedHour * 50;
+                minWheel.scrollTop = selectedMinute * 50;
+
+                function updateSelected(col, type) {
+                    const index = Math.round(col.scrollTop / 50);
+                    if (type === 'hour') selectedHour = index;
+                    else selectedMinute = index;
+                    
+                    col.querySelectorAll('.wheel-item').forEach((item, i) => {
+                        item.classList.toggle('selected', i === index);
+                    });
+                }
+
+                let scrollTimeout;
+                hourWheel.addEventListener('scroll', () => {
+                    clearTimeout(scrollTimeout);
+                    scrollTimeout = setTimeout(() => updateSelected(hourWheel, 'hour'), 100);
+                });
+                minWheel.addEventListener('scroll', () => {
+                    clearTimeout(scrollTimeout);
+                    scrollTimeout = setTimeout(() => updateSelected(minWheel, 'minute'), 100);
+                });
+
+                // Инициализация классов
+                updateSelected(hourWheel, 'hour');
+                updateSelected(minWheel, 'minute');
+            }
+            initWheels();
+
+            function renderReminders() {
+                const el = document.getElementById('reminders-list'); if (!el) return;
+                const list = store.get('reminders', []);
+                if (!list.length) { el.innerHTML = '<p style="color: var(--text-sec); text-align: center;">Пока нет напоминаний.</p>'; return; }
+                el.innerHTML = list.map((r, i) => `<div style="background: var(--card); padding: 16px; border-radius: 16px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.02);"><div><div style="font-weight: 600;">${r.text}</div><div style="font-size: 13px; color: var(--text-sec);">в ${r.time}</div></div><button onclick="deleteReminder(${i})" style="background:none; border:none; font-size: 18px; cursor:pointer;">❌</button></div>`).join('');
+            }
+            window.deleteReminder = function(index) { const list = store.get('reminders', []); list.splice(index, 1); store.set('reminders', list); renderReminders(); };
+            
+            document.getElementById('reminder-save').addEventListener('click', function() {
+                const text = document.getElementById('reminder-text').value.trim();
+                if (!text) { alert('Напиши текст напоминания'); return; }
+                
+                const time = `${String(selectedHour).padStart(2, '0')}:${String(selectedMinute).padStart(2, '0')}`;
+                const list = store.get('reminders', []); list.push({ text, time }); store.set('reminders', list);
+                
+                document.getElementById('reminder-text').value = '';
+                document.getElementById('hour-wheel').scrollTo({ top: 12 * 50, behavior: 'smooth' });
+                document.getElementById('minute-wheel').scrollTo({ top: 0, behavior: 'smooth' });
+                
+                renderReminders();
+                if ('Notification' in window && Notification.permission !== 'granted') Notification.requestPermission();
+            });
+            setInterval(() => {
+                if ('Notification' in window && Notification.permission === 'granted') {
+                    const now = new Date(); const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+                    const list = store.get('reminders', []);
+                    list.forEach(r => { if (r.time === currentTime && !r.notified) { new Notification('Остров добра', { body: r.text }); r.notified = true; store.set('reminders', list); } });
+                }
+            }, 60000);
 
             // ===== МУЗЫКА =====
             const Music = (function() {
