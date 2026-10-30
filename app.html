@@ -879,3 +879,315 @@
             const vals = balanceAreas.map(a => parseInt(document.getElementById('balance-' + a.id).value));
             const avg = vals.reduce((s, v) => s + v, 0) / vals.length;
             let minIdx = 0; vals.forEach((v, i) => { if (v <
+                                                                     let minIdx = 0; vals.forEach((v, i) => { if (v < vals[minIdx]) minIdx = i; }); const lowest = balanceAreas[minIdx];
+            const res = document.getElementById('balance-result'); res.style.display = 'block';
+            res.innerHTML = `<h3 style="margin-top: 0; text-align: center;">Средний балл: ${avg.toFixed(1)}</h3><div style="margin: 16px 0;">${drawBalanceChart(vals)}</div><p style="font-size: 15px; margin-bottom: 8px; text-align: center;">Самая провисающая сфера: <b>${lowest.label}</b> (${vals[minIdx]}/10).</p><p style="font-size: 13px; color: var(--text-sec); text-align: center;">Попробуй уделить ей немного внимания на этой неделе.</p><button class="btn btn-secondary" onclick="closeScreens()" style="margin-top: 16px;">Вернуться на главную</button>`;
+            markDone('wheel-balance');
+        });
+
+        // ===== ИЗБРАННОЕ =====
+        const practiceNames = { breath: 'Коробочное дыхание', tactical: 'Тактическое дыхание', sleep: 'Дыхание 4-7-8', energy: 'Энергия', cbt: 'КПТ', grounding: 'Заземление', diary: 'Дневник', gratitude: 'Благодарность', habit: 'Чеклист заботы', 'sleep-diary': 'Дневник снов', 'wheel-balance': 'Колесо баланса', 'audio-diary': 'Аудио-дневник' };
+        function getFavorites() { return store.get('favorites', []); }
+        function toggleFav(id) {
+            let favs = getFavorites();
+            if (favs.includes(id)) favs = favs.filter(f => f !== id); else favs.push(id);
+            store.set('favorites', favs); renderFavStars();
+        }
+        function renderFavStars() {
+            const favs = getFavorites();
+            document.querySelectorAll('.tile[data-practice]').forEach(tile => {
+                const id = tile.dataset.practice;
+                if (!practiceNames[id]) return;
+                let star = tile.querySelector('.tile-fav');
+                if (!star) {
+                    star = document.createElement('span'); star.className = 'tile-fav'; star.innerText = '★';
+                    star.style.cssText = 'position: absolute; top: 12px; right: 12px; font-size: 18px; cursor: pointer; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);';
+                    star.addEventListener('click', function(e) { e.stopPropagation(); toggleFav(id); this.style.transform = 'scale(1.3)'; setTimeout(()=>this.style.transform='scale(1)', 200); });
+                    tile.appendChild(star);
+                }
+                star.style.opacity = favs.includes(id) ? '1' : '0.2';
+                star.style.color = favs.includes(id) ? '#ffb74d' : 'var(--text-sec)';
+            });
+        }
+        renderFavStars();
+        function renderFavorites() {
+            const el = document.getElementById('favorites-list'); if (!el) return;
+            const favs = getFavorites().filter(id => practiceNames[id]);
+            if (!favs.length) { el.innerHTML = '<p class="empty-state">Пока пусто. Нажми ★ на плитке, чтобы добавить.</p>'; return; }
+            el.innerHTML = favs.map(id => `<div class="tile tile-white tile-wide" style="margin-bottom: 12px;" onclick="openScreen('${id}')"><div class="tile-icon" style="background: var(--tile-blue); color: var(--tile-blue-icon);">★</div><div style="flex: 1;"><div class="tile-title">${practiceNames[id]}</div></div></div>`).join('');
+        }
+
+        // ===== СКАНИРОВАНИЕ ТЕЛА =====
+        const bodySteps = ["Стопы. Почувствуй, как они касаются пола.", "Голени и колени. Заметь напряжение.", "Бёдра. Расслабь их.", "Живот. Дыши в него мягко.", "Грудь. Почувствуй, как она поднимается.", "Руки. Отпусти плечи.", "Шея. Мягко поверни голову.", "Лицо. Расслабь челюсть и лоб.", "Всё тело целиком. Ты здесь."];
+        let bodyStep = 0;
+        document.getElementById('body-btn').addEventListener('click', function() {
+            if (bodyStep >= bodySteps.length) {
+                bodyStep = 0; this.innerText = 'Начать';
+                document.getElementById('body-text').innerText = 'Нажми «Начать»'; document.getElementById('body-progress').innerText = ''; return;
+            }
+            const btn = this; btn.innerText = 'Дальше';
+            document.getElementById('body-text').innerText = bodySteps[bodyStep];
+            document.getElementById('body-progress').innerText = (bodyStep + 1) + ' из ' + bodySteps.length;
+            bodyStep++;
+            if (bodyStep === bodySteps.length) { btn.innerText = 'Заново'; markDone('body'); }
+        });
+
+        // ===== КОПИЛКА ПОБЕД =====
+        function renderWins() {
+            const el = document.getElementById('wins-list'); if (!el) return;
+            const wins = store.get('wins', []);
+            if (!wins.length) { el.innerHTML = '<p class="empty-state">Пока пусто. Добавь первое достижение.</p>'; return; }
+            el.innerHTML = wins.slice().reverse().map(w => `<div class="list-item" style="font-weight: 600;">🏆 ${w}</div>`).join('');
+        }
+        document.getElementById('win-btn').addEventListener('click', function() {
+            const v = document.getElementById('win-input').value.trim(); if (!v) return;
+            const wins = store.get('wins', []); wins.push(v); store.set('wins', wins);
+            document.getElementById('win-input').value = ''; renderWins();
+        });
+
+        // ===== ТРЕКЕР СНА =====
+        let sleepQuality = 3;
+        document.querySelectorAll('.sleep-quality').forEach(btn => {
+            btn.addEventListener('click', function() {
+                sleepQuality = parseInt(this.dataset.q);
+                document.querySelectorAll('.sleep-quality').forEach(b => { b.style.background = ''; b.style.color = 'var(--text)'; });
+                this.style.background = 'var(--tile-blue-icon)';
+                this.style.color = 'white';
+            });
+        });
+        function renderSleep() {
+            const el = document.getElementById('sleep-list'); if (!el) return;
+            const list = store.get('sleep', []);
+            if (!list.length) { el.innerHTML = '<p class="empty-state">Пока нет записей.</p>'; return; }
+            const emoji = { 1: '😫', 2: '😕', 3: '😐', 4: '🙂', 5: '😴' };
+            el.innerHTML = list.slice().reverse().map(s => `<div class="list-item" style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 14px; color: var(--text-sec); font-weight: 600;">${s.date}</span><span style="font-size: 16px; font-weight: 700;">${emoji[s.quality] || ''} ${s.bed || '?'}–${s.wake || '?'}</span></div>`).join('');
+        }
+        document.getElementById('sleep-save').addEventListener('click', function() {
+            const bed = document.getElementById('sleep-bed').value; const wake = document.getElementById('sleep-wake').value;
+            if (!bed || !wake) { alert('Заполни время'); return; }
+            if (bed === wake) { alert('Время сна и пробуждения совпадает. Проверь данные.'); return; }
+            const list = store.get('sleep', []); list.push({ bed, wake, quality: sleepQuality, date: todayKey() });
+            store.set('sleep', list); renderSleep();
+            document.getElementById('sleep-bed').value = ''; document.getElementById('sleep-wake').value = '';
+        });
+
+        // ===== АФФИРМАЦИИ =====
+        const affirmations = ["Ты справляешься лучше, чем тебе кажется.", "Ты имеешь право на отдых.", "Твои чувства важны и имеют смысл.", "Ты не обязан быть идеальным, чтобы быть достойным любви.", "Маленькие шаги — тоже прогресс.", "Ты можешь сказать «нет» без вины.", "Забота о себе — это не эгоизм.", "Даже если сегодня тяжело — это пройдёт.", "Ты уже сделал важное: открыл это приложение.", "Ты достоин доброты, особенно от себя самого.", "Не всё зависит от тебя. И это нормально.", "Ты можешь начинать заново столько, сколько нужно.", "Сравнение с другими не делает тебя хуже.", "Ты — не свои мысли. Ты больше.", "Сегодня достаточно просто быть."];
+        function showAffirmation() { const el = document.getElementById('affirmation-text'); if (el) el.innerText = affirmations[Math.floor(Math.random() * affirmations.length)]; }
+        document.getElementById('affirmation-btn').addEventListener('click', showAffirmation);
+        showAffirmation();
+
+        // ===== ПИСЬМО СЕБЕ =====
+        function renderLetter() {
+            const status = document.getElementById('letter-status'); if (!status) return;
+            const letter = store.get('letter', null);
+            if (letter) {
+                const showAt = new Date(letter.showAt);
+                if (new Date() >= showAt) {
+                    status.innerHTML = '<b>Твоё письмо:</b><br>' + letter.text.replace(/\n/g, '<br>') + '<br><button class="btn btn-secondary" id="letter-clear" style="margin-top: 12px;">Удалить письмо</button>';
+                    const clearBtn = document.getElementById('letter-clear'); if (clearBtn) clearBtn.addEventListener('click', function() { store.set('letter', null); renderLetter(); });
+                } else {
+                    const days = Math.ceil((showAt - new Date()) / (1000 * 60 * 60 * 24)); status.innerText = `Письмо откроется через ${days} дн.`;
+                }
+            } else { status.innerText = ''; }
+        }
+        document.getElementById('letter-save').addEventListener('click', function() {
+            const text = document.getElementById('letter-input').value.trim(); if (!text) return;
+            const showAt = new Date(); showAt.setDate(showAt.getDate() + 7);
+            store.set('letter', { text, showAt: showAt.toISOString() });
+            document.getElementById('letter-input').value = ''; store.set('draft_letter_input', ''); renderLetter();
+        });
+
+        // ===== ЗВУК СОХРАНЕНИЯ =====
+        function playDing() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator(); const gain = ctx.createGain();
+                osc.type = 'sine'; osc.frequency.value = 880;
+                gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+                osc.connect(gain).connect(ctx.destination);
+                osc.start(); osc.stop(ctx.currentTime + 0.5);
+            } catch(e) {}
+        }
+        ['diary-btn', 'grat-btn', 'cbt-btn', 'win-btn', 'dream-save', 'audio-save'].forEach(id => {
+            const el = document.getElementById(id); if (el) el.addEventListener('click', playDing);
+        });
+
+        // ===== НАПОМИНАНИЯ =====
+        let selectedHour = 12, selectedMinute = 0;
+        function initWheels() {
+            const hourWheel = document.getElementById('hour-wheel');
+            const minWheel = document.getElementById('minute-wheel');
+            if (!hourWheel || !minWheel || hourWheel.children.length) return;
+            for (let i = 0; i < 24; i++) {
+                const el = document.createElement('div'); el.className = 'wheel-item'; el.innerText = pad(i); el.dataset.val = i;
+                el.addEventListener('click', () => { hourWheel.scrollTo({ top: i * 50, behavior: 'smooth' }); });
+                hourWheel.appendChild(el);
+            }
+            for (let i = 0; i < 60; i++) {
+                const el = document.createElement('div'); el.className = 'wheel-item'; el.innerText = pad(i); el.dataset.val = i;
+                el.addEventListener('click', () => { minWheel.scrollTo({ top: i * 50, behavior: 'smooth' }); });
+                minWheel.appendChild(el);
+            }
+            hourWheel.scrollTop = selectedHour * 50;
+            minWheel.scrollTop = selectedMinute * 50;
+            function updateSelected(col, type) {
+                const index = Math.round(col.scrollTop / 50);
+                if (type === 'hour') selectedHour = index; else selectedMinute = index;
+                col.querySelectorAll('.wheel-item').forEach((item, i) => { item.classList.toggle('selected', i === index); });
+            }
+            let t1, t2;
+            hourWheel.addEventListener('scroll', () => { clearTimeout(t1); t1 = setTimeout(() => updateSelected(hourWheel, 'hour'), 100); });
+            minWheel.addEventListener('scroll', () => { clearTimeout(t2); t2 = setTimeout(() => updateSelected(minWheel, 'minute'), 100); });
+            updateSelected(hourWheel, 'hour'); updateSelected(minWheel, 'minute');
+        }
+        initWheels();
+
+        function renderReminders() {
+            const el = document.getElementById('reminders-list'); if (!el) return;
+            const list = store.get('reminders', []);
+            if (!list.length) { el.innerHTML = '<p class="empty-state">Пока нет напоминаний.</p>'; return; }
+            el.innerHTML = list.map((r, i) => `<div class="list-item" style="display: flex; justify-content: space-between; align-items: center;"><div><div class="list-item-title">${r.text}</div><div class="list-item-sub">в ${r.time}</div></div><button onclick="deleteReminder(${i})" style="background:none; border:none; font-size: 22px; cursor:pointer; color: var(--text-sec); padding: 4px 8px;">×</button></div>`).join('');
+        }
+        window.deleteReminder = function(index) { const list = store.get('reminders', []); list.splice(index, 1); store.set('reminders', list); renderReminders(); };
+        document.getElementById('reminder-save').addEventListener('click', function() {
+            const text = document.getElementById('reminder-text').value.trim();
+            if (!text) { alert('Напиши текст напоминания'); return; }
+            const time = `${pad(selectedHour)}:${pad(selectedMinute)}`;
+            const list = store.get('reminders', []); list.push({ text, time }); store.set('reminders', list);
+            document.getElementById('reminder-text').value = ''; store.set('draft_reminder_text', '');
+            document.getElementById('hour-wheel').scrollTo({ top: 12 * 50, behavior: 'smooth' });
+            document.getElementById('minute-wheel').scrollTo({ top: 0, behavior: 'smooth' });
+            renderReminders();
+            if ('Notification' in window && Notification.permission !== 'granted') Notification.requestPermission();
+        });
+        setInterval(() => {
+            if ('Notification' in window && Notification.permission === 'granted') {
+                const now = new Date(); const currentTime = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
+                const list = store.get('reminders', []);
+                list.forEach(r => { if (r.time === currentTime && !r.notified) { new Notification('Остров добра', { body: r.text }); r.notified = true; store.set('reminders', list); } });
+            }
+        }, 60000);
+
+        // ===== АУДИО-ДНЕВНИК =====
+        let recognition = null;
+        let isRecording = false;
+        const recordBtn = document.getElementById('record-btn');
+        const recordStatus = document.getElementById('record-status');
+
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.lang = 'ru-RU';
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.onstart = function() { isRecording = true; recordBtn.classList.add('recording'); recordStatus.innerText = "Слушаю... Говори"; };
+            recognition.onresult = function(event) {
+                let finalTranscript = '';
+                for (let i = event.resultIndex; i < event.results.length; ++i) { if (event.results[i].isFinal) finalTranscript += event.results[i][0].transcript; }
+                if (finalTranscript) {
+                    const ta = document.getElementById('audio-transcript');
+                    ta.value += (ta.value ? ' ' : '') + finalTranscript;
+                    store.set('draft_audio_transcript', ta.value);
+                }
+            };
+            recognition.onerror = function(event) { recordStatus.innerText = "Ошибка: " + event.error; stopRecording(); };
+            recognition.onend = function() { stopRecording(); };
+        } else {
+            recordStatus.innerText = "Твой браузер не поддерживает запись голоса.";
+            recordBtn.disabled = true; recordBtn.style.opacity = '0.5';
+        }
+        function stopRecording() {
+            isRecording = false; recordBtn.classList.remove('recording'); recordStatus.innerText = "Запись остановлена. Проверь текст.";
+            if (recognition) recognition.stop();
+        }
+        recordBtn.addEventListener('click', function() {
+            if (!recognition) return;
+            if (isRecording) { recognition.stop(); }
+            else { document.getElementById('audio-transcript').value = ''; recognition.start(); }
+        });
+        function renderAudioDiary() {
+            const el = document.getElementById('audio-list'); if (!el) return;
+            const list = store.get('audio_diary', []);
+            if (!list.length) { el.innerHTML = '<p class="empty-state">Пока нет записей.</p>'; return; }
+            el.innerHTML = list.slice().reverse().map(d => `<div class="list-item"><div class="list-item-sub">${new Date(d.date).toLocaleString()}</div><div style="font-size: 15px; margin-top: 4px;">${d.text}</div></div>`).join('');
+        }
+        document.getElementById('audio-save').addEventListener('click', function() {
+            const text = document.getElementById('audio-transcript').value.trim(); if (!text) return;
+            const list = store.get('audio_diary', []); list.push({ text, date: new Date().toISOString() }); store.set('audio_diary', list);
+            document.getElementById('audio-transcript').value = ''; store.set('draft_audio_transcript', ''); renderAudioDiary(); markDone('audio-diary');
+        });
+
+        // ===== МУЗЫКА =====
+        const Music = (function() {
+            let ctx = null, master = null, nodes = [], playing = false, currentScene = null;
+            function ramp(param, value, time) { time = time || 1.5; const now = ctx.currentTime; param.cancelScheduledValues(now); param.setValueAtTime(param.value, now); param.linearRampToValueAtTime(value, now + time); }
+            function createNoiseBuffer(seconds) { seconds = seconds || 3; const buf = ctx.createBuffer(1, ctx.sampleRate * seconds, ctx.sampleRate); const data = buf.getChannelData(0); for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1; return buf; }
+            function noiseSource(type, freq, q, volume) {
+                const src = ctx.createBufferSource(); src.buffer = createNoiseBuffer(3); src.loop = true;
+                const filter = ctx.createBiquadFilter(); filter.type = type; filter.frequency.value = freq; filter.Q.value = q || 0.7;
+                const gain = ctx.createGain(); gain.gain.value = 0;
+                src.connect(filter).connect(gain).connect(master); src.start(); nodes.push(src, filter, gain);
+                ramp(gain.gain, volume, 3); return gain;
+            }
+            function createPad(freq, detune, volume) {
+                const osc = ctx.createOscillator(); osc.type = 'sine'; osc.frequency.value = freq; osc.detune.value = detune || 0;
+                const gain = ctx.createGain(); gain.gain.value = 0;
+                osc.connect(gain).connect(master); osc.start(); nodes.push(osc, gain);
+                ramp(gain.gain, volume || 0.05, 3); return gain;
+            }
+            function addLFO(target, rate, depth) {
+                const lfo = ctx.createOscillator(); lfo.frequency.value = rate || 0.08;
+                const lfoGain = ctx.createGain(); lfoGain.gain.value = depth || 0.01;
+                lfo.connect(lfoGain).connect(target.gain); lfo.start(); nodes.push(lfo, lfoGain);
+            }
+            async function start(scene) {
+                if (!ctx || ctx.state === 'closed') { ctx = new (window.AudioContext || window.webkitAudioContext)(); master = ctx.createGain(); master.gain.value = 0; master.connect(ctx.destination); }
+                if (ctx.state === 'suspended') await ctx.resume();
+                stopNodes(); currentScene = scene; playing = true; ramp(master.gain, 0.5, 2);
+                if (scene === 'rain') { noiseSource('lowpass', 1200, 0.6, 0.09); noiseSource('highpass', 4000, 0.5, 0.02); const dropOsc = createPad(880, 0, 0.01); addLFO(dropOsc, 7, 0.008); }
+                else if (scene === 'waves') { const w = noiseSource('lowpass', 500, 0.8, 0.12); addLFO(w, 0.12, 0.06); noiseSource('lowpass', 200, 1.0, 0.05); }
+                else { const chord = [createPad(220.00, -4, 0.05), createPad(261.63, 3, 0.045), createPad(329.63, -2, 0.04), createPad(110.00, 0, 0.06)]; chord.forEach(function(p, i) { addLFO(p, 0.05 + i * 0.02, 0.012); }); noiseSource('lowpass', 600, 0.7, 0.03); }
+            }
+            function stopNodes() { nodes.forEach(function(n) { try { if (n.stop) n.stop(); n.disconnect(); } catch(e) {} }); nodes = []; }
+            async function stop() {
+                if (!playing) return; playing = false; currentScene = null;
+                if (master) ramp(master.gain, 0, 1.2);
+                setTimeout(function() {
+                    stopNodes();
+                    if (master) { try { master.disconnect(); } catch(e){} } master = null;
+                    if (ctx) { try { ctx.close(); } catch(e){} } ctx = null;
+                }, 1400);
+            }
+            return {
+                play: async function(scene) {
+                    if (playing && currentScene === scene) { await stop(); return false; }
+                    if (playing) { await stop(); await new Promise(r => setTimeout(r, 100)); }
+                    await start(scene); return true;
+                },
+                isPlaying: function() { return playing; }
+            };
+        })();
+
+        const musicBtn = document.getElementById('music-toggle');
+        const menu = document.createElement('div'); menu.id = 'music-menu';
+        [['rain', '🌧 Дождь'], ['waves', '🌊 Волны'], ['ambient', '🎵 Эмбиент']].forEach(function(item) {
+            const btn = document.createElement('button'); btn.textContent = item[1]; btn.dataset.scene = item[0];
+            btn.addEventListener('click', async function() { const nowPlaying = await Music.play(item[0]); musicBtn.textContent = nowPlaying ? '🔇' : '🎵'; menu.style.display = 'none'; });
+            menu.appendChild(btn);
+        });
+        document.body.appendChild(menu);
+        musicBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (Music.isPlaying()) { Music.play(null); musicBtn.textContent = '🎵'; menu.style.display = 'none'; }
+            else { menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex'; }
+        });
+        document.addEventListener('click', function(e) { if (!menu.contains(e.target) && e.target !== musicBtn) menu.style.display = 'none'; });
+
+        // ===== ИНИЦИАЛИЗАЦИЯ =====
+        updatePremiumUI();
+    });
+    </script>
+</body>
+</html>                                                         
