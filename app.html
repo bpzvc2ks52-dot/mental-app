@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#f4f7f9">
     <title>Остров добра</title>
+    
+    <!-- PWA и Графики -->
+    <link rel="manifest" href="manifest.json">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => navigator.serviceWorker.register('sw.js'));
+        }
+    </script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
 
@@ -87,7 +97,6 @@
         .icon-btn { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--card-border); background: var(--card); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); box-shadow: 0 4px 12px rgba(0,0,0,0.03); font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.3s; }
         .icon-btn:active { transform: scale(0.85); }
 
-        /* ===== FIX: content скроллится ===== */
         .content {
             flex: 1 1 auto; min-height: 0;
             overflow-y: auto; -webkit-overflow-scrolling: touch;
@@ -122,40 +131,27 @@
         .tile-peach { background: var(--tile-peach); color: #7c2d12; border: none; } .tile-peach .tile-icon { color: var(--tile-peach-icon); }
         html[data-theme="dark"] .tile-peach { color: #ffedd5; }
 
-        /* ===== CHECK-IN (Adaptive) ===== */
+        /* Чек-ин */
         .checkin { padding: 4px 0 16px; }
         .checkin-title { font-size: 15px; font-weight: 600; color: var(--text-sec); margin: 0 0 10px; }
         .checkin-options { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-        .checkin-btn {
-            display: flex; flex-direction: column; align-items: center; gap: 4px;
-            padding: 12px 6px; border-radius: 16px;
-            background: var(--card); border: 1px solid var(--card-border);
-            cursor: pointer; font: inherit; color: var(--text);
-            transition: border-color 0.2s, background 0.2s;
-        }
+        .checkin-btn { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 12px 6px; border-radius: 16px; background: var(--card); border: 1px solid var(--card-border); cursor: pointer; font: inherit; color: var(--text); transition: border-color 0.2s, background 0.2s; }
         .checkin-btn[aria-pressed="true"] { border-color: var(--text); background: var(--bg); }
         .checkin-btn:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
         .checkin-emoji { font-size: 22px; line-height: 1; }
         .checkin-label { font-size: 12px; font-weight: 700; }
 
-        /* ===== SINGLE ACTION ===== */
+        /* Одно действие */
         .single-action { padding: 8px 0 16px; }
-        .single-card {
-            background: var(--card); border: 1px solid var(--card-border);
-            border-radius: var(--radius-lg); padding: 28px 24px;
-            text-align: center; box-shadow: var(--shadow);
-            animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-        }
+        .single-card { background: var(--card); border: 1px solid var(--card-border); border-radius: var(--radius-lg); padding: 28px 24px; text-align: center; box-shadow: var(--shadow); animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
         .single-card-eyebrow { font-size: 12px; text-transform: uppercase; letter-spacing: 0.6px; font-weight: 700; color: var(--text-sec); margin-bottom: 20px; }
         .single-card-icon { font-size: 48px; margin-bottom: 12px; line-height: 1; }
         .single-card-title { font-size: 22px; font-weight: 800; margin: 0 0 8px; }
         .single-card-desc { font-size: 15px; color: var(--text-sec); margin: 0 0 24px; line-height: 1.4; }
         .single-card-cta { margin-top: 0; }
         .single-card-more { background: none; border: none; padding: 16px 8px 4px; font: inherit; font-size: 14px; color: var(--text-sec); cursor: pointer; text-decoration: underline; text-underline-offset: 4px; }
-        .single-card-more:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
-        @media (prefers-reduced-motion: reduce) { .single-card { animation: none; } }
 
-        /* ===== PROGRESS RING ===== */
+        /* Прогресс */
         .progress-ring-wrap { display: flex; align-items: center; gap: 16px; background: var(--card); padding: 18px 20px; border-radius: var(--radius-lg); margin-top: 16px; border: 1px solid var(--card-border); box-shadow: var(--shadow); }
         .progress-ring { width: 64px; height: 64px; flex-shrink: 0; }
         .progress-ring circle { fill: none; stroke-width: 6; }
@@ -165,55 +161,28 @@
         .progress-sub { font-size: 13px; color: var(--text-sec); margin-top: 4px; font-weight: 500; }
         .progress-limit { font-size: 12px; color: var(--tile-peach-icon); margin-top: 6px; font-weight: 700; }
 
-        /* ===== BOTTOM NAV ===== */
+        /* Навигация */
         .bottom-nav { position: fixed; left: 20px; right: 20px; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); background: var(--nav-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 36px; display: flex; justify-content: space-around; padding: 8px 0; box-shadow: 0 10px 40px rgba(0,0,0,0.08); border: 1px solid var(--card-border); z-index: 100; }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sec); font-size: 11px; font-weight: 700; cursor: pointer; width: 33%; transition: color 0.3s; padding: 6px 0; position: relative; }
         .nav-item.active { color: var(--text); }
         .nav-icon { font-size: 22px; margin-bottom: 2px; transition: transform 0.3s; }
         .nav-item.active::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 32px; height: 4px; background: var(--text); border-radius: 0 0 4px 4px; }
 
-        /* ===== QUICK HELP (SOS) ===== */
-        .quick-help {
-            position: fixed; right: 20px;
-            bottom: calc(100px + env(safe-area-inset-bottom, 0px));
-            z-index: 90;
-            display: flex; align-items: center; gap: 8px;
-            padding: 12px 18px; border-radius: 100px;
-            border: 1px solid var(--card-border);
-            background: var(--nav-bg);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-            cursor: pointer; font: inherit; font-weight: 700; font-size: 14px; color: var(--text);
-            transition: transform 0.2s;
-        }
+        /* SOS */
+        .quick-help { position: fixed; right: 20px; bottom: calc(100px + env(safe-area-inset-bottom, 0px)); z-index: 90; display: flex; align-items: center; gap: 8px; padding: 12px 18px; border-radius: 100px; border: 1px solid var(--card-border); background: var(--nav-bg); backdrop-filter: blur(20px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); cursor: pointer; font: inherit; font-weight: 700; font-size: 14px; color: var(--text); transition: transform 0.2s; }
         .quick-help:hover { transform: translateY(-2px); }
         .quick-help:active { transform: scale(0.96); }
-        .quick-help:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
-        .quick-help-icon { font-size: 18px; line-height: 1; }
-        @media (max-width: 380px) {
-            .quick-help { width: 52px; height: 52px; padding: 0; justify-content: center; border-radius: 50%; }
-            .quick-help-label { display: none; }
-        }
-        @media (prefers-reduced-motion: reduce) {
-            .quick-help, .quick-help:hover, .quick-help:active { transform: none; transition: none; }
-        }
+        @media (max-width: 380px) { .quick-help { width: 52px; height: 52px; padding: 0; justify-content: center; border-radius: 50%; } .quick-help-label { display: none; } }
 
-        /* ===== MICRO-CONFIRM ===== */
+        /* Micro-confirm */
         .micro-confirm { animation: microGlow 0.9s ease-out; }
-        @keyframes microGlow {
-            0%   { box-shadow: 0 0 0 0 rgba(2,132,199,0.35); }
-            70%  { box-shadow: 0 0 0 12px rgba(2,132,199,0); }
-            100% { box-shadow: 0 0 0 0 rgba(2,132,199,0); }
-        }
-        @media (prefers-reduced-motion: reduce) { .micro-confirm { animation: none; } }
+        @keyframes microGlow { 0% { box-shadow: 0 0 0 0 rgba(2,132,199,0.35); } 70% { box-shadow: 0 0 0 12px rgba(2,132,199,0); } 100% { box-shadow: 0 0 0 0 rgba(2,132,199,0); } }
 
-        /* ===== INNER SCREENS ===== */
+        /* Экраны */
         .inner-screen { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 500; flex-direction: column; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; transform: translateX(100%); opacity: 0; transition: transform 0.4s, opacity 0.3s; padding-bottom: env(safe-area-inset-bottom, 0px); }
         .inner-screen.active { display: flex; transform: translateX(0); opacity: 1; }
         .back-btn { padding: 24px; font-size: 17px; font-weight: 700; color: var(--text); cursor: pointer; flex-shrink: 0; background: none; border: none; align-self: flex-start; }
-        .back-btn:active { opacity: 0.5; }
         .inner-content { padding: 0 24px 40px; text-align: center; }
-
         .screen-hero { text-align: center; margin-bottom: 8px; }
         .screen-hero-icon { font-size: 48px; margin-bottom: 8px; display: inline-block; animation: float 4s infinite ease-in-out; }
         .screen-hero h2 { font-size: 28px; font-weight: 800; margin: 0 0 8px; }
@@ -237,13 +206,12 @@
         .emotion-wheel { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 20px; }
         .emotion-chip { padding: 16px; border-radius: 18px; background: var(--card); border: 1px solid var(--card-border); cursor: pointer; font-weight: 700; font-size: 15px; transition: transform 0.2s; }
         .emotion-chip:active { transform: scale(0.94); }
-        .emotion-tip { background: var(--card); padding: 20px; border-radius: 20px; margin-top: 20px; display: none; text-align: left; animation: fadeIn 0.4s; line-height: 1.6; border: 1px solid var(--card-border); box-shadow: var(--shadow); }
-
-        .ai-box { display: none; background: linear-gradient(135deg, rgba(147,51,234,0.1), rgba(2,132,199,0.1)); padding: 20px; border-radius: 20px; margin-top: 20px; text-align: left; border: 1px solid var(--card-border); animation: fadeIn 0.4s; line-height: 1.5; }
+        .emotion-tip { background: var(--card); padding: 20px; border-radius: 20px; margin-top: 20px; display: none; text-align: left; line-height: 1.6; border: 1px solid var(--card-border); box-shadow: var(--shadow); }
+        .ai-box { display: none; background: linear-gradient(135deg, rgba(147,51,234,0.1), rgba(2,132,199,0.1)); padding: 20px; border-radius: 20px; margin-top: 20px; text-align: left; border: 1px solid var(--card-border); line-height: 1.5; }
 
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(8px); padding: 20px; }
-        .modal-overlay.active { display: flex; animation: fadeIn 0.3s; }
-        .modal-card { background: var(--card-solid); width: 100%; max-width: 400px; border-radius: var(--radius-xl); padding: 28px; text-align: left; animation: slideUp 0.4s; box-shadow: 0 20px 60px rgba(0,0,0,0.2); border: 1px solid var(--card-border); position: relative; max-height: 85vh; overflow-y: auto; }
+        .modal-overlay.active { display: flex; }
+        .modal-card { background: var(--card-solid); width: 100%; max-width: 400px; border-radius: var(--radius-xl); padding: 28px; text-align: left; box-shadow: 0 20px 60px rgba(0,0,0,0.2); border: 1px solid var(--card-border); position: relative; max-height: 85vh; overflow-y: auto; }
         .modal-close { position: absolute; top: 14px; right: 14px; background: rgba(128,128,128,0.1); border: none; width: 34px; height: 34px; border-radius: 50%; font-size: 20px; cursor: pointer; color: var(--text-sec); display: flex; align-items: center; justify-content: center; }
 
         .balance-row { margin-bottom: 16px; }
@@ -279,14 +247,26 @@
         .list-item-sub { font-size: 13px; color: var(--text-sec); margin-top: 4px; font-weight: 500; }
         .empty-state { color: var(--text-sec); text-align: center; padding: 20px; font-weight: 500; }
 
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
-        }
+        /* Бейджи */
+        .badge-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 20px; }
+        .badge-card { background: var(--card); border: 1px solid var(--card-border); padding: 20px; border-radius: 20px; text-align: center; transition: 0.3s; position: relative; overflow: hidden; }
+        .badge-card.locked { opacity: 0.5; filter: grayscale(1); }
+        .badge-icon { font-size: 40px; margin-bottom: 12px; }
+        .badge-title { font-size: 15px; font-weight: 800; margin-bottom: 4px; }
+        .badge-desc { font-size: 12px; color: var(--text-sec); line-height: 1.3; }
+        .badge-date { font-size: 10px; color: var(--tile-green-icon); font-weight: 800; margin-top: 8px; }
+        
+        /* Уведомления */
+        .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: var(--text); color: var(--bg); padding: 14px 24px; border-radius: 100px; font-weight: 700; font-size: 14px; z-index: 9999; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; align-items: center; gap: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); pointer-events: none; }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+
+        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; } }
     </style>
 </head>
 <body>
     <div class="bg-aurora"><div class="blob blob-1"></div><div class="blob blob-2"></div></div>
 
+    <!-- Экран загрузки -->
     <div id="splash">
         <div class="splash-icon">🌿</div>
         <div class="splash-title">Остров добра</div>
@@ -295,6 +275,7 @@
         <div class="splash-progress"></div>
     </div>
 
+    <!-- Знакомство -->
     <div id="onboarding">
         <div style="font-size: 70px; margin-bottom: 24px; animation: float 3s infinite;">👋</div>
         <h2 style="font-size: 28px; font-weight: 800; margin-bottom: 8px;">Как тебя зовут?</h2>
@@ -305,6 +286,7 @@
 
     <button id="music-toggle" aria-label="Включить музыку">🎵</button>
 
+    <!-- Главный экран -->
     <div id="main-screen">
         <div class="header fade-in">
             <div>
@@ -318,6 +300,7 @@
 
         <div class="content" id="adaptive-home" data-mood="unset">
 
+            <!-- Чек-ин -->
             <section class="checkin" aria-labelledby="checkin-title">
                 <h2 class="checkin-title" id="checkin-title">Как ты сейчас?</h2>
                 <div class="checkin-options" role="group" aria-labelledby="checkin-title">
@@ -340,10 +323,12 @@
                 </div>
             </section>
 
+            <!-- Блок "Одно действие" -->
             <section class="single-action" id="single-action" hidden aria-live="polite"></section>
 
+            <!-- Полная главная (плитки) -->
             <section class="full-home" id="full-home">
-                                <div class="progress-ring-wrap">
+                <div class="progress-ring-wrap">
                     <svg class="progress-ring" viewBox="0 0 56 56">
                         <circle class="bg" cx="28" cy="28" r="24"></circle>
                         <circle class="fg" id="progress-fg" cx="28" cy="28" r="24" stroke-dasharray="150.8" stroke-dashoffset="150.8" transform="rotate(-90 28 28)"></circle>
@@ -435,10 +420,13 @@
                     <div class="tile tile-white" data-practice="wheel-balance" onclick="openScreen('wheel-balance')"><div class="tile-icon" style="background: var(--tile-peach); color: var(--tile-peach-icon);">⚖️</div><div><div class="tile-title">Баланс</div><div class="tile-desc">сферы жизни</div></div></div>
                     <div class="tile tile-white" data-practice="affirmations" onclick="openScreen('affirmations')"><div class="tile-icon" style="background: var(--tile-purple); color: var(--tile-purple-icon);">💬</div><div><div class="tile-title">Аффирмации</div><div class="tile-desc">тёплые слова</div></div></div>
                     <div class="tile tile-white" data-practice="audio-diary" onclick="openScreen('audio-diary')"><div class="tile-icon" style="background: var(--tile-blue); color: var(--tile-blue-icon);">🎙</div><div><div class="tile-title">Аудио-дневник</div><div class="tile-desc">говори, а не пиши</div></div></div>
+                    <!-- Новая плитка Достижения -->
+                    <div class="tile tile-white" data-practice="badges" onclick="openScreen('badges')"><div class="tile-icon" style="background: var(--tile-green); color: var(--tile-green-icon);">🏅</div><div><div class="tile-title">Достижения</div><div class="tile-desc">твои награды</div></div></div>
                 </div>
             </section>
         </div>
 
+        <!-- Нижняя навигация -->
         <div class="bottom-nav">
             <div class="nav-item active" data-nav="home" onclick="closeScreens()"><div class="nav-icon">🏠</div><div>Дом</div></div>
             <div class="nav-item" data-nav="fav" onclick="openScreen('favorites')"><div class="nav-icon">⭐</div><div>Избранное</div></div>
@@ -446,10 +434,12 @@
         </div>
     </div>
 
+    <!-- Кнопка SOS -->
     <button id="quick-help" class="quick-help" type="button" aria-label="Мне нужна помощь сейчас">
         <span class="quick-help-icon" aria-hidden="true">🫂</span>
         <span class="quick-help-label">Помощь сейчас</span>
     </button>
+        <!-- ================= ВНУТРЕННИЕ ЭКРАНЫ ================= -->
 
     <div id="screen-favorites" class="inner-screen">
         <button class="back-btn" onclick="closeScreens()">← Назад</button>
@@ -570,7 +560,10 @@
             <div class="screen-hero"><span class="screen-hero-icon">📊</span><h2>Моя статистика</h2><p>Глубокая аналитика твоего прогресса.</p></div>
             <div style="background: var(--card); padding: 24px; border-radius: 24px; text-align: left; box-shadow: var(--shadow); border: 1px solid var(--card-border);">
                 <p style="font-size: 15px; color: var(--text-sec); margin: 0 0 16px; font-weight: 600;">Настроение за неделю</p>
-                <div id="stats-chart" style="display: flex; align-items: flex-end; gap: 10px; height: 120px;"></div>
+                <!-- Канвас для графика Chart.js -->
+                <div style="position: relative; height: 200px; width: 100%; margin-top: 10px;">
+                    <canvas id="stats-chart-canvas"></canvas>
+                </div>
             </div>
             <div class="bento-grid" style="margin-top: 16px;">
                 <div class="tile tile-white" style="flex-direction: column; align-items: flex-start; padding: 20px;">
@@ -729,6 +722,15 @@
         </div>
     </div>
 
+    <!-- Новый экран Достижений -->
+    <div id="screen-badges" class="inner-screen">
+        <button class="back-btn" onclick="closeScreens()">← Назад</button>
+        <div class="inner-content">
+            <div class="screen-hero"><span class="screen-hero-icon">🏅</span><h2>Достижения</h2><p>Маленькие шаги, которые ты сделал.</p></div>
+            <div class="badge-grid" id="badges-container"></div>
+        </div>
+    </div>
+
     <div id="screen-profile" class="inner-screen">
         <button class="back-btn" onclick="closeScreens()">← Назад</button>
         <div class="inner-content">
@@ -759,6 +761,8 @@
         </div>
     </div>
 
+    <!-- ================= МОДАЛКИ И УВЕДОМЛЕНИЯ ================= -->
+
     <div id="mood-modal" class="modal-overlay">
         <div class="modal-card">
             <button class="modal-close" data-close="mood-modal" aria-label="Закрыть">×</button>
@@ -780,6 +784,9 @@
             <div id="day-details-content" style="font-size: 16px; line-height: 1.6;"></div>
         </div>
     </div>
+
+    <!-- Контейнер для всплывающих уведомлений -->
+    <div id="toast" class="toast">🏆 <span id="toast-text">Новое достижение!</span></div>
 
     <script>
             document.addEventListener('DOMContentLoaded', function() {
@@ -863,6 +870,8 @@
             const next = cur === 'dark' ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', next);
             store.set('theme', next); updateThemeBtns();
+            // Обновляем график, если он открыт
+            if (document.getElementById('screen-stats').classList.contains('active')) renderStats();
         }
         document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
         document.getElementById('theme-toggle-2').addEventListener('click', toggleTheme);
@@ -911,6 +920,7 @@
             if (name === 'sleep-diary') renderDreams();
             if (name === 'wheel-balance') initWheelBalance();
             if (name === 'audio-diary') renderAudioDiary();
+            if (name === 'badges') renderBadges();
             if (name === 'stats') {
                 if (!isPremium) { alert('Статистика доступна только в Premium!'); closeScreens(); return; }
                 renderStats();
@@ -921,6 +931,69 @@
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             const nav = document.querySelector('[data-nav="home"]'); if (nav) nav.classList.add('active');
         };
+
+        // ===== MICRO-CONFIRM =====
+        function confirmAction(el) {
+            if (!el) return;
+            if (navigator.vibrate) { try { navigator.vibrate([20, 40, 20]); } catch(e) {} }
+            el.classList.remove('micro-confirm');
+            void el.offsetWidth;
+            el.classList.add('micro-confirm');
+            setTimeout(() => el.classList.remove('micro-confirm'), 950);
+        }
+
+        // ===== ДОСТИЖЕНИЯ (БЕЙДЖИ) =====
+        const BADGES_LIST = [
+            { id: 'first_step', icon: '🌱', title: 'Первый шаг', desc: 'Выполни 1 практику' },
+            { id: 'streak_3', icon: '🔥', title: '3 дня подряд', desc: 'Заботься о себе 3 дня' },
+            { id: 'diary_5', icon: '📖', title: 'Писатель', desc: 'Сделай 5 записей в дневник' },
+            { id: 'breath_10', icon: '🌬️', title: 'Мастер дыхания', desc: 'Сделай 10 дыхательных практик' },
+            { id: 'sleep_3', icon: '😴', title: 'Здоровый сон', desc: 'Отметь хороший сон 3 раза' },
+            { id: 'balance', icon: '⚖️', title: 'Баланс', desc: 'Пройди колесо баланса' }
+        ];
+
+        function showToast(text) {
+            const t = document.getElementById('toast'); const tt = document.getElementById('toast-text');
+            if (!t || !tt) return;
+            tt.innerText = text; t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        function unlockBadge(id) {
+            let unlocked = store.get('badges', []);
+            if (!unlocked.find(b => b.id === id)) {
+                const badge = BADGES_LIST.find(b => b.id === id);
+                if (!badge) return;
+                unlocked.push({ id: id, date: new Date().toISOString() });
+                store.set('badges', unlocked);
+                showToast('Новое достижение: ' + badge.title + ' ' + badge.icon);
+                if (navigator.vibrate) navigator.vibrate([50, 50, 50]);
+                renderBadges();
+            }
+        }
+
+        function checkBadges() {
+            const totalPractices = Object.keys(localStorage).filter(k => k.startsWith('ostrov_progress_')).reduce((sum, k) => sum + JSON.parse(localStorage[k]).length, 0);
+            if (totalPractices >= 1) unlockBadge('first_step');
+            if (store.get('streak', { count: 0 }).count >= 3) unlockBadge('streak_3');
+            if (store.get('diary', []).length >= 5) unlockBadge('diary_5');
+            
+            const actionLog = store.get('action_log', {});
+            const breaths = (actionLog['breath'] || 0) + (actionLog['tactical'] || 0) + (actionLog['sleep'] || 0) + (actionLog['energy'] || 0);
+            if (breaths >= 10) unlockBadge('breath_10');
+            if (store.get('sleep', []).filter(s => s.quality >= 4).length >= 3) unlockBadge('sleep_3');
+            if (store.get('progress_' + todayKey(), []).includes('wheel-balance')) unlockBadge('balance');
+        }
+
+        function renderBadges() {
+            const el = document.getElementById('badges-container'); if (!el) return;
+            const unlocked = store.get('badges', []);
+            el.innerHTML = BADGES_LIST.map(b => {
+                const isUnlocked = unlocked.find(u => u.id === b.id);
+                const dateStr = isUnlocked ? new Date(isUnlocked.date).toLocaleDateString() : '';
+                return `<div class="badge-card ${isUnlocked ? '' : 'locked'}"><div class="badge-icon">${b.icon}</div><div class="badge-title">${b.title}</div><div class="badge-desc">${b.desc}</div>${isUnlocked ? `<div class="badge-date">Получено ${dateStr}</div>` : ''}</div>`;
+            }).join('');
+        }
 
         // ===== ПРОГРЕСС ДНЯ =====
         function getDayProgress() { return store.get('progress_' + todayKey(), []); }
@@ -933,6 +1006,7 @@
                 log[id] = (log[id] || 0) + 1;
                 store.set('action_log', log);
             } catch(e) {}
+            checkBadges(); // Проверяем достижения
         }
         function renderProgress() {
             const arr = getDayProgress(); const total = 5; const done = Math.min(arr.length, total);
@@ -942,17 +1016,7 @@
         }
         renderProgress();
 
-        // ===== MICRO-CONFIRM =====
-        function confirmAction(el) {
-            if (!el) return;
-            if (navigator.vibrate) { try { navigator.vibrate([20, 40, 20]); } catch(e) {} }
-            el.classList.remove('micro-confirm');
-            void el.offsetWidth;
-            el.classList.add('micro-confirm');
-            setTimeout(() => el.classList.remove('micro-confirm'), 950);
-        }
-
-        // ===== ADAPTIVE HOME =====
+        // ===== АДАПТИВНАЯ ГЛАВНАЯ =====
         const ADAPTIVE_KEY = 'home_mood';
         const ADAPTIVE_CONFIG = {
             heavy: { show: 'single', action: 'breath-478' },
@@ -975,9 +1039,7 @@
                     <div class="single-card-icon" aria-hidden="true">${action.icon}</div>
                     <h2 class="single-card-title">${action.title}</h2>
                     <p class="single-card-desc">${action.desc}</p>
-                    <button class="btn single-card-cta" type="button" data-open="${action.screen}">
-                        Начать · ${action.duration}
-                    </button>
+                    <button class="btn single-card-cta" type="button" data-open="${action.screen}">Начать · ${action.duration}</button>
                     <button class="single-card-more" type="button" id="show-full-home">Показать всё</button>
                 </div>`;
             host.querySelector('[data-open]').addEventListener('click', function() { openScreen(this.dataset.open); });
@@ -998,13 +1060,8 @@
             if (!config) return;
             const single = document.getElementById('single-action');
             const full = document.getElementById('full-home');
-            if (config.show === 'single') {
-                full.hidden = true;
-                renderSingleAction(config.action);
-            } else {
-                single.hidden = true;
-                full.hidden = false;
-            }
+            if (config.show === 'single') { full.hidden = true; renderSingleAction(config.action); }
+            else { single.hidden = true; full.hidden = false; }
         }
         document.querySelectorAll('.checkin-btn').forEach(btn => {
             btn.addEventListener('click', () => applyMood(btn.dataset.mood));
@@ -1012,7 +1069,7 @@
         const savedMood = store.get(ADAPTIVE_KEY, null);
         if (savedMood) applyMood(savedMood);
 
-        // ===== QUICK HELP (SOS) =====
+        // ===== SOS (БЫСТРАЯ ПОМОЩЬ) =====
         const quickHelpBtn = document.getElementById('quick-help');
         if (quickHelpBtn) {
             quickHelpBtn.addEventListener('click', function() {
@@ -1023,12 +1080,84 @@
                     sleepBtn.dataset.sos = '1';
                     setTimeout(() => sleepBtn.click(), 150);
                 }
-                try {
-                    const n = parseInt(localStorage.getItem('ostrov_qh_clicks') || '0', 10) + 1;
-                    localStorage.setItem('ostrov_qh_clicks', String(n));
-                } catch(e) {}
             });
         }
+
+        // ===== ГРАФИКИ (Chart.js) =====
+        let moodChartInstance = null;
+        function renderStats() {
+            const ctx = document.getElementById('stats-chart-canvas');
+            if (!ctx || typeof Chart === 'undefined') return;
+            
+            const moods = store.get('moods', {}); const labels = []; const data = []; const now = new Date();
+            for (let i = 6; i >= 0; i--) { 
+                const d = new Date(now); d.setDate(now.getDate() - i); 
+                labels.push(['Вс','Пн','Вт','Ср','Чт','Пт','Сб'][d.getDay()]);
+                data.push(moods[d.toISOString().slice(0, 10)] || null);
+            }
+            
+            if (moodChartInstance) moodChartInstance.destroy();
+            
+            Chart.defaults.font.family = "'Manrope', sans-serif";
+            Chart.defaults.color = document.documentElement.getAttribute('data-theme') === 'dark' ? '#888' : '#728a9c';
+            
+            moodChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Настроение', data: data, borderColor: '#0284c7', backgroundColor: 'rgba(2, 132, 199, 0.1)',
+                        borderWidth: 3, pointBackgroundColor: '#0284c7', pointBorderColor: '#fff', pointBorderWidth: 2, pointRadius: 5, fill: true, tension: 0.4, spanGaps: true
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { min: 1, max: 5, ticks: { stepSize: 1, callback: v => ({1:'😭',2:'😕',3:'😐',4:'🙂',5:'😄'})[v] || '' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            const practices = document.getElementById('stats-practices');
+            if (practices) { let total = 0; for (let key in localStorage) { if (key.startsWith('ostrov_progress_')) { try { total += JSON.parse(localStorage[key]).length; } catch(e) {} } } practices.innerText = total; }
+            const sleeps = document.getElementById('stats-sleep'); if (sleeps) sleeps.innerText = store.get('sleep', []).filter(s => s.quality >= 4).length;
+        }
+
+        // ===== ДЫХАНИЕ =====
+        async function runBreathing(circleId, textId, btn, phasesArray, cycles, practiceId) {
+            if (btn.disabled) return;
+            const isSOS = btn.dataset.sos === '1';
+            if (!isSOS && !checkLimit()) return;
+            btn.disabled = true;
+            const text = document.getElementById(textId); const circle = document.getElementById(circleId); btn.style.display = 'none';
+            const sleep = ms => new Promise(r => setTimeout(r, ms));
+            for (let i = 0; i < cycles; i++) {
+                for (let p = 0; p < phasesArray.length; p++) {
+                    text.innerText = phasesArray[p].name; circle.style.transform = phasesArray[p].scale ? 'scale(1.25)' : 'scale(1)';
+                    if (navigator.vibrate) { try { navigator.vibrate(30); } catch(e) {} }
+                    for (let s = phasesArray[p].sec; s > 0; s--) { circle.innerText = s; await sleep(1000); }
+                }
+            }
+            text.innerText = "Завершено"; circle.innerText = "✓"; btn.style.display = 'block'; btn.innerText = "Повторить"; btn.disabled = false;
+            if (btn.dataset.sos === '1') delete btn.dataset.sos;
+            if (practiceId) markDone(practiceId);
+            if (!isSOS) useLimit();
+            openModal('mood-modal');
+        }
+        document.getElementById('breath-btn').addEventListener('click', function() { runBreathing('breath-circle', 'breath-text', this, [{name:"Вдох",sec:4,scale:true},{name:"Задержка",sec:4,scale:true},{name:"Выдох",sec:4,scale:false},{name:"Задержка",sec:4,scale:false}], 4, 'breath'); });
+        document.getElementById('tac-btn').addEventListener('click', function() { runBreathing('tac-circle', 'tac-text', this, [{name:"Вдох",sec:4,scale:true},{name:"Задержка",sec:4,scale:true},{name:"Выдох",sec:4,scale:false},{name:"Задержка",sec:2,scale:false}], 4, 'tactical'); });
+        document.getElementById('sleep-btn').addEventListener('click', function() { runBreathing('sleep-circle', 'sleep-text', this, [{name:"Вдох",sec:4,scale:true},{name:"Задержка",sec:7,scale:true},{name:"Выдох",sec:8,scale:false}], 4, 'sleep'); });
+        document.getElementById('energy-btn').addEventListener('click', function() { runBreathing('energy-circle', 'energy-text', this, [{name:"Вдох",sec:2,scale:true},{name:"Выдох",sec:2,scale:false}], 15, 'energy'); });
+
+        // ===== МОДАЛКА НАСТРОЕНИЯ =====
+        document.querySelectorAll('.mood-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const score = parseInt(this.dataset.score); const moods = store.get('moods', {}); moods[todayKey()] = score; store.set('moods', moods);
+                closeModal('mood-modal');
+            });
+        });
 
         // ===== КАЛЕНДАРЬ =====
         function renderProfileCalendar() {
@@ -1067,57 +1196,6 @@
             openModal('day-details-modal');
         }
 
-        // ===== СТАТИСТИКА =====
-        function renderStats() {
-            const chart = document.getElementById('stats-chart');
-            if (chart) {
-                chart.innerHTML = ''; const moods = store.get('moods', {}); const days = []; const now = new Date();
-                for (let i = 6; i >= 0; i--) { const d = new Date(now); d.setDate(now.getDate() - i); days.push(d.toISOString().slice(0, 10)); }
-                days.forEach(key => {
-                    const score = moods[key] || 0; const height = score ? (score * 20) : 6;
-                    const bar = document.createElement('div'); bar.style.cssText = `flex: 1; height: ${height}px; background: ${score ? 'var(--tile-blue-icon)' : 'rgba(128,128,128,0.2)'}; border-radius: 6px;`;
-                    chart.appendChild(bar);
-                });
-            }
-            const practices = document.getElementById('stats-practices');
-            if (practices) { let total = 0; for (let key in localStorage) { if (key.startsWith('ostrov_progress_')) { try { total += JSON.parse(localStorage[key]).length; } catch(e) {} } } practices.innerText = total; }
-            const sleeps = document.getElementById('stats-sleep'); if (sleeps) sleeps.innerText = store.get('sleep', []).filter(s => s.quality >= 4).length;
-        }
-
-        // ===== ДЫХАНИЕ =====
-        async function runBreathing(circleId, textId, btn, phasesArray, cycles, practiceId) {
-            if (btn.disabled) return;
-            const isSOS = btn.dataset.sos === '1';
-            if (!isSOS && !checkLimit()) return;
-            btn.disabled = true;
-            const text = document.getElementById(textId); const circle = document.getElementById(circleId); btn.style.display = 'none';
-            const sleep = ms => new Promise(r => setTimeout(r, ms));
-            for (let i = 0; i < cycles; i++) {
-                for (let p = 0; p < phasesArray.length; p++) {
-                    text.innerText = phasesArray[p].name; circle.style.transform = phasesArray[p].scale ? 'scale(1.25)' : 'scale(1)';
-                    if (navigator.vibrate) { try { navigator.vibrate(30); } catch(e) {} }
-                    for (let s = phasesArray[p].sec; s > 0; s--) { circle.innerText = s; await sleep(1000); }
-                }
-            }
-            text.innerText = "Завершено"; circle.innerText = "✓"; btn.style.display = 'block'; btn.innerText = "Повторить"; btn.disabled = false;
-            if (btn.dataset.sos === '1') { delete btn.dataset.sos; }
-            if (practiceId) markDone(practiceId);
-            if (!isSOS) useLimit();
-            openModal('mood-modal');
-        }
-        document.getElementById('breath-btn').addEventListener('click', function() { runBreathing('breath-circle', 'breath-text', this, [{name:"Вдох",sec:4,scale:true},{name:"Задержка",sec:4,scale:true},{name:"Выдох",sec:4,scale:false},{name:"Задержка",sec:4,scale:false}], 4, 'breath'); });
-        document.getElementById('tac-btn').addEventListener('click', function() { runBreathing('tac-circle', 'tac-text', this, [{name:"Вдох",sec:4,scale:true},{name:"Задержка",sec:4,scale:true},{name:"Выдох",sec:4,scale:false},{name:"Задержка",sec:2,scale:false}], 4, 'tactical'); });
-        document.getElementById('sleep-btn').addEventListener('click', function() { runBreathing('sleep-circle', 'sleep-text', this, [{name:"Вдох",sec:4,scale:true},{name:"Задержка",sec:7,scale:true},{name:"Выдох",sec:8,scale:false}], 4, 'sleep'); });
-        document.getElementById('energy-btn').addEventListener('click', function() { runBreathing('energy-circle', 'energy-text', this, [{name:"Вдох",sec:2,scale:true},{name:"Выдох",sec:2,scale:false}], 15, 'energy'); });
-
-        // ===== МОДАЛКА НАСТРОЕНИЯ =====
-        document.querySelectorAll('.mood-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const score = parseInt(this.dataset.score); const moods = store.get('moods', {}); moods[todayKey()] = score; store.set('moods', moods);
-                closeModal('mood-modal');
-            });
-        });
-
         // ===== КПТ =====
         document.getElementById('cbt-btn').addEventListener('click', function() {
             const entry = { thought: document.getElementById('cbt-thought').value, emotion: document.getElementById('cbt-emotion').value, forFacts: document.getElementById('cbt-for').value, against: document.getElementById('cbt-against').value, friend: document.getElementById('cbt-friend').value, date: new Date().toISOString() };
@@ -1125,7 +1203,7 @@
             const list = store.get('cbt', []); list.push(entry); store.set('cbt', list);
             document.getElementById('cbt-status').innerText = "Сохранено ✓";
             ['cbt-thought','cbt-emotion','cbt-for','cbt-against','cbt-friend'].forEach(id => { document.getElementById(id).value = ''; store.set('draft_' + id.replace(/-/g, '_'), ''); });
-            markDone('cbt');
+            markDone('cbt'); confirmAction(this);
         });
 
         // ===== ЗАЗЕМЛЕНИЕ =====
@@ -1252,7 +1330,7 @@
         });
 
         // ===== ИЗБРАННОЕ =====
-        const practiceNames = { breath: 'Коробочное дыхание', tactical: 'Тактическое дыхание', sleep: 'Дыхание 4-7-8', energy: 'Энергия', cbt: 'КПТ', grounding: 'Заземление', diary: 'Дневник', gratitude: 'Благодарность', habit: 'Чеклист заботы', 'sleep-diary': 'Дневник снов', 'wheel-balance': 'Колесо баланса', 'audio-diary': 'Аудио-дневник' };
+        const practiceNames = { breath: 'Коробочное дыхание', tactical: 'Тактическое дыхание', sleep: 'Дыхание 4-7-8', energy: 'Энергия', cbt: 'КПТ', grounding: 'Заземление', diary: 'Дневник', gratitude: 'Благодарность', habit: 'Чеклист заботы', 'sleep-diary': 'Дневник снов', 'wheel-balance': 'Колесо баланса', 'audio-diary': 'Аудио-дневник', badges: 'Достижения' };
         function getFavorites() { return store.get('favorites', []); }
         function toggleFav(id) {
             let favs = getFavorites();
@@ -1540,6 +1618,7 @@
 
         // ===== ИНИЦИАЛИЗАЦИЯ =====
         updatePremiumUI();
+        checkBadges(); // Проверка бейджей при загрузке
     });
     </script>
 </body>
