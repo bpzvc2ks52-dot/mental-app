@@ -54,7 +54,6 @@
         button { font-family: inherit; }
         button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
 
-        /* Aurora background */
         .bg-aurora { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
         .blob { position: absolute; filter: blur(90px); opacity: 0.4; border-radius: 50%; animation: floatBlob 15s infinite alternate ease-in-out; }
         .blob-1 { top: -10%; left: -10%; width: 60vw; height: 60vw; background: #bae6fd; }
@@ -64,12 +63,10 @@
         html[data-theme="dark"] .blob-2 { background: #9333ea; }
         @keyframes floatBlob { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(10%, 15%) scale(1.1); } }
 
-        /* Animations */
         .fade-in { animation: slideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Splash */
         #splash { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; transition: opacity 0.8s ease, transform 0.8s ease; }
         #splash.hidden { opacity: 0; transform: scale(1.05); pointer-events: none; }
         .splash-icon { font-size: 80px; margin-bottom: 24px; animation: float 4s infinite ease-in-out; }
@@ -99,9 +96,7 @@
         .bento-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
         .tile { border-radius: var(--radius-lg); padding: 20px; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; background: var(--card); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid var(--card-border); box-shadow: var(--shadow); transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease; min-height: 120px; }
         .tile:active { transform: scale(0.95); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        @media (hover: hover) {
-            .tile:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
-        }
+        @media (hover: hover) { .tile:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); } }
         .tile-wide { grid-column: span 2; flex-direction: row; align-items: center; gap: 16px; min-height: 80px; padding: 18px 20px; }
         .tile-icon { width: 46px; height: 46px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; background: rgba(255,255,255,0.5); flex-shrink: 0; }
         html[data-theme="dark"] .tile-icon { background: rgba(0,0,0,0.2); }
@@ -120,7 +115,6 @@
         .tile-peach { background: var(--tile-peach); color: #7c2d12; border: none; } .tile-peach .tile-icon { color: var(--tile-peach-icon); background: rgba(255,255,255,0.6); }
         html[data-theme="dark"] .tile-peach { color: #ffedd5; } html[data-theme="dark"] .tile-peach .tile-icon { background: rgba(0,0,0,0.2); }
 
-        /* Progress ring */
         .progress-ring-wrap { display: flex; align-items: center; gap: 16px; background: var(--card); padding: 18px 20px; border-radius: var(--radius-lg); margin-top: 16px; border: 1px solid var(--card-border); box-shadow: var(--shadow); backdrop-filter: blur(20px); }
         .progress-ring { width: 64px; height: 64px; flex-shrink: 0; }
         .progress-ring circle { fill: none; stroke-width: 6; }
@@ -130,7 +124,6 @@
         .progress-sub { font-size: 13px; color: var(--text-sec); margin-top: 4px; font-weight: 500; }
         .progress-limit { font-size: 12px; color: var(--tile-peach-icon); margin-top: 6px; font-weight: 700; }
 
-        /* Bottom nav */
         .bottom-nav { position: fixed; left: 20px; right: 20px; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); background: var(--nav-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 36px; display: flex; justify-content: space-around; padding: 8px 0; box-shadow: 0 10px 40px rgba(0,0,0,0.08); border: 1px solid var(--card-border); z-index: 100; }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sec); font-size: 11px; font-weight: 700; cursor: pointer; width: 33%; transition: color 0.3s; padding: 6px 0; position: relative; }
         .nav-item.active { color: var(--text); }
@@ -138,23 +131,19 @@
         .nav-item:active .nav-icon { transform: scale(1.2); }
         .nav-item.active::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 32px; height: 4px; background: var(--text); border-radius: 0 0 4px 4px; }
 
-        /* Inner screens */
         .inner-screen { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 500; flex-direction: column; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; transform: translateX(100%); opacity: 0; transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease; padding-bottom: env(safe-area-inset-bottom, 0px); }
         .inner-screen.active { display: flex; transform: translateX(0); opacity: 1; }
         .back-btn { padding: 24px; font-size: 17px; font-weight: 700; color: var(--text); cursor: pointer; flex-shrink: 0; transition: opacity 0.3s; align-self: flex-start; background: none; border: none; }
         .back-btn:active { opacity: 0.5; }
         .inner-content { padding: 0 24px 40px; text-align: center; }
 
-        /* Hero header для экранов */
         .screen-hero { text-align: center; margin-bottom: 8px; }
         .screen-hero-icon { font-size: 48px; margin-bottom: 8px; display: inline-block; animation: float 4s infinite ease-in-out; }
         .screen-hero h2 { font-size: 28px; font-weight: 800; margin: 0 0 8px; }
         .screen-hero p { color: var(--text-sec); margin: 0 0 24px; font-size: 16px; }
 
-        /* Breath circle */
         .breath-circle { width: 170px; height: 170px; border-radius: 50%; background: var(--tile-blue); border: 3px solid var(--tile-blue-icon); display: flex; align-items: center; justify-content: center; font-size: 42px; font-weight: 800; color: #0c4a6e; margin: 30px auto; transition: transform 4s ease-in-out; box-shadow: 0 10px 30px rgba(2,132,199,0.15); }
 
-        /* Buttons */
         .btn { background: var(--text); color: var(--bg); border: none; padding: 18px; border-radius: 20px; font-size: 17px; font-weight: 700; width: 100%; cursor: pointer; margin-top: 16px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease; }
         .btn:active { transform: scale(0.94); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .btn:hover { box-shadow: 0 12px 24px rgba(0,0,0,0.15); }
@@ -164,31 +153,26 @@
         input, textarea { width: 100%; padding: 16px; border-radius: 20px; border: 1px solid var(--card-border); background: var(--card); color: var(--text); font-size: 16px; margin-bottom: 16px; font-family: inherit; resize: none; outline: none; transition: border-color 0.3s ease, background 0.3s ease; backdrop-filter: blur(10px); font-weight: 500; }
         input:focus, textarea:focus { border-color: var(--text); background: var(--bg); }
 
-        /* Music */
         #music-toggle { position: fixed; top: calc(24px + env(safe-area-inset-top, 0px)); right: 24px; z-index: 200; width: 52px; height: 52px; border-radius: 50%; border: 1px solid var(--card-border); background: var(--card); backdrop-filter: blur(20px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); font-size: 24px; cursor: pointer; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); display: flex; align-items: center; justify-content: center; }
         #music-toggle:active { transform: scale(0.85); }
         #music-menu { position: fixed; top: calc(86px + env(safe-area-inset-top, 0px)); right: 24px; z-index: 200; background: var(--card); backdrop-filter: blur(24px); border-radius: 20px; padding: 10px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); display: none; flex-direction: column; gap: 4px; min-width: 180px; border: 1px solid var(--card-border); }
         #music-menu button { border: none; background: transparent; padding: 14px 16px; font-size: 16px; font-weight: 600; text-align: left; border-radius: 14px; cursor: pointer; color: var(--text); transition: background 0.2s; }
         #music-menu button:hover { background: rgba(128,128,128,0.1); }
 
-        /* Emotion wheel */
         .emotion-wheel { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 20px; }
         .emotion-chip { padding: 16px; border-radius: 18px; background: var(--card); border: 1px solid var(--card-border); cursor: pointer; font-weight: 700; font-size: 15px; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s; backdrop-filter: blur(10px); }
         .emotion-chip:active { transform: scale(0.94); }
         .emotion-chip:hover { box-shadow: var(--shadow-hover); }
         .emotion-tip { background: var(--card); padding: 20px; border-radius: 20px; margin-top: 20px; display: none; text-align: left; animation: fadeIn 0.4s ease; line-height: 1.6; border: 1px solid var(--card-border); box-shadow: var(--shadow); }
 
-        /* AI box */
         .ai-box { display: none; background: linear-gradient(135deg, rgba(147,51,234,0.1), rgba(2,132,199,0.1)); padding: 20px; border-radius: 20px; margin-top: 20px; text-align: left; border: 1px solid var(--card-border); animation: fadeIn 0.4s ease; line-height: 1.5; }
 
-        /* Modal overlay */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(8px); padding: 20px; }
         .modal-overlay.active { display: flex; animation: fadeIn 0.3s ease; }
         .modal-card { background: var(--card-solid); width: 100%; max-width: 400px; border-radius: var(--radius-xl); padding: 28px; text-align: left; animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 20px 60px rgba(0,0,0,0.2); border: 1px solid var(--card-border); position: relative; max-height: 85vh; overflow-y: auto; }
         .modal-close { position: absolute; top: 14px; right: 14px; background: rgba(128,128,128,0.1); border: none; width: 34px; height: 34px; border-radius: 50%; font-size: 20px; cursor: pointer; color: var(--text-sec); display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
         .modal-close:hover { background: rgba(128,128,128,0.2); }
 
-        /* Balance */
         .balance-row { margin-bottom: 16px; }
         .balance-row-label { display: flex; justify-content: space-between; font-size: 14px; font-weight: 700; margin-bottom: 8px; }
         .balance-row-label span:last-child { color: var(--text); font-weight: 800; }
@@ -200,7 +184,6 @@
         .balance-chart line { stroke: var(--card-border); stroke-width: 1; }
         .balance-chart .data-polygon { fill: rgba(206, 147, 216, 0.2); stroke: var(--tile-purple-icon); stroke-width: 2; stroke-linejoin: round; transition: all 0.5s ease; }
 
-        /* Wheel picker */
         .wheel-picker-wrap { display: flex; justify-content: center; align-items: center; gap: 12px; height: 160px; overflow: hidden; position: relative; margin-bottom: 24px; background: var(--card); border-radius: 24px; border: 1px solid var(--card-border); box-shadow: var(--shadow); }
         .wheel-picker-wrap::before, .wheel-picker-wrap::after { content: ''; position: absolute; left: 0; right: 0; height: 60px; z-index: 2; pointer-events: none; }
         .wheel-picker-wrap::before { top: 0; background: linear-gradient(to bottom, var(--card-solid), transparent); opacity: 0.9; }
@@ -212,16 +195,13 @@
         .wheel-highlight { position: absolute; top: 50%; left: 15px; right: 15px; height: 50px; transform: translateY(-50%); border-top: 1px solid var(--card-border); border-bottom: 1px solid var(--card-border); background: rgba(128,128,128,0.05); border-radius: 12px; pointer-events: none; z-index: 0; }
         .wheel-colon { font-size: 24px; font-weight: 800; z-index: 2; color: var(--text); }
 
-        /* Audio diary */
         .record-btn { width: 80px; height: 80px; border-radius: 50%; background: var(--tile-pink-icon); color: white; font-size: 32px; display: flex; align-items: center; justify-content: center; margin: 20px auto; cursor: pointer; box-shadow: 0 10px 30px rgba(225, 29, 72, 0.3); transition: all 0.3s; border: none; }
         .record-btn:hover { transform: scale(1.05); }
         .record-btn.recording { animation: pulse 1.5s infinite; background: #e11d48; }
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.4); } 70% { box-shadow: 0 0 0 20px rgba(225, 29, 72, 0); } 100% { box-shadow: 0 0 0 0 rgba(225, 29, 72, 0); } }
 
-        /* Onboarding */
         #onboarding { position: fixed; inset: 0; background: var(--bg); z-index: 9998; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 32px; text-align: center; backdrop-filter: blur(20px); overflow: hidden; }
 
-        /* List item */
         .list-item { background: var(--card); padding: 16px 20px; border-radius: 16px; margin-bottom: 10px; box-shadow: var(--shadow); border: 1px solid var(--card-border); text-align: left; }
         .list-item-title { font-weight: 700; font-size: 16px; }
         .list-item-sub { font-size: 13px; color: var(--text-sec); margin-top: 4px; font-weight: 500; }
@@ -233,7 +213,6 @@
 <body>
     <div class="bg-aurora"><div class="blob blob-1"></div><div class="blob blob-2"></div></div>
 
-    <!-- SPLASH -->
     <div id="splash">
         <div class="splash-icon">🌿</div>
         <div class="splash-title">Остров добра</div>
@@ -242,7 +221,6 @@
         <div class="splash-progress"></div>
     </div>
 
-    <!-- ONBOARDING -->
     <div id="onboarding">
         <div style="font-size: 70px; margin-bottom: 24px; animation: float 3s infinite;">👋</div>
         <h2 style="font-size: 28px; font-weight: 800; margin-bottom: 8px;">Как тебя зовут?</h2>
@@ -253,12 +231,11 @@
 
     <button id="music-toggle" aria-label="Включить музыку">🎵</button>
 
-    <!-- MAIN -->
     <div id="main-screen">
         <div class="header fade-in">
             <div>
                 <div class="greeting" id="greeting">Доброе утро!</div>
-                <div class="greeting-sub" id="greeting-sub">Будь к себе чуточку добрее.<br><b>Ты этого заслуживаешь.</b></div>
+                <div class="greeting-sub">Будь к себе чуточку добрее.<br><b>Ты этого заслуживаешь.</b></div>
             </div>
             <div class="header-actions">
                 <button class="icon-btn" id="theme-toggle" aria-label="Сменить тему">🌙</button>
@@ -267,14 +244,12 @@
 
         <div class="content fade-in">
             <div class="progress-ring-wrap">
-                <svg class="
-                                <div class="progress-ring-wrap">
                 <svg class="progress-ring" viewBox="0 0 56 56">
                     <circle class="bg" cx="28" cy="28" r="24"></circle>
                     <circle class="fg" id="progress-fg" cx="28" cy="28" r="24" stroke-dasharray="150.8" stroke-dashoffset="150.8" transform="rotate(-90 28 28)"></circle>
                 </svg>
                 <div style="flex: 1;">
-                    <div class="progress-text" id="progress-text">Сегодня: 0 из 5</div>
+                     из 5</div>
                     <div class="progress-sub">маленькие шаги — большие перемены</div>
                     <div class="progress-limit" id="progress-limit" style="display: none;"></div>
                 </div>
@@ -370,88 +345,58 @@
         </div>
     </div>
 
-    <!-- FAVORITES -->
     <div id="screen-favorites" class="inner-screen">
         <button class="back-btn" onclick="closeScreens()">← Назад</button>
         <div class="inner-content">
-            <div class="screen-hero">
-                <span class="screen-hero-icon">⭐</span>
-                <h2>Избранное</h2>
-                <p>Твои любимые практики.</p>
-            </div>
+            <div class="screen-hero"><span class="screen-hero-icon">⭐</span><h2>Избранное</h2><p>Твои любимые практики.</p></div>
             <div id="favorites-list" style="text-align: left;"></div>
         </div>
     </div>
 
-    <!-- BREATH -->
     <div id="screen-breath" class="inner-screen">
         <button class="back-btn" onclick="closeScreens()">← Назад</button>
         <div class="inner-content">
-            <div class="screen-hero">
-                <span class="screen-hero-icon">🎁</span>
-                <h2>Коробочное дыхание</h2>
-                <p>Сними напряжение за 2 минуты.</p>
-            </div>
+            <div class="screen-hero"><span class="screen-hero-icon">🎁</span><h2>Коробочное дыхание</h2><p>Сними напряжение за 2 минуты.</p></div>
             <div class="breath-circle" id="breath-circle">4</div>
             <div id="breath-text" style="font-weight: 700; font-size: 20px; margin-bottom: 24px;">Готов?</div>
             <button class="btn" id="breath-btn">Начать</button>
         </div>
     </div>
 
-    <!-- TACTICAL -->
     <div id="screen-tactical" class="inner-screen">
         <button class="back-btn" onclick="closeScreens()">← Назад</button>
         <div class="inner-content">
-            <div class="screen-hero">
-                <span class="screen-hero-icon">🎯</span>
-                <h2>Тактическое дыхание</h2>
-                <p>Схема 4-4-4-2 для фокуса.</p>
-            </div>
+            <div class="screen-hero"><span class="screen-hero-icon">🎯</span><h2>Тактическое дыхание</h2><p>Схема 4-4-4-2 для фокуса.</p></div>
             <div class="breath-circle" id="tac-circle" style="background: var(--tile-purple); color: #4a148c;">4</div>
             <div id="tac-text" style="font-weight: 700; font-size: 20px; margin-bottom: 24px;">Готов?</div>
             <button class="btn" id="tac-btn">Начать</button>
         </div>
     </div>
 
-    <!-- SLEEP BREATH -->
     <div id="screen-sleep" class="inner-screen">
         <button class="back-btn" onclick="closeScreens()">← Назад</button>
         <div class="inner-content">
-            <div class="screen-hero">
-                <span class="screen-hero-icon">🌙</span>
-                <h2>Дыхание 4-7-8</h2>
-                <p>Для глубокого расслабления.</p>
-            </div>
+            <div class="screen-hero"><span class="screen-hero-icon">🌙</span><h2>Дыхание 4-7-8</h2><p>Для глубокого расслабления.</p></div>
             <div class="breath-circle" id="sleep-circle" style="background: var(--tile-pink); color: #880e4f;">4</div>
             <div id="sleep-text" style="font-weight: 700; font-size: 20px; margin-bottom: 24px;">Готов?</div>
             <button class="btn" id="sleep-btn">Начать</button>
         </div>
     </div>
 
-    <!-- ENERGY -->
     <div id="screen-energy" class="inner-screen">
         <button class="back-btn" onclick="closeScreens()">← Назад</button>
         <div class="inner-content">
-            <div class="screen-hero">
-                <span class="screen-hero-icon">⚡</span>
-                <h2>Энергия</h2>
-                <p>Активное дыхание для бодрости. 60 секунд.</p>
-            </div>
+            <div class="screen-hero"><span class="screen-hero-icon">⚡</span><h2>Энергия</h2><p>Активное дыхание для бодрости. 60 секунд.</p></div>
             <div class="breath-circle" id="energy-circle" style="background: var(--tile-green); color: #2e7d32;">2</div>
             <div id="energy-text" style="font-weight: 700; font-size: 20px; margin-bottom: 24px;">Готов?</div>
             <button class="btn" id="energy-btn">Начать</button>
         </div>
     </div>
 
-    <!-- ASSISTANT -->
     <div id="screen-assistant" class="inner-screen">
         <button class="back-btn" onclick="closeScreens()">← Назад</button>
         <div class="inner-content">
-            <div class="screen-hero">
-                <span class="screen-hero-icon">🤖</span>
-                <h2>Как ты сейчас?</h2>
-                <p>Выбери состояние, и я подберу план.</p>
-            </div>
+            <div class="screen-hero"><span class="screen-hero-icon">🤖</span><h2>Как ты сейчас?</h2><p>Выбери состояние, и я подберу план.</p></div>
             <div class="emotion-wheel" id="assistant-states">
                 <div class="emotion-chip" data-state="anxious">😰 Тревожно</div>
                 <div class="emotion-chip" data-state="tired">😴 Устал(а)</div>
@@ -463,15 +408,10 @@
         </div>
     </div>
 
-    <!-- REMINDERS -->
     <div id="screen-reminders" class="inner-screen">
         <button class="back-btn" onclick="closeScreens()">← Назад</button>
         <div class="inner-content">
-            <div class="screen-hero">
-                <span class="screen-hero-icon">⏰</span>
-                <h2>Мои напоминания</h2>
-                <p>О чём нельзя забыть?</p>
-            </div>
+            <div class="screen-hero"><span class="screen-hero-icon">⏰</span><h2>Мои напоминания</h2><p>О чём нельзя забыть?</p></div>
             <input type="text" id="reminder-text" placeholder="Например: выпить воды">
             <div class="wheel-picker-wrap">
                 <div class="wheel-col" id="hour-wheel"></div>
@@ -484,15 +424,10 @@
         </div>
     </div>
 
-    <!-- AUDIO DIARY -->
     <div id="screen-audio-diary" class="inner-screen">
         <button class="back-btn" onclick="closeScreens()">← Назад</button>
         <div class="inner-content">
-            <div class="screen-hero">
-                <span class="screen-hero-icon">🎙</span>
-                <h2>Аудио-дневник</h2>
-                <p>Говори, а мы запишем твои мысли.</p>
-            </div>
+            <div class="screen-hero"><span class="screen-hero-icon">🎙</span><h2>Аудио-дневник</h2><p>Говори, а мы запишем твои мысли.</p></div>
             <button class="record-btn" id="record-btn" aria-label="Начать запись">🎙</button>
             <div id="record-status" style="font-weight: 700; color: var(--tile-pink-icon); margin-bottom: 24px;">Нажми, чтобы начать запись</div>
             <textarea id="audio-transcript" rows="4" placeholder="Здесь появится текст твоей записи..."></textarea>
@@ -500,19 +435,262 @@
             <div id="audio-list" style="text-align: left; margin-top: 24px;"></div>
         </div>
     </div>
-        <script>
+
+    <div id="screen-meditations" class="inner-screen">
+        <button class="back-btn" onclick="closeScreens()">← Назад</button>
+        <div class="inner-content">
+            <div class="screen-hero"><span class="screen-hero-icon">🧘‍♀️</span><h2>Библиотека медитаций</h2><p>Глубокие аудио-практики для сна и спокойствия.</p></div>
+            <div class="bento-grid" style="grid-template-columns: 1fr;">
+                <div class="tile tile-white tile-wide" onclick="alert('Доступно в Premium!')">
+                    <div class="tile-icon" style="background: var(--tile-purple); color: var(--tile-purple-icon);">🌙</div>
+                    <div style="flex: 1;"><div class="tile-title">Глубокий сон</div><div class="tile-desc">10 минут, текст под шум дождя</div></div><div>👑</div>
+                </div>
+                <div class="tile tile-white tile-wide" onclick="alert('Доступно в Premium!')">
+                    <div class="tile-icon" style="background: var(--tile-blue); color: var(--tile-blue-icon);">🌊</div>
+                    <div style="flex: 1;"><div class="tile-title">Утреннее спокойствие</div><div class="tile-desc">5 минут, настрой на день</div></div><div>👑</div>
+                </div>
+                <div class="tile tile-white tile-wide" onclick="alert('Доступно в Premium!')">
+                    <div class="tile-icon" style="background: var(--tile-green); color: var(--tile-green-icon);">🌱</div>
+                    <div style="flex: 1;"><div class="tile-title">Уверенность</div><div class="tile-desc">7 минут, работа с самооценкой</div></div><div>👑</div>
+                </div>
+            </div>
+            <button class="btn btn-premium" style="margin-top: 24px;" onclick="alert('Скоро тут можно будет разблокировать премиум!')">Скоро тут можно будет разблокировать премиум</button>
+        </div>
+    </div>
+
+    <div id="screen-stats" class="inner-screen">
+        <button class="back-btn" onclick="closeScreens()">← Назад</button>
+        <div class="inner-content">
+            <div class="screen-hero"><span class="screen-hero-icon">📊</span><h2>Моя статистика</h2><p>Глубокая аналитика твоего прогресса.</p></div>
+            <div style="background: var(--card); padding: 24px; border-radius: 24px; text-align: left; box-shadow: var(--shadow); border: 1px solid var(--card-border);">
+                <p style="font-size: 15px; color: var(--text-sec); margin: 0 0 16px; font-weight: 600;">Настроение за неделю</p>
+                <div id="stats-chart" style="display: flex; align-items: flex-end; gap: 10px; height: 120px;"></div>
+            </div>
+            <div class="bento-grid" style="margin-top: 16px;">
+                <div class="tile tile-white" style="flex-direction: column; align-items: flex-start; padding: 20px;">
+                    <div style="font-size: 28px; font-weight: 800; color: var(--tile-green-icon);" id="stats-practices">0</div>
+                    <div style="font-size: 13px; color: var(--text-sec); font-weight: 500;">практик выполнено</div>
+                </div>
+                <div class="tile tile-white" style="flex-direction: column; align-items: flex-start; padding: 20px;">
+                    <div style="font-size: 28px; font-weight: 800; color: var(--tile-blue-icon);" id="stats-sleep">0</div>
+                    <div style="font-size: 13px; color: var(--text-sec); font-weight: 500;">дней хорошего сна</div>
+                </div>
+            </div>
+            <button class="btn btn-premium" style="margin-top: 24px;" onclick="alert('Скоро тут можно будет разблокировать премиум!')">Скоро тут можно будет разблокировать премиум</button>
+        </div>
+    </div>
+
+    <div id="screen-sleep-diary" class="inner-screen">
+        <button class="back-btn" onclick="closeScreens()">← Назад</button>
+        <div class="inner-content">
+            <div class="screen-hero"><span class="screen-hero-icon">💭</span><h2>Дневник снов</h2><p>Запиши сон, чтобы понять его послание.</p></div>
+            <textarea id="dream-input" rows="4" placeholder="Что тебе приснилось?"></textarea>
+            <input type="text" id="dream-tag" placeholder="Ключевой символ (вода, полёт, падение...)">
+            <button class="btn" id="dream-save">Сохранить сон</button>
+            <div id="dreams-list" style="text-align: left; margin-top: 24px;"></div>
+        </div>
+    </div>
+
+    <div id="screen-wheel-balance" class="inner-screen">
+        <button class="back-btn" onclick="closeScreens()">← Назад</button>
+        <div class="inner-content">
+            <div class="screen-hero"><span class="screen-hero-icon">⚖️</span><h2>Колесо баланса</h2><p>Оцени 8 сфер жизни от 1 до 10.</p></div>
+            <div style="text-align: left;" id="balance-inputs"></div>
+            <button class="btn" id="balance-save" style="margin-top: 24px;">Посмотреть результат</button>
+            <div id="balance-result" style="margin-top: 24px; display: none; background: var(--card); padding: 24px; border-radius: 24px; box-shadow: var(--shadow); border: 1px solid var(--card-border);"></div>
+        </div>
+    </div>
+
+    <div id="screen-cbt" class="inner-screen">
+        <button class="back-btn" onclick="closeScreens()">← Назад</button>
+        <div class="inner-content" style="text-align: left;">
+            <div class="screen-hero"><span class="screen-hero-icon">🧠</span><h2>КПТ-анализ</h2><p>Разбери мысль по фактам.</p></div>
+            <input type="text" id="cbt-thought" placeholder="Тревожная мысль">
+            <input type="text" id="cbt-emotion" placeholder="Какая эмоция?">
+            <input type="text" id="cbt-for" placeholder="Факты ЗА">
+            <input type="text" id="cbt-against" placeholder="Факты ПРОТИВ">
+            <input type="text" id="cbt-friend" placeholder="Что бы ты сказал другу?">
+            <button class="btn" id="cbt-btn">Записать</button>
+            <div id="cbt-status" style="margin-top: 12px; text-align: center; color: var(--text-sec); font-weight: 600;"></div>
+        </div>
+    </div>
+
+    <div id="screen-grounding" class="inner-screen">
+        <button class="back-btn" onclick="closeScreens()">← Назад</button>
+        <div class="inner-content" style="text-align: left;">
+            <div class="screen-hero"><span class="screen-hero-icon">📝</span><h2>Заземление</h2><p>Вернись в момент "здесь и сейчас".</p></div>
+            <div id="ground-prompt" style="font-weight: 700; margin-bottom: 12px; font-size: 20px;">Назови 5 вещей, которые видишь</div>
+            <input type="text" id="ground-input" placeholder="Напиши...">
+            <button class="btn" id="ground-btn">Далее</button>
+            <div id="ground-ai" class="ai-box">
+                <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; color: var(--tile-purple-icon); letter-spacing: 0.5px;">✨ Совет от ИИ</div>
+                <span id="ground-ai-text" style="font-weight: 500;"></span>
+            </div>
+        </div>
+    </div>
+
+    <div id="screen-diary" class="inner-screen">
+        <button class="back-btn" onclick="closeScreens()">← Назад</button>
+        <div class="inner-content">
+            <div class="screen-hero"><span class="screen-hero-icon">📖</span><h2>Дневник</h2><p>Выплесни мысли на бумагу.</p></div>
+            <textarea id="diary-input" rows="6" placeholder="Что тебя беспокоит?"></textarea>
+            <button class="btn" id="diary-btn">Сохранить</button>
+            <div id="diary-status" style="margin-top: 12px; color: var(--text-sec); font-weight: 600;"></div>
+        </div>
+    </div>
+
+    <div id="screen-gratitude" class="inner-screen">
+        <button class="back-btn" onclick="closeScreens()">← Назад</button>
+        <div class="inner-content">
+            <div class="screen-hero"><span class="screen-hero-icon">🙏</span><h2>Благодарность</h2><p>Запиши 3 вещи, за которые ты благодарен.</p></div>
+            <textarea id="grat-input" rows="4" placeholder="1. ...&#10;2. ...&#10;3. ..."></textarea>
+            <button class="btn" id="grat-btn">Сохранить</button>
+            <div id="grat-status" style="margin-top: 12px; color: var(--text-sec); font-weight: 600;"></div>
+        </div>
+    </div>
+
+    <div id="screen-habit" class="inner-screen">
+        <button class="back-btn" onclick="closeScreens()">← Назад</button>
+        <div class="inner-content">
+            <div class="screen-hero"><span class="screen-hero-icon">✅</span><h2>Чеклист заботы</h2><p>Отметь день, когда ты позаботился о себе.</p></div>
+            <div style="font-size: 80px; font-weight: 800; margin: 30px 0;" id="streak-num-inner">0</div>
+            <div style="font-size: 14px; color: var(--text-sec); font-weight: 600; margin-bottom: 20px;">дней подряд</div>
+            <button class="btn" id="habit-btn-inner">Отметить день</button>
+        </div>
+    </div>
+
+    <div id="screen-emotions" class="inner-screen">
+        <button class="back-btn" onclick="closeScreens()">← Назад</button>
+        <div class="inner-content">
+            <div class="screen-hero"><span class="screen-hero-icon">🎡</span><h2>Колесо эмоций</h2><p>Что ты сейчас чувствуешь?</p></div>
+            <div class="emotion-wheel">
+                <div class="emotion-chip" data-emotion="joy">😊 Радость</div>
+                <div class="emotion-chip" data-emotion="sad">😢 Грусть</div>
+                <div class="emotion-chip" data-emotion="anger">😠 Злость</div>
+                <div class="emotion-chip" data-emotion="fear">😨 Страх</div>
+                <div class="emotion-chip" data-emotion="anxiety">😰 Тревога</div>
+                <div class="emotion-chip" data-emotion="shame">😳 Стыд</div>
+                <div class="emotion-chip" data-emotion="lonely">🥺 Одиночество</div>
+                <div class="emotion-chip" data-emotion="tired">😴 Усталость</div>
+            </div>
+            <div class="emotion-tip" id="emotion-tip"></div>
+        </div>
+    </div>
+
+    <div id="screen-body" class="inner-screen">
+        <button class="back-btn" onclick="closeScreens()">← Назад</button>
+        <div class="inner-content">
+            <div class="screen-hero"><span class="screen-hero-icon">🧘</span><h2>Сканирование тела</h2><p>Веди внимание от стоп к голове.</p></div>
+            <div style="background: var(--card); padding: 32px; border-radius: 24px; min-height: 140px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 600; box-shadow: var(--shadow); border: 1px solid var(--card-border);" id="body-text">Нажми «Начать»</div>
+            <div style="font-size: 14px; color: var(--text-sec); margin-top: 16px; font-weight: 600;" id="body-progress"></div>
+            <button class="btn" id="body-btn">Начать</button>
+        </div>
+    </div>
+
+    <div id="screen-wins" class="inner-screen">
+        <button class="back-btn" onclick="closeScreens()">← Назад</button>
+        <div class="inner-content">
+            <div class="screen-hero"><span class="screen-hero-icon">🏆</span><h2>Копилка побед</h2><p>Маленькие достижения тоже считаются.</p></div>
+            <input type="text" id="win-input" placeholder="Что сегодня получилось?">
+            <button class="btn" id="win-btn">Добавить</button>
+            <div id="wins-list" style="text-align: left; margin-top: 24px;"></div>
+        </div>
+    </div>
+
+    <div id="screen-sleep-tracker" class="inner-screen">
+        <button class="back-btn" onclick="closeScreens()">← Назад</button>
+        <div class="inner-content">
+            <div class="screen-hero"><span class="screen-hero-icon">😴</span><h2>Трекер сна</h2><p>Как спалось этой ночью?</p></div>
+            <input type="time" id="sleep-bed" placeholder="Лёг" style="color-scheme: light dark;">
+            <input type="time" id="sleep-wake" placeholder="Встал" style="color-scheme: light dark;">
+            <div style="display: flex; gap: 10px; margin-bottom: 16px;">
+                <button class="btn btn-secondary sleep-quality" data-q="1" style="margin-top: 0;">😫</button>
+                <button class="btn btn-secondary sleep-quality" data-q="2" style="margin-top: 0;">😕</button>
+                <button class="btn btn-secondary sleep-quality" data-q="3" style="margin-top: 0;">😐</button>
+                <button class="btn btn-secondary sleep-quality" data-q="4" style="margin-top: 0;">🙂</button>
+                <button class="btn btn-secondary sleep-quality" data-q="5" style="margin-top: 0;">😴</button>
+            </div>
+            <button class="btn" id="sleep-save">Сохранить</button>
+            <div id="sleep-list" style="text-align: left; margin-top: 24px;"></div>
+        </div>
+    </div>
+
+    <div id="screen-affirmations" class="inner-screen">
+        <button class="back-btn" onclick="closeScreens()">← Назад</button>
+        <div class="inner-content">
+            <div class="screen-hero"><span class="screen-hero-icon">💬</span><h2>Аффирмации</h2><p>Тёплые слова для тебя.</p></div>
+px; border-radius: 32px; font-size: 22px; font-weight: 700; line-height: 1.5; min-height: 180px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow); border: 1px solid var(--card-border);" id="affirmation-text">Нажми «Другая», чтобы получить тёплые слова</div>
+            <button class="btn" id="affirmation-btn">Другая</button>
+        </div>
+    </div>
+
+    <div id="screen-profile" class="inner-screen">
+        <button class="back-btn" onclick="closeScreens()">← Назад</button>
+        <div class="inner-content">
+            <div class="screen-hero"><span class="screen-hero-icon">👤</span><h2>Профиль</h2></div>
+            <div style="background: var(--card); padding: 24px; border-radius: 24px; margin-top: 8px; box-shadow: var(--shadow); border: 1px solid var(--card-border);">
+                <p style="font-size: 18px; font-weight: 800; margin: 0;">Привет, <span id="profile-name">друг</span> 👋</p>
+                <p style="font-size: 14px; color: var(--text-sec); margin-top: 6px; font-weight: 500;">Статус: <span id="profile-status" style="font-weight: 800; color: var(--text-sec);">Бесплатный</span></p>
+            </div>
+
+            <div style="background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%); padding: 24px; border-radius: 24px; margin-top: 16px; text-align: left; color: white; box-shadow: 0 10px 30px rgba(255,140,0,0.3);">
+                <p style="font-size: 18px; font-weight: 800; margin: 0 0 6px;">Остров Premium</p>
+                <p style="font-size: 14px; margin: 0 0 16px; opacity: 0.9; font-weight: 500; line-height: 1.4;">Безлимитные практики, все медитации, умный помощник и глубокая статистика.</p>
+                <button class="btn" style="background: white; color: #c67100; margin-top: 0; font-weight: 800;" onclick="alert('Скоро тут можно будет разблокировать премиум!')">Скоро тут можно будет разблокировать премиум</button>
+            </div>
+
+            <div style="background: var(--card); padding: 20px; border-radius: 24px; margin-top: 16px; text-align: left; box-shadow: var(--shadow); border: 1px solid var(--card-border);">
+                <p style="font-size: 15px; color: var(--text-sec); margin: 0 0 12px; font-weight: 600;">Календарь активности</p>
+                <div id="profile-calendar" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px;"></div>
+            </div>
+
+            <div style="background: var(--card); padding: 20px; border-radius: 24px; margin-top: 16px; text-align: left; box-shadow: var(--shadow); border: 1px solid var(--card-border);">
+                <p style="font-size: 15px; color: var(--text-sec); margin: 0 0 12px; font-weight: 600;">Тема</p>
+                <button class="btn btn-secondary" id="theme-toggle-2" style="margin-top: 0;">🌙 Тёмная тема</button>
+            </div>
+
+            <div style="background: var(--card); padding: 20px; border-radius: 24px; margin-top: 16px; text-align: left; box-shadow: var(--shadow); border: 1px solid var(--card-border);">
+                <p style="font-size: 15px; color: var(--text-sec); margin: 0 0 12px; font-weight: 600;">Письмо себе</p>
+                <textarea id="letter-input" rows="4" placeholder="Напиши тёплое письмо. Покажем через неделю."></textarea>
+                <button class="btn btn-secondary" id="letter-save">Отложить на неделю</button>
+                <div id="letter-status" style="margin-top: 10px; font-size: 14px; color: var(--text-sec); font-weight: 500;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="mood-modal" class="modal-overlay">
+        <div class="modal-card">
+            <button class="modal-close" data-close="mood-modal">×</button>
+            <h3 style="margin-top: 0; font-size: 24px; font-weight: 800; text-align: center;">Как ты себя чувствуешь?</h3>
+            <div style="display: flex; justify-content: space-around; margin-top: 24px;">
+                <button class="mood-btn" data-score="5" style="font-size: 42px; background: none; border: none; cursor: pointer; transition: transform 0.2s;">😄</button>
+                <button class="mood-btn" data-score="4" style="font-size: 42px; background: none; border: none; cursor: pointer; transition: transform 0.2s;">🙂</button>
+                <button class="mood-btn" data-score="3" style="font-size: 42px; background: none; border: none; cursor: pointer; transition: transform 0.2s;">😐</button>
+                <button class="mood-btn" data-score="2" style="font-size: 42px; background: none; border: none; cursor: pointer; transition: transform 0.2s;">😕</button>
+                <button class="mood-btn" data-score="1" style="font-size: 42px; background: none; border: none; cursor: pointer; transition: transform 0.2s;">😭</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="day-details-modal" class="modal-overlay">
+        <div class="modal-card">
+            <button class="modal-close" data-close="day-details-modal">×</button>
+            <h3 style="margin-top: 0; margin-bottom: 20px; font-size: 22px; font-weight: 800;" id="day-details-title">День</h3>
+            <div id="day-details-content" style="font-size: 16px; line-height: 1.6;"></div>
+        </div>
+    </div>
+
+    <script>
     document.addEventListener('DOMContentLoaded', function() {
         // ===== ХРАНИЛИЩЕ =====
         const store = {
             get: (k, d) => { try { const v = localStorage.getItem('ostrov_' + k); return v ? JSON.parse(v) : d; } catch(e) { return d; } },
             set: (k, v) => { try { localStorage.setItem('ostrov_' + k, JSON.stringify(v)); } catch(e) {} }
         };
-
-        // ===== УТИЛИТЫ =====
         const todayKey = () => new Date().toISOString().slice(0, 10);
         const pad = n => String(n).padStart(2, '0');
 
-        // ===== МОДАЛКИ (универсально) =====
+        // ===== МОДАЛКИ =====
         function openModal(id) { const m = document.getElementById(id); if (m) m.classList.add('active'); }
         function closeModal(id) { const m = document.getElementById(id); if (m) m.classList.remove('active'); }
         document.querySelectorAll('.modal-close').forEach(btn => {
@@ -525,7 +703,7 @@
             if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
         });
 
-        // ===== АВТОСОХРАНЕНИЕ ЧЕРНОВИКОВ =====
+        // ===== АВТОСОХРАНЕНИЕ =====
         function setupAutosave(inputId, storeKey) {
             const el = document.getElementById(inputId);
             if (!el) return;
@@ -537,7 +715,7 @@
             setupAutosave(id, id.replace(/-/g, '_'));
         });
 
-        // ===== PREMIUM / ЛИМИТЫ =====
+        // ===== PREMIUM =====
         let isPremium = store.get('isPremium', false);
         function getDailyUsage() {
             const today = todayKey();
@@ -548,16 +726,10 @@
         function getRemainingToday() { return isPremium ? Infinity : Math.max(0, 3 - getDailyUsage().count); }
         function checkLimit() {
             if (isPremium) return true;
-            if (getDailyUsage().count >= 3) {
-                alert('Бесплатный лимит практик на сегодня исчерпан (3 из 3).\n\nСкоро тут можно будет разблокировать премиум!');
-                return false;
-            }
+            if (getDailyUsage().count >= 3) { alert('Бесплатный лимит практик на сегодня исчерпан (3 из 3).\n\nСкоро тут можно будет разблокировать премиум!'); return false; }
             return true;
         }
-        function useLimit() {
-            if (isPremium) return;
-            const u = getDailyUsage(); u.count++; store.set('dailyUsage', u); updateLimitUI();
-        }
+        function useLimit() { if (isPremium) return; const u = getDailyUsage(); u.count++; store.set('dailyUsage', u); updateLimitUI(); }
         function updateLimitUI() {
             const el = document.getElementById('progress-limit'); if (!el) return;
             if (isPremium) { el.style.display = 'none'; return; }
@@ -595,7 +767,7 @@
         document.getElementById('theme-toggle-2').addEventListener('click', toggleTheme);
         updateThemeBtns();
 
-        // ===== ИМЯ / ONBOARDING =====
+        // ===== ИМЯ =====
         let userName = store.get('name', '');
         function applyName() {
             const g = document.getElementById('greeting'); const pn = document.getElementById('profile-name');
@@ -622,34 +794,31 @@
             document.querySelectorAll('.inner-screen').forEach(s => s.classList.remove('active'));
             const target = document.getElementById(`screen-${name}`);
             if (target) { target.classList.add('active'); target.scrollTop = 0; }
-            // Обновляем активный пункт нижней навигации
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             if (name === 'favorites') {
-                document.querySelector('[data-nav="fav"]')?.classList.add('active');
-                if (typeof renderFavorites === 'function') renderFavorites();
+                document.querySelector('[data-nav="fav"]').classList.add('active');
+                renderFavorites();
             } else if (name === 'profile') {
-                document.querySelector('[data-nav="profile"]')?.classList.add('active');
-                if (typeof renderProfileCalendar === 'function') renderProfileCalendar();
-                if (typeof renderLetter === 'function') renderLetter();
-                updatePremiumUI();
-            } else if (!['breath','tactical','sleep','energy','assistant','reminders','audio-diary','meditations','stats','sleep-diary','wheel-balance','cbt','grounding','diary','gratitude','habit','emotions','body','wins','sleep-tracker','affirmations'].includes(name)) {
-                document.querySelector('[data-nav="home"]')?.classList.add('active');
+                document.querySelector('[data-nav="profile"]').classList.add('active');
+                renderProfileCalendar(); renderLetter(); updatePremiumUI();
+            } else {
+                document.querySelector('[data-nav="home"]').classList.add('active');
             }
-            if (name === 'wins' && typeof renderWins === 'function') renderWins();
-            if (name === 'sleep-tracker' && typeof renderSleep === 'function') renderSleep();
-            if (name === 'reminders' && typeof renderReminders === 'function') renderReminders();
-            if (name === 'sleep-diary' && typeof renderDreams === 'function') renderDreams();
-            if (name === 'wheel-balance' && typeof initWheelBalance === 'function') initWheelBalance();
-            if (name === 'audio-diary' && typeof renderAudioDiary === 'function') renderAudioDiary();
+            if (name === 'wins') renderWins();
+            if (name === 'sleep-tracker') renderSleep();
+            if (name === 'reminders') renderReminders();
+            if (name === 'sleep-diary') renderDreams();
+            if (name === 'wheel-balance') initWheelBalance();
+            if (name === 'audio-diary') renderAudioDiary();
             if (name === 'stats') {
                 if (!isPremium) { alert('Статистика доступна только в Premium!'); closeScreens(); return; }
-                if (typeof renderStats === 'function') renderStats();
+                renderStats();
             }
         }
         window.closeScreens = function() {
             document.querySelectorAll('.inner-screen').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.querySelector('[data-nav="home"]')?.classList.add('active');
+            document.querySelector('[data-nav="home"]').classList.add('active');
         }
 
         // ===== ПРОГРЕСС ДНЯ =====
@@ -701,11 +870,7 @@
             if (gratToday.length) notesHtml += `<div style="margin-top: 12px; background: rgba(128,128,128,0.05); padding: 12px; border-radius: 12px;"><b>🙏 Благодарность:</b><br>${gratToday.map(d => d.text).join('<br><br>')}</div>`;
             if (dreamsToday.length) notesHtml += `<div style="margin-top: 12px; background: rgba(128,128,128,0.05); padding: 12px; border-radius: 12px;"><b>💭 Сны:</b><br>${dreamsToday.map(d => d.text).join('<br><br>')}</div>`;
             document.getElementById('day-details-title').innerText = `День ${dateStr}`;
-            document.getElementById('day-details-content').innerHTML = `
-                <div style="font-size: 32px; text-align: center; margin-bottom: 16px;">${moodText}</div>
-                <div><b>Выполнено практик (${progress.length}):</b><ul style="margin: 8px 0 0 0; padding-left: 20px;">${doneList}</ul></div>
-                ${sleepHtml}${notesHtml}
-            `;
+            document.getElementById('day-details-content').innerHTML = `<div style="font-size: 32px; text-align: center; margin-bottom: 16px;">${moodText}</div><div><b>Выполнено практик (${progress.length}):</b><ul style="margin: 8px 0 0 0; padding-left: 20px;">${doneList}</ul></div>${sleepHtml}${notesHtml}`;
             openModal('day-details-modal');
         }
 
@@ -790,7 +955,7 @@
             document.getElementById('grat-status').innerText = "Сохранено ✓"; document.getElementById('grat-input').value = ""; store.set('draft_grat_input', ''); markDone('gratitude');
         });
 
-        // ===== ЧЕКЛИСТ ЗАБОТЫ =====
+        // ===== ЧЕКЛИСТ =====
         function renderStreak() { const streak = store.get('streak', { count: 0, last: null }); const el = document.getElementById('streak-num-inner'); if (el) el.innerText = streak.count; }
         renderStreak();
         document.getElementById('habit-btn-inner').addEventListener('click', function() {
@@ -801,7 +966,7 @@
             streak.last = today; store.set('streak', streak); renderStreak(); markDone('habit');
         });
 
-        // ===== КОЛЕСО ЭМОЦИЙ =====
+        // ===== ЭМОЦИИ =====
         const emotionTips = {
             joy: "<b>Радость — это ресурс.</b><br>• Заметь, что именно вызвало это чувство, и постарайся повторить это в будущем.<br>• Поделись радостью с близким — это усиливает её.<br>• Запиши этот момент в Копилку побед.",
             sad: "<b>Грусть — это сигнал, что что-то важно.</b><br>• Позволь себе побыть с этим чувством, не убегая от него.<br>• Выпиши свои переживания в Дневник — это поможет выпустить пар.<br>• Сделай что-то маленькое и приятное для себя (тёплый чай, плед).",
@@ -826,7 +991,7 @@
             angry: { title: "При злости", steps: ["Сделай тактическое дыхание", "Выплесни в Дневник", "Заземлись"] },
             ok: { title: "Отличный день!", steps: ["Отметь в Чеклисте", "Запиши хорошее", "Сканирование тела"] }
         };
-        document.querySelectorAll('#assistant-states .emotion-chip').forEach(chip => {
+               document.querySelectorAll('#assistant-states .emotion-chip').forEach(chip => {
             chip.addEventListener('click', function() {
                 const state = this.dataset.state; const plan = assistantPlans[state]; const res = document.getElementById('assistant-result');
                 res.style.display = 'block'; res.innerHTML = `<h3 style="margin-top: 0;">${plan.title}</h3><ul style="padding-left: 20px;">${plan.steps.map(s => `<li style="margin-bottom: 8px;">${s}</li>`).join('')}</ul>`;
@@ -844,7 +1009,7 @@
             const text = document.getElementById('dream-input').value.trim(); const tag = document.getElementById('dream-tag').value.trim();
             if (!text) return;
             const list = store.get('dreams', []); list.push({ text, tag, date: new Date().toISOString() }); store.set('dreams', list);
-            document.getElementById('dream-input').value = ''; document.getElementById('dream-tag').value = ''; store.set('draft_dream_input', ''); store.set('draft_dream_tag', ''); renderDreams(); markDone('sleep-diary');
+            document.getElementById('dream-input').value = ''; document.getElementById('dream-tag').value = ''; store.set('draft_dream_input', ''); store.set('draft_dream_tag', ''); renderDreams(); markDone('sleep-diary'); playDing();
         });
 
         // ===== КОЛЕСО БАЛАНСА =====
@@ -878,8 +1043,7 @@
         document.getElementById('balance-save').addEventListener('click', function() {
             const vals = balanceAreas.map(a => parseInt(document.getElementById('balance-' + a.id).value));
             const avg = vals.reduce((s, v) => s + v, 0) / vals.length;
-            let minIdx = 0; vals.forEach((v, i) => { if (v <
-                                                                     let minIdx = 0; vals.forEach((v, i) => { if (v < vals[minIdx]) minIdx = i; }); const lowest = balanceAreas[minIdx];
+            let minIdx = 0; vals.forEach((v, i) => { if (v < vals[minIdx]) minIdx = i; }); const lowest = balanceAreas[minIdx];
             const res = document.getElementById('balance-result'); res.style.display = 'block';
             res.innerHTML = `<h3 style="margin-top: 0; text-align: center;">Средний балл: ${avg.toFixed(1)}</h3><div style="margin: 16px 0;">${drawBalanceChart(vals)}</div><p style="font-size: 15px; margin-bottom: 8px; text-align: center;">Самая провисающая сфера: <b>${lowest.label}</b> (${vals[minIdx]}/10).</p><p style="font-size: 13px; color: var(--text-sec); text-align: center;">Попробуй уделить ей немного внимания на этой неделе.</p><button class="btn btn-secondary" onclick="closeScreens()" style="margin-top: 16px;">Вернуться на главную</button>`;
             markDone('wheel-balance');
@@ -942,7 +1106,7 @@
         document.getElementById('win-btn').addEventListener('click', function() {
             const v = document.getElementById('win-input').value.trim(); if (!v) return;
             const wins = store.get('wins', []); wins.push(v); store.set('wins', wins);
-            document.getElementById('win-input').value = ''; renderWins();
+            document.getElementById('win-input').value = ''; renderWins(); playDing();
         });
 
         // ===== ТРЕКЕР СНА =====
@@ -998,7 +1162,7 @@
             document.getElementById('letter-input').value = ''; store.set('draft_letter_input', ''); renderLetter();
         });
 
-        // ===== ЗВУК СОХРАНЕНИЯ =====
+        // ===== ЗВУК =====
         function playDing() {
             try {
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -1116,7 +1280,7 @@
         document.getElementById('audio-save').addEventListener('click', function() {
             const text = document.getElementById('audio-transcript').value.trim(); if (!text) return;
             const list = store.get('audio_diary', []); list.push({ text, date: new Date().toISOString() }); store.set('audio_diary', list);
-            document.getElementById('audio-transcript').value = ''; store.set('draft_audio_transcript', ''); renderAudioDiary(); markDone('audio-diary');
+            document.getElementById('audio-transcript').value = ''; store.set('draft_audio_transcript', ''); renderAudioDiary(); markDone('audio-diary'); playDing();
         });
 
         // ===== МУЗЫКА =====
@@ -1190,4 +1354,4 @@
     });
     </script>
 </body>
-</html>                                                         
+</html>
