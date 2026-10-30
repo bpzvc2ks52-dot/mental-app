@@ -151,7 +151,7 @@
         .single-card-cta { margin-top: 0; }
         .single-card-more { background: none; border: none; padding: 16px 8px 4px; font: inherit; font-size: 14px; color: var(--text-sec); cursor: pointer; text-decoration: underline; text-underline-offset: 4px; }
 
-        /* Прогресс */
+        /* Прогресс и Дерево */
         .progress-ring-wrap { display: flex; align-items: center; gap: 16px; background: var(--card); padding: 18px 20px; border-radius: var(--radius-lg); margin-top: 16px; border: 1px solid var(--card-border); box-shadow: var(--shadow); }
         .progress-ring { width: 64px; height: 64px; flex-shrink: 0; }
         .progress-ring circle { fill: none; stroke-width: 6; }
@@ -160,6 +160,14 @@
         .progress-text { font-size: 15px; font-weight: 800; }
         .progress-sub { font-size: 13px; color: var(--text-sec); margin-top: 4px; font-weight: 500; }
         .progress-limit { font-size: 12px; color: var(--tile-peach-icon); margin-top: 6px; font-weight: 700; }
+
+        .tree-widget { display: flex; align-items: center; gap: 16px; background: linear-gradient(135deg, var(--card), rgba(220, 252, 231, 0.3)); padding: 16px 20px; border-radius: var(--radius-lg); margin-top: 14px; border: 1px solid var(--card-border); box-shadow: var(--shadow); cursor: pointer; transition: transform 0.3s; }
+        .tree-widget:active { transform: scale(0.97); }
+        .tree-icon-wrap { width: 54px; height: 54px; border-radius: 50%; background: var(--card-solid); display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.05); flex-shrink: 0; }
+        .tree-icon { transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .tree-widget:hover .tree-icon { transform: scale(1.15) rotate(5deg); }
+        @keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.4); } 100% { transform: scale(1); } }
+        .tree-pop { animation: pop 0.6s ease-out; }
 
         /* Навигация */
         .bottom-nav { position: fixed; left: 20px; right: 20px; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); background: var(--nav-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 36px; display: flex; justify-content: space-around; padding: 8px 0; box-shadow: 0 10px 40px rgba(0,0,0,0.08); border: 1px solid var(--card-border); z-index: 100; }
@@ -247,7 +255,7 @@
         .list-item-sub { font-size: 13px; color: var(--text-sec); margin-top: 4px; font-weight: 500; }
         .empty-state { color: var(--text-sec); text-align: center; padding: 20px; font-weight: 500; }
 
-        /* Бейджи */
+        /* Бейджи и Уведомления */
         .badge-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 20px; }
         .badge-card { background: var(--card); border: 1px solid var(--card-border); padding: 20px; border-radius: 20px; text-align: center; transition: 0.3s; position: relative; overflow: hidden; }
         .badge-card.locked { opacity: 0.5; filter: grayscale(1); }
@@ -255,8 +263,6 @@
         .badge-title { font-size: 15px; font-weight: 800; margin-bottom: 4px; }
         .badge-desc { font-size: 12px; color: var(--text-sec); line-height: 1.3; }
         .badge-date { font-size: 10px; color: var(--tile-green-icon); font-weight: 800; margin-top: 8px; }
-        
-        /* Уведомления */
         .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: var(--text); color: var(--bg); padding: 14px 24px; border-radius: 100px; font-weight: 700; font-size: 14px; z-index: 9999; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; align-items: center; gap: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); pointer-events: none; }
         .toast.show { transform: translateX(-50%) translateY(0); }
 
@@ -323,7 +329,7 @@
                 </div>
             </section>
 
-            <!-- Блок "Одно действие" -->
+            <!-- Блок "Одно действие" (для адаптива) -->
             <section class="single-action" id="single-action" hidden aria-live="polite"></section>
 
             <!-- Полная главная (плитки) -->
@@ -337,6 +343,17 @@
                         <div class="progress-text" id="progress-text">Сегодня: 0 из 5</div>
                         <div class="progress-sub">маленькие шаги — большие перемены</div>
                         <div class="progress-limit" id="progress-limit" style="display: none;"></div>
+                    </div>
+                </div>
+
+                <!-- Виджет Дерева заботы -->
+                <div id="tree-widget" class="tree-widget" onclick="showTreeMessage()">
+                    <div class="tree-icon-wrap">
+                        <div id="tree-icon" class="tree-icon">🌰</div>
+                    </div>
+                    <div class="tree-text">
+                        <div id="tree-title" style="font-size: 15px; font-weight: 800; color: var(--text);">Твоё дерево</div>
+                        <div id="tree-sub" style="font-size: 13px; color: var(--text-sec); margin-top: 2px;">Выполни практику, чтобы полить его</div>
                     </div>
                 </div>
 
@@ -418,9 +435,9 @@
                     <div class="tile tile-pink" data-practice="sleep-tracker" onclick="openScreen('sleep-tracker')"><div class="tile-icon">😴</div><div><div class="tile-title">Сон</div><div class="tile-desc" style="color: inherit; opacity: 0.8;">как спалось</div></div></div>
                     <div class="tile tile-blue" data-practice="sleep-diary" onclick="openScreen('sleep-diary')"><div class="tile-icon">💭</div><div><div class="tile-title">Сны</div><div class="tile-desc" style="color: inherit; opacity: 0.8;">запиши сон</div></div></div>
                     <div class="tile tile-white" data-practice="wheel-balance" onclick="openScreen('wheel-balance')"><div class="tile-icon" style="background: var(--tile-peach); color: var(--tile-peach-icon);">⚖️</div><div><div class="tile-title">Баланс</div><div class="tile-desc">сферы жизни</div></div></div>
+                    <div class="tile tile-white" data-practice="safespace" onclick="openScreen('safespace')"><div class="tile-icon" style="background: var(--tile-purple); color: var(--tile-purple-icon);">🌌</div><div><div class="tile-title">Тишина</div><div class="tile-desc">место без слов</div></div></div>
                     <div class="tile tile-white" data-practice="affirmations" onclick="openScreen('affirmations')"><div class="tile-icon" style="background: var(--tile-purple); color: var(--tile-purple-icon);">💬</div><div><div class="tile-title">Аффирмации</div><div class="tile-desc">тёплые слова</div></div></div>
                     <div class="tile tile-white" data-practice="audio-diary" onclick="openScreen('audio-diary')"><div class="tile-icon" style="background: var(--tile-blue); color: var(--tile-blue-icon);">🎙</div><div><div class="tile-title">Аудио-дневник</div><div class="tile-desc">говори, а не пиши</div></div></div>
-                    <!-- Новая плитка Достижения -->
                     <div class="tile tile-white" data-practice="badges" onclick="openScreen('badges')"><div class="tile-icon" style="background: var(--tile-green); color: var(--tile-green-icon);">🏅</div><div><div class="tile-title">Достижения</div><div class="tile-desc">твои награды</div></div></div>
                 </div>
             </section>
@@ -560,7 +577,6 @@
             <div class="screen-hero"><span class="screen-hero-icon">📊</span><h2>Моя статистика</h2><p>Глубокая аналитика твоего прогресса.</p></div>
             <div style="background: var(--card); padding: 24px; border-radius: 24px; text-align: left; box-shadow: var(--shadow); border: 1px solid var(--card-border);">
                 <p style="font-size: 15px; color: var(--text-sec); margin: 0 0 16px; font-weight: 600;">Настроение за неделю</p>
-                <!-- Канвас для графика Chart.js -->
                 <div style="position: relative; height: 200px; width: 100%; margin-top: 10px;">
                     <canvas id="stats-chart-canvas"></canvas>
                 </div>
@@ -631,6 +647,8 @@
         <button class="back-btn" onclick="closeScreens()">← Назад</button>
         <div class="inner-content">
             <div class="screen-hero"><span class="screen-hero-icon">📖</span><h2>Дневник</h2><p>Выплесни мысли на бумагу.</p></div>
+            <!-- Кнопка подсказки для дневника -->
+            <button class="btn btn-secondary" id="diary-prompt-btn" style="margin-bottom: 12px; font-size: 14px;">✨ О чём написать?</button>
             <textarea id="diary-input" rows="6" placeholder="Что тебя беспокоит?"></textarea>
             <button class="btn" id="diary-btn">Сохранить</button>
             <div id="diary-status" style="margin-top: 12px; color: var(--text-sec); font-weight: 600;"></div>
@@ -722,13 +740,23 @@
         </div>
     </div>
 
-    <!-- Новый экран Достижений -->
+    <!-- Экран Достижений -->
     <div id="screen-badges" class="inner-screen">
         <button class="back-btn" onclick="closeScreens()">← Назад</button>
         <div class="inner-content">
             <div class="screen-hero"><span class="screen-hero-icon">🏅</span><h2>Достижения</h2><p>Маленькие шаги, которые ты сделал.</p></div>
             <div class="badge-grid" id="badges-container"></div>
         </div>
+    </div>
+
+    <!-- Экран Безопасное место (Zen) -->
+    <div id="screen-safespace" class="inner-screen" style="background: #0a0a0a; padding: 0;">
+        <button class="back-btn" onclick="closeScreens()" style="color: white; position: absolute; z-index: 10;">← Назад</button>
+        <div style="position: absolute; top: 80px; left: 0; right: 0; text-align: center; color: rgba(255,255,255,0.4); pointer-events: none;">
+            <h2 style="font-size: 20px; font-weight: 600; margin: 0;">Твоё безопасное место</h2>
+            <p style="font-size: 14px;">Просто води пальцем по экрану...</p>
+        </div>
+        <canvas id="zen-canvas" style="width: 100%; height: 100%; display: block;"></canvas>
     </div>
 
     <div id="screen-profile" class="inner-screen">
@@ -785,7 +813,7 @@
         </div>
     </div>
 
-    <!-- Контейнер для всплывающих уведомлений -->
+    <!-- Контейнер для уведомлений -->
     <div id="toast" class="toast">🏆 <span id="toast-text">Новое достижение!</span></div>
 
     <script>
@@ -870,7 +898,6 @@
             const next = cur === 'dark' ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', next);
             store.set('theme', next); updateThemeBtns();
-            // Обновляем график, если он открыт
             if (document.getElementById('screen-stats').classList.contains('active')) renderStats();
         }
         document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
@@ -905,6 +932,7 @@
             const target = document.getElementById(`screen-${name}`);
             if (target) { target.classList.add('active'); target.scrollTop = 0; }
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            
             if (name === 'favorites') {
                 const nav = document.querySelector('[data-nav="fav"]'); if (nav) nav.classList.add('active');
                 renderFavorites();
@@ -921,6 +949,7 @@
             if (name === 'wheel-balance') initWheelBalance();
             if (name === 'audio-diary') renderAudioDiary();
             if (name === 'badges') renderBadges();
+            if (name === 'safespace') setTimeout(initZenCanvas, 100);
             if (name === 'stats') {
                 if (!isPremium) { alert('Статистика доступна только в Premium!'); closeScreens(); return; }
                 renderStats();
@@ -930,6 +959,7 @@
             document.querySelectorAll('.inner-screen').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             const nav = document.querySelector('[data-nav="home"]'); if (nav) nav.classList.add('active');
+            if (zenAnimationId) { cancelAnimationFrame(zenAnimationId); zenAnimationId = null; }
         };
 
         // ===== MICRO-CONFIRM =====
@@ -942,6 +972,49 @@
             setTimeout(() => el.classList.remove('micro-confirm'), 950);
         }
 
+        // ===== ДЕРЕВО ЗАБОТЫ (СТРИК) =====
+        const TREE_STAGES = [
+            { icon: '🌰', title: 'Семечко', desc: 'Начни заботиться о себе' },
+            { icon: '🌱', title: 'Росток', desc: 'Первый шаг сделан!' },
+            { icon: '🪴', title: 'Кустик', desc: '3 дня заботы' },
+            { icon: '🌳', title: 'Дерево', desc: '7 дней подряд' },
+            { icon: '🌸', title: 'Цветение', desc: '14 дней подряд!' },
+            { icon: '✨', title: 'Магия', desc: '30 дней подряд!' }
+        ];
+        function updateTreeWidget(animate = false) {
+            let streak = store.get('streak', { count: 0, last: null });
+            let stageIdx = 0;
+            if (streak.count >= 30) stageIdx = 5;
+            else if (streak.count >= 14) stageIdx = 4;
+            else if (streak.count >= 7) stageIdx = 3;
+            else if (streak.count >= 3) stageIdx = 2;
+            else if (streak.count >= 1) stageIdx = 1;
+            const stage = TREE_STAGES[stageIdx];
+            const iconEl = document.getElementById('tree-icon');
+            const titleEl = document.getElementById('tree-title');
+            const subEl = document.getElementById('tree-sub');
+            if (iconEl) {
+                iconEl.innerText = stage.icon;
+                titleEl.innerText = stage.title;
+                subEl.innerText = streak.count > 0 ? `${streak.count} дней заботы подряд` : stage.desc;
+                if (animate) {
+                    iconEl.classList.remove('tree-pop');
+                    void iconEl.offsetWidth;
+                    iconEl.classList.add('tree-pop');
+                }
+            }
+        }
+        window.showTreeMessage = function() {
+            const messages = [
+                "Растение не умирает, если его забыть полить один раз. Просто полей его сегодня 💧",
+                "Каждый день — это новый шанс вырастить что-то красивое.",
+                "Ты заботишься о мире вокруг, не забывай заботиться и о себе 🌱",
+                "Твоё дерево растёт, даже когда ты просто отдыхаешь."
+            ];
+            const msg = messages[Math.floor(Math.random() * messages.length)];
+            showToast(msg);
+        };
+
         // ===== ДОСТИЖЕНИЯ (БЕЙДЖИ) =====
         const BADGES_LIST = [
             { id: 'first_step', icon: '🌱', title: 'Первый шаг', desc: 'Выполни 1 практику' },
@@ -951,14 +1024,12 @@
             { id: 'sleep_3', icon: '😴', title: 'Здоровый сон', desc: 'Отметь хороший сон 3 раза' },
             { id: 'balance', icon: '⚖️', title: 'Баланс', desc: 'Пройди колесо баланса' }
         ];
-
         function showToast(text) {
             const t = document.getElementById('toast'); const tt = document.getElementById('toast-text');
             if (!t || !tt) return;
             tt.innerText = text; t.classList.add('show');
             setTimeout(() => t.classList.remove('show'), 3000);
         }
-
         function unlockBadge(id) {
             let unlocked = store.get('badges', []);
             if (!unlocked.find(b => b.id === id)) {
@@ -971,7 +1042,6 @@
                 renderBadges();
             }
         }
-
         function checkBadges() {
             const totalPractices = Object.keys(localStorage).filter(k => k.startsWith('ostrov_progress_')).reduce((sum, k) => sum + JSON.parse(localStorage[k]).length, 0);
             if (totalPractices >= 1) unlockBadge('first_step');
@@ -984,7 +1054,6 @@
             if (store.get('sleep', []).filter(s => s.quality >= 4).length >= 3) unlockBadge('sleep_3');
             if (store.get('progress_' + todayKey(), []).includes('wheel-balance')) unlockBadge('balance');
         }
-
         function renderBadges() {
             const el = document.getElementById('badges-container'); if (!el) return;
             const unlocked = store.get('badges', []);
@@ -995,7 +1064,7 @@
             }).join('');
         }
 
-        // ===== ПРОГРЕСС ДНЯ =====
+        // ===== ПРОГРЕСС ДНЯ И СТРИК =====
         function getDayProgress() { return store.get('progress_' + todayKey(), []); }
         function markDone(id) {
             const arr = getDayProgress();
@@ -1006,7 +1075,22 @@
                 log[id] = (log[id] || 0) + 1;
                 store.set('action_log', log);
             } catch(e) {}
-            checkBadges(); // Проверяем достижения
+            
+            // Логика Дерева/Стрика
+            let streak = store.get('streak', { count: 0, last: null });
+            const today = todayKey();
+            if (streak.last !== today) {
+                const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
+                if (streak.last === yesterday.toISOString().slice(0, 10)) streak.count++;
+                else streak.count = 1;
+                streak.last = today;
+                store.set('streak', streak);
+                updateTreeWidget(true);
+                if (streak.count > 1) showToast(`🔥 Дерево полито! ${streak.count} дней подряд`);
+            }
+            const streakEl = document.getElementById('streak-num-inner');
+            if (streakEl) streakEl.innerText = streak.count;
+            checkBadges();
         }
         function renderProgress() {
             const arr = getDayProgress(); const total = 5; const done = Math.min(arr.length, total);
@@ -1083,43 +1167,83 @@
             });
         }
 
+        // ===== ZEN CANVAS (БЕЗОПАСНОЕ МЕСТО) =====
+        let zenAnimationId = null;
+        function initZenCanvas() {
+            const canvas = document.getElementById('zen-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            function resize() {
+                canvas.width = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+            let particles = [];
+            function spawnParticle(x, y) {
+                const colors = ['#38bdf8', '#c084fc', '#fb7185', '#6ee7b7'];
+                particles.push({ x, y, r: 5, alpha: 1, color: colors[Math.floor(Math.random() * colors.length)], speed: Math.random() * 1 + 0.5 });
+            }
+            canvas.addEventListener('mousemove', (e) => { if (e.buttons === 1) spawnParticle(e.offsetX, e.offsetY); });
+            canvas.addEventListener('touchmove', (e) => { e.preventDefault(); const t = e.touches[0]; const rect = canvas.getBoundingClientRect(); spawnParticle(t.clientX - rect.left, t.clientY - rect.top); }, {passive: false});
+            canvas.addEventListener('touchstart', (e) => { e.preventDefault(); const t = e.touches[0]; const rect = canvas.getBoundingClientRect(); spawnParticle(t.clientX - rect.left, t.clientY - rect.top); }, {passive: false});
+            function draw() {
+                ctx.fillStyle = 'rgba(10, 10, 10, 0.1)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                for (let i = particles.length - 1; i >= 0; i--) {
+                    let p = particles[i];
+                    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color; ctx.globalAlpha = p.alpha; ctx.fill();
+                    p.r += p.speed; p.alpha -= 0.015;
+                    if (p.alpha <= 0) particles.splice(i, 1);
+                }
+                ctx.globalAlpha = 1;
+                zenAnimationId = requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        // ===== ВОПРОСЫ ДЛЯ ДНЕВНИКА =====
+        const diaryPrompts = [
+            "Что сегодня заставило меня улыбнуться?",
+            "Какая мысль меня беспокоит больше всего прямо сейчас?",
+            "Что бы я сказал(а) себе 5 лет назад?",
+            "За что я могу похвалить себя сегодня?",
+            "Какие три вещи находятся в моей зоне контроля?",
+            "Что я чувствую прямо сейчас, в эту секунду?",
+            "Кто меня поддерживает, даже если мы редко общаемся?",
+            "Какую маленькую радость я могу себе позволить сегодня?"
+        ];
+        const promptBtn = document.getElementById('diary-prompt-btn');
+        if (promptBtn) {
+            promptBtn.addEventListener('click', function() {
+                const input = document.getElementById('diary-input');
+                const randomPrompt = diaryPrompts[Math.floor(Math.random() * diaryPrompts.length)];
+                input.value = randomPrompt + "\n\n";
+                input.focus();
+                input.setSelectionRange(input.value.length, input.value.length);
+            });
+        }
+
         // ===== ГРАФИКИ (Chart.js) =====
         let moodChartInstance = null;
         function renderStats() {
             const ctx = document.getElementById('stats-chart-canvas');
             if (!ctx || typeof Chart === 'undefined') return;
-            
             const moods = store.get('moods', {}); const labels = []; const data = []; const now = new Date();
             for (let i = 6; i >= 0; i--) { 
                 const d = new Date(now); d.setDate(now.getDate() - i); 
                 labels.push(['Вс','Пн','Вт','Ср','Чт','Пт','Сб'][d.getDay()]);
                 data.push(moods[d.toISOString().slice(0, 10)] || null);
             }
-            
             if (moodChartInstance) moodChartInstance.destroy();
-            
             Chart.defaults.font.family = "'Manrope', sans-serif";
             Chart.defaults.color = document.documentElement.getAttribute('data-theme') === 'dark' ? '#888' : '#728a9c';
-            
             moodChartInstance = new Chart(ctx, {
                 type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Настроение', data: data, borderColor: '#0284c7', backgroundColor: 'rgba(2, 132, 199, 0.1)',
-                        borderWidth: 3, pointBackgroundColor: '#0284c7', pointBorderColor: '#fff', pointBorderWidth: 2, pointRadius: 5, fill: true, tension: 0.4, spanGaps: true
-                    }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { min: 1, max: 5, ticks: { stepSize: 1, callback: v => ({1:'😭',2:'😕',3:'😐',4:'🙂',5:'😄'})[v] || '' } },
-                        x: { grid: { display: false } }
-                    }
-                }
+                data: { labels: labels, datasets: [{ label: 'Настроение', data: data, borderColor: '#0284c7', backgroundColor: 'rgba(2, 132, 199, 0.1)', borderWidth: 3, pointBackgroundColor: '#0284c7', pointBorderColor: '#fff', pointBorderWidth: 2, pointRadius: 5, fill: true, tension: 0.4, spanGaps: true }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { min: 1, max: 5, ticks: { stepSize: 1, callback: v => ({1:'😭',2:'😕',3:'😐',4:'🙂',5:'😄'})[v] || '' } }, x: { grid: { display: false } } } }
             });
-
             const practices = document.getElementById('stats-practices');
             if (practices) { let total = 0; for (let key in localStorage) { if (key.startsWith('ostrov_progress_')) { try { total += JSON.parse(localStorage[key]).length; } catch(e) {} } } practices.innerText = total; }
             const sleeps = document.getElementById('stats-sleep'); if (sleeps) sleeps.innerText = store.get('sleep', []).filter(s => s.quality >= 4).length;
@@ -1330,7 +1454,7 @@
         });
 
         // ===== ИЗБРАННОЕ =====
-        const practiceNames = { breath: 'Коробочное дыхание', tactical: 'Тактическое дыхание', sleep: 'Дыхание 4-7-8', energy: 'Энергия', cbt: 'КПТ', grounding: 'Заземление', diary: 'Дневник', gratitude: 'Благодарность', habit: 'Чеклист заботы', 'sleep-diary': 'Дневник снов', 'wheel-balance': 'Колесо баланса', 'audio-diary': 'Аудио-дневник', badges: 'Достижения' };
+        const practiceNames = { breath: 'Коробочное дыхание', tactical: 'Тактическое дыхание', sleep: 'Дыхание 4-7-8', energy: 'Энергия', cbt: 'КПТ', grounding: 'Заземление', diary: 'Дневник', gratitude: 'Благодарность', habit: 'Чеклист заботы', 'sleep-diary': 'Дневник снов', 'wheel-balance': 'Колесо баланса', 'audio-diary': 'Аудио-дневник', badges: 'Достижения', safespace: 'Тишина' };
         function getFavorites() { return store.get('favorites', []); }
         function toggleFav(id) {
             let favs = getFavorites();
@@ -1618,7 +1742,8 @@
 
         // ===== ИНИЦИАЛИЗАЦИЯ =====
         updatePremiumUI();
-        checkBadges(); // Проверка бейджей при загрузке
+        updateTreeWidget();
+        checkBadges();
     });
     </script>
 </body>
