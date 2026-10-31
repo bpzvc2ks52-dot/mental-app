@@ -268,6 +268,13 @@
         .legal-footer a { color: var(--text); text-decoration: underline; cursor: pointer; }
         .disclaimer-box { background: rgba(255, 153, 0, 0.1); border: 1px solid rgba(255, 153, 0, 0.3); padding: 12px; border-radius: 12px; font-size: 11px; color: var(--text-sec); line-height: 1.4; margin-top: 20px; text-align: left; }
 
+        /* Cookie Banner */
+        .cookie-banner { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card-solid); padding: 16px 20px; box-shadow: 0 -4px 20px rgba(0,0,0,0.1); display: none; justify-content: space-between; align-items: center; z-index: 9998; font-size: 12px; gap: 12px; border-top: 1px solid var(--card-border); }
+        .cookie-banner p { margin: 0; color: var(--text-sec); line-height: 1.4; }
+        .cookie-banner a { color: var(--text); text-decoration: underline; cursor: pointer; }
+        .cookie-banner button { background: var(--text); color: var(--bg); border: none; padding: 10px 20px; border-radius: 100px; font-weight: 700; cursor: pointer; flex-shrink: 0; transition: transform 0.2s; }
+        .cookie-banner button:active { transform: scale(0.95); }
+
         @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; } }
     </style>
 </head>
@@ -440,7 +447,8 @@
                 <div class="legal-footer">
                     <div style="margin-bottom: 8px;"><b>16+</b></div>
                     © 2024 Остров добра<br>
-                    <a onclick="openScreen('privacy')">Политика конфиденциальности</a>
+                    <a onclick="openScreen('privacy')">Политика конфиденциальности</a> • 
+                    <a onclick="openScreen('offer')">Публичная оферта</a>
                 </div>
             </section>
         </div>
@@ -481,6 +489,30 @@
             <p style="font-size: 13px; line-height: 1.5; color: var(--text); margin-bottom: 12px;">
                 <b>4. Согласие</b><br>
                 Используя Приложение, вы соглашаетесь с тем, что ваши данные хранятся только на вашем устройстве.
+            </p>
+        </div>
+    </div>
+
+    <!-- Экран Публичной Оферты -->
+    <div id="screen-offer" class="inner-screen">
+        <button class="back-btn" onclick="closeScreens()">← Назад</button>
+        <div class="inner-content" style="text-align: left;">
+            <div class="screen-hero" style="text-align: center;"><h2>Публичная оферта</h2></div>
+            <p style="font-size: 13px; line-height: 1.5; color: var(--text); margin-bottom: 12px;">
+                <b>1. Общие положения</b><br>
+                Настоящий документ является официальным предложением (публичной офертой) о предоставлении доступа к премиум-функциям приложения «Остров добра».
+            </p>
+            <p style="font-size: 13px; line-height: 1.5; color: var(--text); margin-bottom: 12px;">
+                <b>2. Предмет оферты</b><br>
+                Исполнитель предоставляет Пользователю доступ к расширенному функционалу (медитации, углубленная статистика, неограниченные практики) на условиях подписки.
+            </p>
+            <p style="font-size: 13px; line-height: 1.5; color: var(--text); margin-bottom: 12px;">
+                <b>3. Стоимость и порядок оплаты</b><br>
+                Стоимость подписки указывается в приложении перед оплатой. Оплата производится через безопасные платежные шлюзы. Подписка может быть отменена в любой момент.
+            </p>
+            <p style="font-size: 13px; line-height: 1.5; color: var(--text); margin-bottom: 12px;">
+                <b>4. Возврат средств</b><br>
+                Возврат средств осуществляется в соответствии с законодательством РФ, если Пользователь не воспользовался премиум-функциями.
             </p>
         </div>
     </div>
@@ -922,6 +954,12 @@
         <button class="btn btn-secondary" id="music-stop" style="margin-top: 10px; padding: 10px;">Остановить всё</button>
     </div>
 
+    <!-- Cookie Баннер -->
+    <div id="cookie-banner" class="cookie-banner">
+        <p>Мы используем локальное хранилище (cookies) для сохранения вашего прогресса. Продолжая пользоваться сайтом, вы соглашаетесь с <a onclick="openScreen('privacy')">Политикой конфиденциальности</a>.</p>
+        <button id="cookie-accept">Принять</button>
+    </div>
+
     <script>
             document.addEventListener('DOMContentLoaded', function() {
         // ===== ХРАНИЛИЩЕ =====
@@ -1088,7 +1126,7 @@
         document.getElementById('theme-toggle-2').addEventListener('click', toggleTheme);
         updateThemeBtns();
 
-        // ===== ПРИВЕТСТВИЕ (БЕЗ ИМЕНИ) =====
+        // ===== ПРИВЕТСТВИЕ =====
         function applyGreeting() {
             const g = document.getElementById('greeting');
             const hour = new Date().getHours();
@@ -1106,9 +1144,10 @@
             const target = document.getElementById(`screen-${name}`);
             if (target) { target.classList.add('active'); target.scrollTop = 0; }
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            
             if (name === 'favorites') { document.querySelector('[data-nav="fav"]').classList.add('active'); renderFavorites(); }
             else if (name === 'profile') { document.querySelector('[data-nav="profile"]').classList.add('active'); renderProfileCalendar(); renderLetter(); updatePremiumUI(); }
-            else if (name !== 'privacy' && name !== 'register') { document.querySelector('[data-nav="home"]').classList.add('active'); }
+            else if (name !== 'privacy' && name !== 'offer') { document.querySelector('[data-nav="home"]').classList.add('active'); }
             
             if (name === 'wins') renderWins();
             if (name === 'sleep-tracker') renderSleep();
@@ -1769,6 +1808,18 @@
         const musicBtn = document.getElementById('music-toggle'); const menu = document.getElementById('music-menu');
         musicBtn.addEventListener('click', function(e) { e.stopPropagation(); menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex'; });
         document.addEventListener('click', function(e) { if (!menu.contains(e.target) && e.target !== musicBtn) menu.style.display = 'none'; });
+
+        // ===== COOKIE БАННЕР =====
+        const cookieBanner = document.getElementById('cookie-banner');
+        if (cookieBanner) {
+            if (!store.get('cookie_accepted', false)) {
+                setTimeout(() => { cookieBanner.style.display = 'flex'; }, 1000);
+            }
+            document.getElementById('cookie-accept')?.addEventListener('click', () => {
+                store.set('cookie_accepted', true);
+                cookieBanner.style.display = 'none';
+            });
+        }
 
         // ===== ИНИЦИАЛИЗАЦИЯ =====
         updatePremiumUI();
