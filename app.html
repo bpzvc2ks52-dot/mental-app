@@ -6,7 +6,6 @@
     <meta name="theme-color" content="#f4f7f9">
     <title>Остров добра</title>
     
-    <!-- PWA и Графики -->
     <link rel="manifest" href="manifest.json">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
@@ -206,7 +205,6 @@
         input, textarea { width: 100%; padding: 16px; border-radius: 20px; border: 1px solid var(--card-border); background: var(--card); color: var(--text); font-size: 16px; margin-bottom: 16px; font-family: inherit; resize: none; outline: none; transition: border-color 0.3s; font-weight: 500; }
         input:focus, textarea:focus { border-color: var(--text); background: var(--bg); }
 
-        #music-toggle { position: fixed; top: calc(24px + env(safe-area-inset-top, 0px)); right: 24px; z-index: 200; width: 52px; height: 52px; border-radius: 50%; border: 1px solid var(--card-border); background: var(--card); backdrop-filter: blur(20px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         #music-menu { position: fixed; top: calc(86px + env(safe-area-inset-top, 0px)); right: 24px; z-index: 200; background: var(--card-solid); border-radius: 20px; padding: 10px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); display: none; flex-direction: column; gap: 4px; min-width: 180px; border: 1px solid var(--card-border); }
         #music-menu button { border: none; background: transparent; padding: 14px 16px; font-size: 16px; font-weight: 600; text-align: left; border-radius: 14px; cursor: pointer; color: var(--text); }
         #music-menu button:hover { background: rgba(128,128,128,0.1); }
@@ -255,7 +253,6 @@
         .list-item-sub { font-size: 13px; color: var(--text-sec); margin-top: 4px; font-weight: 500; }
         .empty-state { color: var(--text-sec); text-align: center; padding: 20px; font-weight: 500; }
 
-        /* Бейджи и Уведомления */
         .badge-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 20px; }
         .badge-card { background: var(--card); border: 1px solid var(--card-border); padding: 20px; border-radius: 20px; text-align: center; transition: 0.3s; position: relative; overflow: hidden; }
         .badge-card.locked { opacity: 0.5; filter: grayscale(1); }
@@ -265,6 +262,10 @@
         .badge-date { font-size: 10px; color: var(--tile-green-icon); font-weight: 800; margin-top: 8px; }
         .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: var(--text); color: var(--bg); padding: 14px 24px; border-radius: 100px; font-weight: 700; font-size: 14px; z-index: 9999; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; align-items: center; gap: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); pointer-events: none; }
         .toast.show { transform: translateX(-50%) translateY(0); }
+
+        /* Чат */
+        #chat-box::-webkit-scrollbar { display: none; }
+        #chat-box { -ms-overflow-style: none; scrollbar-width: none; }
 
         @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; } }
     </style>
@@ -290,8 +291,6 @@
         <button class="btn" id="onboarding-save" style="max-width: 320px;">Продолжить</button>
     </div>
 
-    <button id="music-toggle" aria-label="Включить музыку">🎵</button>
-
     <!-- Главный экран -->
     <div id="main-screen">
         <div class="header fade-in">
@@ -300,6 +299,8 @@
                 <div class="greeting-sub">Будь к себе чуточку добрее.<br><b>Ты этого заслуживаешь.</b></div>
             </div>
             <div class="header-actions">
+                <!-- Кнопки теперь стоят рядом и не наезжают друг на друга -->
+                <button class="icon-btn" id="music-toggle" aria-label="Включить музыку">🎵</button>
                 <button class="icon-btn" id="theme-toggle" aria-label="Сменить тему">🌙</button>
             </div>
         </div>
@@ -439,6 +440,9 @@
                     <div class="tile tile-white" data-practice="affirmations" onclick="openScreen('affirmations')"><div class="tile-icon" style="background: var(--tile-purple); color: var(--tile-purple-icon);">💬</div><div><div class="tile-title">Аффирмации</div><div class="tile-desc">тёплые слова</div></div></div>
                     <div class="tile tile-white" data-practice="audio-diary" onclick="openScreen('audio-diary')"><div class="tile-icon" style="background: var(--tile-blue); color: var(--tile-blue-icon);">🎙</div><div><div class="tile-title">Аудио-дневник</div><div class="tile-desc">говори, а не пиши</div></div></div>
                     <div class="tile tile-white" data-practice="badges" onclick="openScreen('badges')"><div class="tile-icon" style="background: var(--tile-green); color: var(--tile-green-icon);">🏅</div><div><div class="tile-title">Достижения</div><div class="tile-desc">твои награды</div></div></div>
+                    <!-- НОВЫЕ ПЛИТКИ -->
+                    <div class="tile tile-white" data-practice="ai-chat" onclick="openScreen('ai-chat')"><div class="tile-icon" style="background: var(--tile-blue); color: var(--tile-blue-icon);">💬</div><div><div class="tile-title">ИИ-собеседник</div><div class="tile-desc">выговорись</div></div></div>
+                    <div class="tile tile-white" data-practice="videos" onclick="openScreen('videos')"><div class="tile-icon" style="background: var(--tile-pink); color: var(--tile-pink-icon);">📺</div><div><div class="tile-title">Что посмотреть?</div><div class="tile-desc">видео по психологии</div></div></div>
                 </div>
             </section>
         </div>
@@ -647,7 +651,6 @@
         <button class="back-btn" onclick="closeScreens()">← Назад</button>
         <div class="inner-content">
             <div class="screen-hero"><span class="screen-hero-icon">📖</span><h2>Дневник</h2><p>Выплесни мысли на бумагу.</p></div>
-            <!-- Кнопка подсказки для дневника -->
             <button class="btn btn-secondary" id="diary-prompt-btn" style="margin-bottom: 12px; font-size: 14px;">✨ О чём написать?</button>
             <textarea id="diary-input" rows="6" placeholder="Что тебя беспокоит?"></textarea>
             <button class="btn" id="diary-btn">Сохранить</button>
@@ -746,6 +749,63 @@
         <div class="inner-content">
             <div class="screen-hero"><span class="screen-hero-icon">🏅</span><h2>Достижения</h2><p>Маленькие шаги, которые ты сделал.</p></div>
             <div class="badge-grid" id="badges-container"></div>
+        </div>
+    </div>
+
+    <!-- ЭКРАН ИИ-СОБЕСЕДНИКА -->
+    <div id="screen-ai-chat" class="inner-screen">
+        <button class="back-btn" onclick="closeScreens()">← Назад</button>
+        <div class="inner-content" style="display: flex; flex-direction: column; height: calc(100vh - 80px); padding-bottom: 20px;">
+            <div class="screen-hero"><span class="screen-hero-icon">🤖</span><h2>ИИ-собеседник</h2><p>Я здесь, чтобы выслушать. Без осуждения.</p></div>
+            
+            <div id="chat-box" style="flex: 1; overflow-y: auto; text-align: left; display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;">
+                <div class="list-item" style="background: var(--tile-blue); border: none; border-radius: 16px 16px 16px 4px; max-width: 85%; align-self: flex-start;">
+                    Привет. Я твой виртуальный помощник. Как ты себя чувствуешь? Если хочешь, можешь просто написать, что тебя тревожит.
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 8px;">
+                <input type="text" id="chat-input" placeholder="Напиши сообщение..." style="margin-bottom: 0;">
+                <button class="btn" id="chat-send" style="width: auto; margin-top: 0; padding: 0 20px;">➤</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ЭКРАН ВИДЕО -->
+    <div id="screen-videos" class="inner-screen">
+        <button class="back-btn" onclick="closeScreens()">← Назад</button>
+        <div class="inner-content">
+            <div class="screen-hero"><span class="screen-hero-icon">📺</span><h2>Что посмотреть?</h2><p>Полезные видео по психологии.</p></div>
+            
+            <div style="text-align: left; display: flex; flex-direction: column; gap: 16px;">
+                <!-- Карточка видео 1 -->
+                <a href="https://www.youtube.com/results?search_query=как+справиться+с+тревогой" target="_blank" class="list-item" style="text-decoration: none; color: inherit; padding: 0; overflow: hidden; display: block;">
+                    <div style="height: 140px; background: #e0f2fe; display: flex; align-items: center; justify-content: center; font-size: 40px;">▶️</div>
+                    <div style="padding: 16px;">
+                        <div class="list-item-title">Как справиться с тревогой?</div>
+                        <div class="list-item-sub">Практические советы от психологов</div>
+                    </div>
+                </a>
+                
+                <!-- Карточка видео 2 -->
+                <a href="https://www.youtube.com/results?search_query=как+поднять+самооценку" target="_blank" class="list-item" style="text-decoration: none; color: inherit; padding: 0; overflow: hidden; display: block;">
+                    <div style="height: 140px; background: #f3e8ff; display: flex; align-items: center; justify-content: center; font-size: 40px;">▶️</div>
+                    <div style="padding: 16px;">
+                        <div class="list-item-title">Самооценка и любовь к себе</div>
+                        <div class="list-item-sub">Как перестать себя критиковать</div>
+                    </div>
+                </a>
+
+                <!-- Карточка видео 3 -->
+                <a href="https://www.youtube.com/results?search_query=эмоциональное+выгорание" target="_blank" class="list-item" style="text-decoration: none; color: inherit; padding: 0; overflow: hidden; display: block;">
+                    <div style="height: 140px; background: #dcfce7; display: flex; align-items: center; justify-content: center; font-size: 40px;">▶️</div>
+                    <div style="padding: 16px;">
+                        <div class="list-item-title">Эмоциональное выгорание</div>
+                        <div class="list-item-sub">Что делать, когда нет сил</div>
+                    </div>
+                </a>
+            </div>
+            <p style="font-size: 12px; color: var(--text-sec); margin-top: 24px;">* Ссылки ведут на поиск YouTube по этой теме. Ты можешь заменить их на конкретные видео.</p>
         </div>
     </div>
 
@@ -950,6 +1010,7 @@
             if (name === 'audio-diary') renderAudioDiary();
             if (name === 'badges') renderBadges();
             if (name === 'safespace') setTimeout(initZenCanvas, 100);
+            if (name === 'ai-chat') { const box = document.getElementById('chat-box'); if (box) box.scrollTop = box.scrollHeight; }
             if (name === 'stats') {
                 if (!isPremium) { alert('Статистика доступна только в Premium!'); closeScreens(); return; }
                 renderStats();
@@ -1076,7 +1137,6 @@
                 store.set('action_log', log);
             } catch(e) {}
             
-            // Логика Дерева/Стрика
             let streak = store.get('streak', { count: 0, last: null });
             const today = todayKey();
             if (streak.last !== today) {
@@ -1223,6 +1283,53 @@
                 input.focus();
                 input.setSelectionRange(input.value.length, input.value.length);
             });
+        }
+
+        // ===== ИИ-СОБЕСЕДНИК =====
+        const chatInput = document.getElementById('chat-input');
+        const chatSend = document.getElementById('chat-send');
+        const chatBox = document.getElementById('chat-box');
+
+        function addChatMessage(text, isUser) {
+            if (!chatBox) return;
+            const div = document.createElement('div');
+            div.className = 'list-item';
+            div.style.cssText = isUser 
+                ? 'background: var(--bg); border: 1px solid var(--card-border); border-radius: 16px 16px 4px 16px; max-width: 85%; align-self: flex-end; text-align: right; margin-bottom: 0;' 
+                : 'background: var(--tile-blue); border: none; border-radius: 16px 16px 16px 4px; max-width: 85%; align-self: flex-start; margin-bottom: 0;';
+            div.innerText = text;
+            chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function getAIReply(msg) {
+            const lower = msg.toLowerCase();
+            if (lower.includes('тревог') || lower.includes('страх') || lower.includes('паник')) {
+                return "Я понимаю, тревога — это тяжело. Ты в безопасности. Давай попробуем замедлиться. Может, сделаем дыхание 4-7-8? (Оно есть в разделе Дыхание).";
+            }
+            if (lower.includes('устал') || lower.includes('нет сил') || lower.includes('выгор')) {
+                return "Ты имеешь полное право на отдых. Не вини себя за то, что устал(а). Попробуй сегодня просто полежать 15 минут без телефона. Или послушай шум дождя.";
+            }
+            if (lower.includes('груст') || lower.includes('плохо') || lower.includes('плак')) {
+                return "Мне жаль, что тебе грустно. Позволь себе поплакать, если хочется, это нормально. А когда станет чуть легче, попробуй выписать 3 вещи, за которые ты благодарен(на).";
+            }
+            if (lower.includes('привет') || lower.includes('здравств')) {
+                return "Привет! Рад тебя видеть. Как проходит твой день?";
+            }
+            return "Я слышу тебя. То, что ты чувствуешь — важно. Попробуй выплеснуть эти мысли в Дневник, там тебя никто не осудит. Или сходи в раздел «КПТ», чтобы разобрать мысль по фактам.";
+        }
+
+        function sendMessage() {
+            const text = chatInput.value.trim();
+            if (!text) return;
+            addChatMessage(text, true);
+            chatInput.value = '';
+            setTimeout(() => { addChatMessage(getAIReply(text), false); }, 600);
+        }
+
+        if (chatSend && chatInput) {
+            chatSend.addEventListener('click', sendMessage);
+            chatInput.addEventListener('keypress', function(e) { if (e.key === 'Enter') sendMessage(); });
         }
 
         // ===== ГРАФИКИ (Chart.js) =====
@@ -1454,7 +1561,7 @@
         });
 
         // ===== ИЗБРАННОЕ =====
-        const practiceNames = { breath: 'Коробочное дыхание', tactical: 'Тактическое дыхание', sleep: 'Дыхание 4-7-8', energy: 'Энергия', cbt: 'КПТ', grounding: 'Заземление', diary: 'Дневник', gratitude: 'Благодарность', habit: 'Чеклист заботы', 'sleep-diary': 'Дневник снов', 'wheel-balance': 'Колесо баланса', 'audio-diary': 'Аудио-дневник', badges: 'Достижения', safespace: 'Тишина' };
+        const practiceNames = { breath: 'Коробочное дыхание', tactical: 'Тактическое дыхание', sleep: 'Дыхание 4-7-8', energy: 'Энергия', cbt: 'КПТ', grounding: 'Заземление', diary: 'Дневник', gratitude: 'Благодарность', habit: 'Чеклист заботы', 'sleep-diary': 'Дневник снов', 'wheel-balance': 'Колесо баланса', 'audio-diary': 'Аудио-дневник', badges: 'Достижения', safespace: 'Тишина', 'ai-chat': 'ИИ-собеседник', videos: 'Что посмотреть?' };
         function getFavorites() { return store.get('favorites', []); }
         function toggleFav(id) {
             let favs = getFavorites();
