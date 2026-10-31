@@ -202,7 +202,6 @@
         .btn:active { transform: scale(0.94); }
         .btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--card-border); }
         .btn-premium { background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%); color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.2); font-weight: 800; }
-        .btn-danger { background: var(--tile-pink-icon); color: white; }
 
         input, textarea { width: 100%; padding: 16px; border-radius: 20px; border: 1px solid var(--card-border); background: var(--card); color: var(--text); font-size: 16px; margin-bottom: 16px; font-family: inherit; resize: none; outline: none; transition: border-color 0.3s; font-weight: 500; }
         input:focus, textarea:focus { border-color: var(--text); background: var(--bg); }
@@ -244,10 +243,6 @@
         .wheel-highlight { position: absolute; top: 50%; left: 15px; right: 15px; height: 50px; transform: translateY(-50%); border-top: 1px solid var(--card-border); border-bottom: 1px solid var(--card-border); background: rgba(128,128,128,0.05); border-radius: 12px; pointer-events: none; z-index: 0; }
         .wheel-colon { font-size: 24px; font-weight: 800; z-index: 2; color: var(--text); }
 
-        .record-btn { width: 80px; height: 80px; border-radius: 50%; background: var(--tile-pink-icon); color: white; font-size: 32px; display: flex; align-items: center; justify-content: center; margin: 20px auto; cursor: pointer; box-shadow: 0 10px 30px rgba(225, 29, 72, 0.3); border: none; }
-        .record-btn.recording { animation: pulse 1.5s infinite; background: #e11d48; }
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.4); } 70% { box-shadow: 0 0 0 20px rgba(225, 29, 72, 0); } 100% { box-shadow: 0 0 0 0 rgba(225, 29, 72, 0); } }
-
         #onboarding { position: fixed; inset: 0; background: var(--bg); z-index: 9998; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 32px; text-align: center; overflow: hidden; }
 
         .list-item { background: var(--card); padding: 16px 20px; border-radius: 16px; margin-bottom: 10px; box-shadow: var(--shadow); border: 1px solid var(--card-border); text-align: left; }
@@ -268,6 +263,11 @@
         #chat-box::-webkit-scrollbar { display: none; }
         #chat-box { -ms-overflow-style: none; scrollbar-width: none; }
 
+        /* Юридические элементы */
+        .legal-footer { text-align: center; font-size: 11px; color: var(--text-sec); margin-top: 40px; margin-bottom: 20px; line-height: 1.6; }
+        .legal-footer a { color: var(--text); text-decoration: underline; cursor: pointer; }
+        .disclaimer-box { background: rgba(255, 153, 0, 0.1); border: 1px solid rgba(255, 153, 0, 0.3); padding: 12px; border-radius: 12px; font-size: 11px; color: var(--text-sec); line-height: 1.4; margin-top: 20px; text-align: left; }
+
         @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; } }
     </style>
 </head>
@@ -281,15 +281,6 @@
         <div class="splash-sub">Твой уютный уголок заботы.</div>
         <button class="splash-btn" id="start-btn">Начать путь</button>
         <div class="splash-progress"></div>
-    </div>
-
-    <!-- Первичное знакомство -->
-    <div id="onboarding">
-        <div style="font-size: 70px; margin-bottom: 24px; animation: float 3s infinite;">👋</div>
-        <h2 style="font-size: 28px; font-weight: 800; margin-bottom: 8px;">Как тебя зовут?</h2>
-        <p style="color: var(--text-sec); margin-bottom: 32px; font-size: 16px;">Чтобы обращаться по имени.</p>
-        <input type="text" id="onboarding-name" placeholder="Твоё имя" style="max-width: 320px; text-align: center; font-size: 18px; font-weight: 600;">
-        <button class="btn" id="onboarding-save" style="max-width: 320px;">Продолжить</button>
     </div>
 
     <!-- Главный экран -->
@@ -420,24 +411,36 @@
                     </div>
                 </div>
 
-                <div class="section-title">Ещё (Требуется регистрация)</div>
+                <!-- Раздел "Ещё" (все практики доступны без регистрации) -->
+                <div class="section-title">Ещё</div>
                 <div class="bento-grid">
-                    <div class="tile tile-white" data-auth="true" data-practice="pomodoro" onclick="openScreen('pomodoro')"><div class="tile-icon" style="background: var(--tile-peach); color: var(--tile-peach-icon);">🍅</div><div><div class="tile-title">Фокус (25 мин)</div><div class="tile-desc">таймер Помодоро</div></div></div>
-                    <div class="tile tile-white" data-auth="true" data-practice="safety" onclick="openScreen('safety')"><div class="tile-icon" style="background: var(--tile-blue); color: var(--tile-blue-icon);">🛡️</div><div><div class="tile-title">Безопасность</div><div class="tile-desc">кризисный план</div></div></div>
-                    <div class="tile tile-white" data-auth="true" data-practice="diary" onclick="openScreen('diary')"><div class="tile-icon" style="background: var(--tile-peach); color: var(--tile-peach-icon);">📖</div><div><div class="tile-title">Дневник</div><div class="tile-desc">выплесни мысли</div></div></div>
-                    <div class="tile tile-white" data-auth="true" data-practice="habit" onclick="openScreen('habit')"><div class="tile-icon" style="background: var(--tile-pink); color: var(--tile-pink-icon);">✅</div><div><div class="tile-title">Чеклист заботы</div><div class="tile-desc">отметь день</div></div></div>
-                    <div class="tile tile-peach" data-auth="true" data-practice="emotions" onclick="openScreen('emotions')"><div class="tile-icon">🎡</div><div><div class="tile-title">Эмоции</div><div class="tile-desc" style="color: inherit; opacity: 0.8;">назови чувство</div></div></div>
-                    <div class="tile tile-purple" data-auth="true" data-practice="body" onclick="openScreen('body')"><div class="tile-icon">🧘</div><div><div class="tile-title">Тело</div><div class="tile-desc" style="color: inherit; opacity: 0.8;">сканирование</div></div></div>
-                    <div class="tile tile-green" data-auth="true" data-practice="wins" onclick="openScreen('wins')"><div class="tile-icon">🏆</div><div><div class="tile-title">Победы</div><div class="tile-desc" style="color: inherit; opacity: 0.8;">достижения</div></div></div>
-                    <div class="tile tile-pink" data-auth="true" data-practice="sleep-tracker" onclick="openScreen('sleep-tracker')"><div class="tile-icon">😴</div><div><div class="tile-title">Сон</div><div class="tile-desc" style="color: inherit; opacity: 0.8;">как спалось</div></div></div>
-                    <div class="tile tile-blue" data-auth="true" data-practice="sleep-diary" onclick="openScreen('sleep-diary')"><div class="tile-icon">💭</div><div><div class="tile-title">Сны</div><div class="tile-desc" style="color: inherit; opacity: 0.8;">запиши сон</div></div></div>
-                    <div class="tile tile-white" data-auth="true" data-practice="wheel-balance" onclick="openScreen('wheel-balance')"><div class="tile-icon" style="background: var(--tile-peach); color: var(--tile-peach-icon);">⚖️</div><div><div class="tile-title">Баланс</div><div class="tile-desc">сферы жизни</div></div></div>
-                    <div class="tile tile-white" data-auth="true" data-practice="safespace" onclick="openScreen('safespace')"><div class="tile-icon" style="background: var(--tile-purple); color: var(--tile-purple-icon);">🌌</div><div><div class="tile-title">Тишина</div><div class="tile-desc">место без слов</div></div></div>
-                    <div class="tile tile-white" data-auth="true" data-practice="affirmations" onclick="openScreen('affirmations')"><div class="tile-icon" style="background: var(--tile-purple); color: var(--tile-purple-icon);">💬</div><div><div class="tile-title">Аффирмации</div><div class="tile-desc">тёплые слова</div></div></div>
-                    <div class="tile tile-white" data-auth="true" data-practice="audio-diary" onclick="openScreen('audio-diary')"><div class="tile-icon" style="background: var(--tile-blue); color: var(--tile-blue-icon);">🎙</div><div><div class="tile-title">Аудио-дневник</div><div class="tile-desc">говори, а не пиши</div></div></div>
-                    <div class="tile tile-white" data-auth="true" data-practice="badges" onclick="openScreen('badges')"><div class="tile-icon" style="background: var(--tile-green); color: var(--tile-green-icon);">🏅</div><div><div class="tile-title">Достижения</div><div class="tile-desc">твои награды</div></div></div>
-                    <div class="tile tile-white" data-auth="true" data-practice="ai-chat" onclick="openScreen('ai-chat')"><div class="tile-icon" style="background: var(--tile-blue); color: var(--tile-blue-icon);">💬</div><div><div class="tile-title">ИИ-собеседник</div><div class="tile-desc">выговорись</div></div></div>
-                    <div class="tile tile-white" data-auth="true" data-practice="videos" onclick="openScreen('videos')"><div class="tile-icon" style="background: var(--tile-pink); color: var(--tile-pink-icon);">📺</div><div><div class="tile-title">Что посмотреть?</div><div class="tile-desc">видео по психологии</div></div></div>
+                    <div class="tile tile-white" data-practice="pomodoro" onclick="openScreen('pomodoro')"><div class="tile-icon" style="background: var(--tile-peach); color: var(--tile-peach-icon);">🍅</div><div><div class="tile-title">Фокус (25 мин)</div><div class="tile-desc">таймер Помодоро</div></div></div>
+                    <div class="tile tile-white" data-practice="safety" onclick="openScreen('safety')"><div class="tile-icon" style="background: var(--tile-blue); color: var(--tile-blue-icon);">🛡️</div><div><div class="tile-title">Безопасность</div><div class="tile-desc">кризисный план</div></div></div>
+                    <div class="tile tile-white" data-practice="diary" onclick="openScreen('diary')"><div class="tile-icon" style="background: var(--tile-peach); color: var(--tile-peach-icon);">📖</div><div><div class="tile-title">Дневник</div><div class="tile-desc">выплесни мысли</div></div></div>
+                    <div class="tile tile-white" data-practice="habit" onclick="openScreen('habit')"><div class="tile-icon" style="background: var(--tile-pink); color: var(--tile-pink-icon);">✅</div><div><div class="tile-title">Чеклист заботы</div><div class="tile-desc">отметь день</div></div></div>
+                    <div class="tile tile-peach" data-practice="emotions" onclick="openScreen('emotions')"><div class="tile-icon">🎡</div><div><div class="tile-title">Эмоции</div><div class="tile-desc" style="color: inherit; opacity: 0.8;">назови чувство</div></div></div>
+                    <div class="tile tile-purple" data-practice="body" onclick="openScreen('body')"><div class="tile-icon">🧘</div><div><div class="tile-title">Тело</div><div class="tile-desc" style="color: inherit; opacity: 0.8;">сканирование</div></div></div>
+                    <div class="tile tile-green" data-practice="wins" onclick="openScreen('wins')"><div class="tile-icon">🏆</div><div><div class="tile-title">Победы</div><div class="tile-desc" style="color: inherit; opacity: 0.8;">достижения</div></div></div>
+                    <div class="tile tile-pink" data-practice="sleep-tracker" onclick="openScreen('sleep-tracker')"><div class="tile-icon">😴</div><div><div class="tile-title">Сон</div><div class="tile-desc" style="color: inherit; opacity: 0.8;">как спалось</div></div></div>
+                    <div class="tile tile-blue" data-practice="sleep-diary" onclick="openScreen('sleep-diary')"><div class="tile-icon">💭</div><div><div class="tile-title">Сны</div><div class="tile-desc" style="color: inherit; opacity: 0.8;">запиши сон</div></div></div>
+                    <div class="tile tile-white" data-practice="wheel-balance" onclick="openScreen('wheel-balance')"><div class="tile-icon" style="background: var(--tile-peach); color: var(--tile-peach-icon);">⚖️</div><div><div class="tile-title">Баланс</div><div class="tile-desc">сферы жизни</div></div></div>
+                    <div class="tile tile-white" data-practice="safespace" onclick="openScreen('safespace')"><div class="tile-icon" style="background: var(--tile-purple); color: var(--tile-purple-icon);">🌌</div><div><div class="tile-title">Тишина</div><div class="tile-desc">место без слов</div></div></div>
+                    <div class="tile tile-white" data-practice="affirmations" onclick="openScreen('affirmations')"><div class="tile-icon" style="background: var(--tile-purple); color: var(--tile-purple-icon);">💬</div><div><div class="tile-title">Аффирмации</div><div class="tile-desc">тёплые слова</div></div></div>
+                    <div class="tile tile-white" data-practice="badges" onclick="openScreen('badges')"><div class="tile-icon" style="background: var(--tile-green); color: var(--tile-green-icon);">🏅</div><div><div class="tile-title">Достижения</div><div class="tile-desc">твои награды</div></div></div>
+                    <div class="tile tile-white" data-practice="ai-chat" onclick="openScreen('ai-chat')"><div class="tile-icon" style="background: var(--tile-blue); color: var(--tile-blue-icon);">💬</div><div><div class="tile-title">ИИ-собеседник</div><div class="tile-desc">выговорись</div></div></div>
+                    <div class="tile tile-white" data-practice="videos" onclick="openScreen('videos')"><div class="tile-icon" style="background: var(--tile-pink); color: var(--tile-pink-icon);">📺</div><div><div class="tile-title">Что посмотреть?</div><div class="tile-desc">видео по психологии</div></div></div>
+                </div>
+
+                <!-- Дисклеймер -->
+                <div class="disclaimer-box">
+                    <b>⚠️ Важно:</b> Приложение носит исключительно информационный и рекомендательный характер. Оно не является медицинской услугой или заменой профессиональной психотерапии. Имеются противопоказания. При серьёзных психических расстройствах необходима консультация специалиста.
+                </div>
+                
+                <!-- Юридический футер -->
+                <div class="legal-footer">
+                    <div style="margin-bottom: 8px;"><b>16+</b></div>
+                    © 2024 Остров добра<br>
+                    <a onclick="openScreen('privacy')">Политика конфиденциальности</a>
                 </div>
             </section>
         </div>
@@ -457,19 +460,28 @@
     </button>
         <!-- ================= ВНУТРЕННИЕ ЭКРАНЫ ================= -->
 
-    <!-- Экран Регистрации -->
-    <div id="screen-register" class="inner-screen">
+    <!-- Экран Политики Конфиденциальности -->
+    <div id="screen-privacy" class="inner-screen">
         <button class="back-btn" onclick="closeScreens()">← Назад</button>
-        <div class="inner-content" style="display: flex; flex-direction: column; height: 100%; justify-content: center;">
-            <div class="screen-hero">
-                <span class="screen-hero-icon">🔒</span>
-                <h2>Регистрация</h2>
-                <p>Оставь контакты, чтобы открыть доступ ко всем практикам раздела «Ещё».</p>
-            </div>
-            <input type="text" id="reg-name" placeholder="Твоё имя">
-            <input type="tel" id="reg-phone" placeholder="Номер телефона (например: +7 999 123-45-67)">
-            <button class="btn" id="reg-submit">Зарегистрироваться</button>
-            <p style="font-size: 12px; color: var(--text-sec); margin-top: 16px; line-height: 1.4;">Нажимая кнопку, ты соглашаешься на обработку данных. Мы не передаём их третьим лицам.</p>
+        <div class="inner-content" style="text-align: left;">
+            <div class="screen-hero" style="text-align: center;"><h2>Политика конфиденциальности</h2></div>
+            
+            <p style="font-size: 13px; line-height: 1.5; color: var(--text); margin-bottom: 12px;">
+                <b>1. Общие положения</b><br>
+                Настоящая Политика определяет порядок обработки и защиты персональных данных пользователей приложения «Остров добра» (далее — Приложение).
+            </p>
+            <p style="font-size: 13px; line-height: 1.5; color: var(--text); margin-bottom: 12px;">
+                <b>2. Какие данные мы собираем</b><br>
+                На данный момент Приложение работает в анонимном режиме. Мы не собираем ваши имена, номера телефонов или голосовые записи.
+            </p>
+            <p style="font-size: 13px; line-height: 1.5; color: var(--text); margin-bottom: 12px;">
+                <b>3. Хранение данных</b><br>
+                Все ваши записи (дневники, настройки, прогресс) сохраняются локально на вашем устройстве (localStorage браузера). Сервер не имеет к ним доступа.
+            </p>
+            <p style="font-size: 13px; line-height: 1.5; color: var(--text); margin-bottom: 12px;">
+                <b>4. Согласие</b><br>
+                Используя Приложение, вы соглашаетесь с тем, что ваши данные хранятся только на вашем устройстве.
+            </p>
         </div>
     </div>
 
@@ -579,18 +591,6 @@
             </div>
             <button class="btn" id="reminder-save">Добавить напоминание</button>
             <div id="reminders-list" style="text-align: left; margin-top: 24px;"></div>
-        </div>
-    </div>
-
-    <div id="screen-audio-diary" class="inner-screen">
-        <button class="back-btn" onclick="closeScreens()">← Назад</button>
-        <div class="inner-content">
-            <div class="screen-hero"><span class="screen-hero-icon">🎙</span><h2>Аудио-дневник</h2><p>Говори, а мы запишем твои мысли.</p></div>
-            <button class="record-btn" id="record-btn" aria-label="Начать запись">🎙</button>
-            <div id="record-status" style="font-weight: 700; color: var(--tile-pink-icon); margin-bottom: 24px;">Нажми, чтобы начать запись</div>
-            <textarea id="audio-transcript" rows="4" placeholder="Здесь появится текст твоей записи..."></textarea>
-            <button class="btn" id="audio-save">Сохранить в дневник</button>
-            <div id="audio-list" style="text-align: left; margin-top: 24px;"></div>
         </div>
     </div>
 
@@ -843,11 +843,13 @@
         <button class="back-btn" onclick="closeScreens()">← Назад</button>
         <div class="inner-content">
             <div class="screen-hero"><span class="screen-hero-icon">👤</span><h2>Профиль</h2></div>
+            
             <div style="background: var(--card); padding: 24px; border-radius: 24px; margin-top: 8px; box-shadow: var(--shadow); border: 1px solid var(--card-border);">
-                <p style="font-size: 18px; font-weight: 800; margin: 0;">Привет, <span id="profile-name">друг</span> 👋</p>
+                <p style="font-size: 18px; font-weight: 800; margin: 0;">Привет! 👋</p>
                 <p style="font-size: 14px; color: var(--text-sec); margin-top: 6px; font-weight: 500;">Статус: <span id="profile-status" style="font-weight: 800; color: var(--text-sec);">Бесплатный</span></p>
-                <p style="font-size: 14px; color: var(--text-sec); margin-top: 4px; font-weight: 500;" id="profile-phone"></p>
             </div>
+
+            <!-- Блок Экспорта/Импорта -->
             <div style="background: var(--card); padding: 20px; border-radius: 24px; margin-top: 16px; text-align: left; box-shadow: var(--shadow); border: 1px solid var(--card-border);">
                 <p style="font-size: 15px; color: var(--text-sec); margin: 0 0 12px; font-weight: 600;">Мои данные</p>
                 <p style="font-size: 12px; color: var(--text-sec); margin-bottom: 12px; line-height: 1.4;">Сохрани свои записи и настройки в файл, чтобы не потерять их при смене устройства.</p>
@@ -855,6 +857,7 @@
                 <input type="file" id="import-file" accept=".json" style="display: none;">
                 <button class="btn btn-secondary" id="import-data-btn" style="margin-top: 8px;">📤 Загрузить из файла</button>
             </div>
+
             <div style="background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%); padding: 24px; border-radius: 24px; margin-top: 16px; text-align: left; color: white; box-shadow: 0 10px 30px rgba(255,140,0,0.3);">
                 <p style="font-size: 18px; font-weight: 800; margin: 0 0 6px;">Остров Premium</p>
                 <p style="font-size: 14px; margin: 0 0 16px; opacity: 0.9; font-weight: 500; line-height: 1.4;">Безлимитные практики, все медитации, умный помощник и глубокая статистика.</p>
@@ -951,37 +954,8 @@
             const saved = store.get('draft_' + storeKey, ''); if (saved) el.value = saved;
             el.addEventListener('input', function() { store.set('draft_' + storeKey, this.value); });
         }
-        ['diary-input','grat-input','cbt-thought','cbt-emotion','cbt-for','cbt-against','cbt-friend','dream-input','dream-tag','letter-input','reminder-text','audio-transcript','safety-phone','safety-phrases'].forEach(id => {
+        ['diary-input','grat-input','cbt-thought','cbt-emotion','cbt-for','cbt-against','cbt-friend','dream-input','dream-tag','letter-input','reminder-text','safety-phone','safety-phrases'].forEach(id => {
             setupAutosave(id, id.replace(/-/g, '_'));
-        });
-
-        // ===== РЕГИСТРАЦИЯ =====
-        function updateAuthUI() {
-            const phone = store.get('user_phone', '');
-            const phoneEl = document.getElementById('profile-phone');
-            if (phoneEl) phoneEl.innerText = phone ? `Тел: ${phone}` : 'Гость (только базовые практики)';
-            const isRegistered = !!phone;
-            document.querySelectorAll('[data-auth="true"]').forEach(tile => {
-                if (!isRegistered) {
-                    tile.style.opacity = '0.6';
-                    let lock = tile.querySelector('.tile-lock-auth');
-                    if (!lock) {
-                        lock = document.createElement('span'); lock.className = 'tile-lock-auth'; lock.innerText = '🔒';
-                        lock.style.cssText = 'position: absolute; top: 12px; right: 12px; font-size: 18px;';
-                        tile.appendChild(lock);
-                    }
-                } else {
-                    tile.style.opacity = '1';
-                    const lock = tile.querySelector('.tile-lock-auth'); if (lock) lock.remove();
-                }
-            });
-        }
-        document.getElementById('reg-submit')?.addEventListener('click', function() {
-            const name = document.getElementById('reg-name').value.trim();
-            const phone = document.getElementById('reg-phone').value.trim();
-            if (!name || !phone) { alert('Пожалуйста, заполните имя и телефон'); return; }
-            store.set('user_name', name); store.set('user_phone', phone); store.set('name', name);
-            applyName(); updateAuthUI(); closeScreens(); showToast('Регистрация успешна! Практики открыты.');
         });
 
         // ===== ЭКСПОРТ / ИМПОРТ =====
@@ -1114,46 +1088,33 @@
         document.getElementById('theme-toggle-2').addEventListener('click', toggleTheme);
         updateThemeBtns();
 
-        // ===== ИМЯ =====
-        let userName = store.get('name', '');
-        function applyName() {
-            const g = document.getElementById('greeting'); const pn = document.getElementById('profile-name');
+        // ===== ПРИВЕТСТВИЕ (БЕЗ ИМЕНИ) =====
+        function applyGreeting() {
+            const g = document.getElementById('greeting');
             const hour = new Date().getHours();
-            let base = hour < 12 ? 'Доброе утро' : hour < 18 ? 'Добрый день' : 'Добрый вечер';
-            if (userName) base += ', ' + userName;
-            if (g) g.innerText = base + '!'; if (pn) pn.textContent = userName || 'друг';
+            let base = hour < 12 ? 'Доброе утро!' : hour < 18 ? 'Добрый день!' : 'Добрый вечер!';
+            if (g) g.innerText = base;
         }
-        applyName();
-        const onboarding = document.getElementById('onboarding');
+        applyGreeting();
         document.getElementById('start-btn').addEventListener('click', function() {
             document.getElementById('splash').classList.add('hidden');
-            if (!userName) setTimeout(() => { onboarding.style.display = 'flex'; }, 600);
         });
-        document.getElementById('onboarding-save').addEventListener('click', function() {
-            const v = document.getElementById('onboarding-name').value.trim(); if (!v) return;
-            userName = v; store.set('name', v); applyName(); onboarding.style.display = 'none';
-        });
-        document.getElementById('onboarding-name').addEventListener('keydown', function(e) { if (e.key === 'Enter') document.getElementById('onboarding-save').click(); });
 
         // ===== НАВИГАЦИЯ =====
         window.openScreen = function(name) {
-            const protectedScreens = ['diary','habit','emotions','body','wins','sleep-tracker','sleep-diary','wheel-balance','safespace','affirmations','audio-diary','badges','ai-chat','videos','pomodoro','safety'];
-            if (protectedScreens.includes(name) && !store.get('user_phone', null)) {
-                showToast('Пожалуйста, зарегистрируйтесь для доступа'); name = 'register';
-            }
             document.querySelectorAll('.inner-screen').forEach(s => s.classList.remove('active'));
             const target = document.getElementById(`screen-${name}`);
             if (target) { target.classList.add('active'); target.scrollTop = 0; }
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             if (name === 'favorites') { document.querySelector('[data-nav="fav"]').classList.add('active'); renderFavorites(); }
-            else if (name === 'profile') { document.querySelector('[data-nav="profile"]').classList.add('active'); renderProfileCalendar(); renderLetter(); updatePremiumUI(); updateAuthUI(); }
-            else if (name !== 'register') { document.querySelector('[data-nav="home"]').classList.add('active'); }
+            else if (name === 'profile') { document.querySelector('[data-nav="profile"]').classList.add('active'); renderProfileCalendar(); renderLetter(); updatePremiumUI(); }
+            else if (name !== 'privacy' && name !== 'register') { document.querySelector('[data-nav="home"]').classList.add('active'); }
+            
             if (name === 'wins') renderWins();
             if (name === 'sleep-tracker') renderSleep();
             if (name === 'reminders') renderReminders();
             if (name === 'sleep-diary') renderDreams();
             if (name === 'wheel-balance') initWheelBalance();
-            if (name === 'audio-diary') renderAudioDiary();
             if (name === 'badges') renderBadges();
             if (name === 'safespace') setTimeout(initZenCanvas, 100);
             if (name === 'ai-chat') { const box = document.getElementById('chat-box'); if (box) box.scrollTop = box.scrollHeight; }
@@ -1452,10 +1413,8 @@
             const diaryToday = store.get('diary', []).filter(d => d.date.slice(0, 10) === dateStr);
             const gratToday = store.get('gratitude', []).filter(d => d.date.slice(0, 10) === dateStr);
             const dreamsToday = store.get('dreams', []).filter(d => d.date.slice(0, 10) === dateStr);
-            const audioToday = store.get('audio_diary', []).filter(d => d.date.slice(0, 10) === dateStr);
             let notesHtml = '';
             if (diaryToday.length) notesHtml += `<div style="margin-top: 12px; background: rgba(128,128,128,0.05); padding: 12px; border-radius: 12px;"><b>📖 Дневник:</b><br>${diaryToday.map(d => d.text).join('<br><br>')}</div>`;
-            if (audioToday.length) notesHtml += `<div style="margin-top: 12px; background: rgba(128,128,128,0.05); padding: 12px; border-radius: 12px;"><b>🎙 Аудио:</b><br>${audioToday.map(d => d.text).join('<br><br>')}</div>`;
             if (gratToday.length) notesHtml += `<div style="margin-top: 12px; background: rgba(128,128,128,0.05); padding: 12px; border-radius: 12px;"><b>🙏 Благодарность:</b><br>${gratToday.map(d => d.text).join('<br><br>')}</div>`;
             if (dreamsToday.length) notesHtml += `<div style="margin-top: 12px; background: rgba(128,128,128,0.05); padding: 12px; border-radius: 12px;"><b>💭 Сны:</b><br>${dreamsToday.map(d => d.text).join('<br><br>')}</div>`;
             document.getElementById('day-details-title').innerText = `День ${dateStr}`;
@@ -1597,7 +1556,7 @@
         });
 
         // ===== ИЗБРАННОЕ =====
-        const practiceNames = { breath: 'Коробочное дыхание', tactical: 'Тактическое дыхание', sleep: 'Дыхание 4-7-8', energy: 'Энергия', cbt: 'КПТ', grounding: 'Заземление', diary: 'Дневник', gratitude: 'Благодарность', habit: 'Чеклист заботы', 'sleep-diary': 'Дневник снов', 'wheel-balance': 'Колесо баланса', 'audio-diary': 'Аудио-дневник', badges: 'Достижения', safespace: 'Тишина', 'ai-chat': 'ИИ-собеседник', videos: 'Что посмотреть?', pomodoro: 'Таймер фокуса', safety: 'Коробочка безопасности' };
+        const practiceNames = { breath: 'Коробочное дыхание', tactical: 'Тактическое дыхание', sleep: 'Дыхание 4-7-8', energy: 'Энергия', cbt: 'КПТ', grounding: 'Заземление', diary: 'Дневник', gratitude: 'Благодарность', habit: 'Чеклист заботы', 'sleep-diary': 'Дневник снов', 'wheel-balance': 'Колесо баланса', badges: 'Достижения', safespace: 'Тишина', 'ai-chat': 'ИИ-собеседник', videos: 'Что посмотреть?', pomodoro: 'Таймер фокуса', safety: 'Коробочка безопасности' };
         function getFavorites() { return store.get('favorites', []); }
         function toggleFav(id) {
             let favs = getFavorites();
@@ -1766,51 +1725,6 @@
             }
         }, 60000);
 
-        // ===== АУДИО-ДНЕВНИК =====
-        let recognition = null;
-        let isRecording = false;
-        const recordBtn = document.getElementById('record-btn');
-        const recordStatus = document.getElementById('record-status');
-        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            recognition = new SpeechRecognition();
-            recognition.lang = 'ru-RU'; recognition.continuous = true; recognition.interimResults = true;
-            recognition.onstart = function() { isRecording = true; recordBtn.classList.add('recording'); recordStatus.innerText = "Слушаю... Говори"; };
-            recognition.onresult = function(event) {
-                let finalTranscript = '';
-                for (let i = event.resultIndex; i < event.results.length; ++i) { if (event.results[i].isFinal) finalTranscript += event.results[i][0].transcript; }
-                if (finalTranscript) {
-                    const ta = document.getElementById('audio-transcript');
-                    ta.value += (ta.value ? ' ' : '') + finalTranscript; store.set('draft_audio_transcript', ta.value);
-                }
-            };
-            recognition.onerror = function(event) { recordStatus.innerText = "Ошибка: " + event.error; stopRecording(); };
-            recognition.onend = function() { stopRecording(); };
-        } else {
-            recordStatus.innerText = "Твой браузер не поддерживает запись голоса.";
-            recordBtn.disabled = true; recordBtn.style.opacity = '0.5';
-        }
-        function stopRecording() {
-            isRecording = false; recordBtn.classList.remove('recording'); recordStatus.innerText = "Запись остановлена. Проверь текст.";
-            if (recognition) recognition.stop();
-        }
-        recordBtn.addEventListener('click', function() {
-            if (!recognition) return;
-            if (isRecording) { recognition.stop(); } else { document.getElementById('audio-transcript').value = ''; recognition.start(); }
-        });
-        function renderAudioDiary() {
-            const el = document.getElementById('audio-list'); if (!el) return;
-            const list = store.get('audio_diary', []);
-            if (!list.length) { el.innerHTML = '<p class="empty-state">Пока нет записей.</p>'; return; }
-            el.innerHTML = list.slice().reverse().map(d => `<div class="list-item"><div class="list-item-sub">${new Date(d.date).toLocaleString()}</div><div style="font-size: 15px; margin-top: 4px;">${d.text}</div></div>`).join('');
-        }
-        document.getElementById('audio-save').addEventListener('click', function() {
-            const text = document.getElementById('audio-transcript').value.trim(); if (!text) return;
-            const list = store.get('audio_diary', []); list.push({ text, date: new Date().toISOString() }); store.set('audio_diary', list);
-            document.getElementById('audio-transcript').value = ''; store.set('draft_audio_transcript', ''); renderAudioDiary(); markDone('audio-diary');
-            confirmAction(this);
-        });
-
         // ===== МИКШЕР ЗВУКОВ =====
         const MusicMixer = (function() {
             let ctx = null, master = null;
@@ -1857,7 +1771,9 @@
         document.addEventListener('click', function(e) { if (!menu.contains(e.target) && e.target !== musicBtn) menu.style.display = 'none'; });
 
         // ===== ИНИЦИАЛИЗАЦИЯ =====
-        updatePremiumUI(); updateTreeWidget(); checkBadges(); updateAuthUI();
+        updatePremiumUI();
+        updateTreeWidget();
+        checkBadges();
     });
     </script>
 </body>
