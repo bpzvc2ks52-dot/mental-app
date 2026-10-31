@@ -330,7 +330,7 @@
                 </div>
             </section>
 
-            <!-- Блок "Одно действие" -->
+            <!-- Блок "Одно действие" (появляется при адаптивном режиме) -->
             <section class="single-action" id="single-action" hidden aria-live="polite"></section>
 
             <!-- Полная главная (плитки) -->
@@ -406,7 +406,6 @@
 
                 <div class="section-title">На каждый день</div>
                 <div class="bento-grid" style="grid-template-columns: 1fr;">
-                    <!-- Эти практики доступны без регистрации -->
                     <div class="tile tile-white tile-wide" data-practice="cbt" onclick="openScreen('cbt')">
                         <div class="tile-icon" style="background: var(--tile-blue); color: var(--tile-blue-icon);">🧠</div>
                         <div style="flex: 1;"><div class="tile-title">КПТ (Мысли)</div><div class="tile-desc">разбери мысль по фактам</div></div>
@@ -423,10 +422,8 @@
 
                 <div class="section-title">Ещё (Требуется регистрация)</div>
                 <div class="bento-grid">
-                    <!-- Добавлены новые плитки: Фокус (Pomodoro) и Безопасность (Safety Box) -->
                     <div class="tile tile-white" data-auth="true" data-practice="pomodoro" onclick="openScreen('pomodoro')"><div class="tile-icon" style="background: var(--tile-peach); color: var(--tile-peach-icon);">🍅</div><div><div class="tile-title">Фокус (25 мин)</div><div class="tile-desc">таймер Помодоро</div></div></div>
                     <div class="tile tile-white" data-auth="true" data-practice="safety" onclick="openScreen('safety')"><div class="tile-icon" style="background: var(--tile-blue); color: var(--tile-blue-icon);">🛡️</div><div><div class="tile-title">Безопасность</div><div class="tile-desc">кризисный план</div></div></div>
-                    
                     <div class="tile tile-white" data-auth="true" data-practice="diary" onclick="openScreen('diary')"><div class="tile-icon" style="background: var(--tile-peach); color: var(--tile-peach-icon);">📖</div><div><div class="tile-title">Дневник</div><div class="tile-desc">выплесни мысли</div></div></div>
                     <div class="tile tile-white" data-auth="true" data-practice="habit" onclick="openScreen('habit')"><div class="tile-icon" style="background: var(--tile-pink); color: var(--tile-pink-icon);">✅</div><div><div class="tile-title">Чеклист заботы</div><div class="tile-desc">отметь день</div></div></div>
                     <div class="tile tile-peach" data-auth="true" data-practice="emotions" onclick="openScreen('emotions')"><div class="tile-icon">🎡</div><div><div class="tile-title">Эмоции</div><div class="tile-desc" style="color: inherit; opacity: 0.8;">назови чувство</div></div></div>
@@ -488,7 +485,7 @@
         </div>
     </div>
 
-    <!-- Экран Коробочки безопасности (Кризисный план) -->
+    <!-- Экран Коробочки безопасности -->
     <div id="screen-safety" class="inner-screen">
         <button class="back-btn" onclick="closeScreens()">← Назад</button>
         <div class="inner-content" style="text-align: left;">
@@ -799,13 +796,11 @@
         <button class="back-btn" onclick="closeScreens()">← Назад</button>
         <div class="inner-content" style="display: flex; flex-direction: column; height: calc(100vh - 80px); padding-bottom: 20px;">
             <div class="screen-hero"><span class="screen-hero-icon">🤖</span><h2>ИИ-собеседник</h2><p>Я здесь, чтобы выслушать. Без осуждения.</p></div>
-            
             <div id="chat-box" style="flex: 1; overflow-y: auto; text-align: left; display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;">
                 <div class="list-item" style="background: var(--tile-blue); border: none; border-radius: 16px 16px 16px 4px; max-width: 85%; align-self: flex-start;">
                     Привет. Я твой виртуальный помощник. Как ты себя чувствуешь? Если хочешь, можешь просто написать, что тебя тревожит.
                 </div>
             </div>
-            
             <div style="display: flex; gap: 8px;">
                 <input type="text" id="chat-input" placeholder="Напиши сообщение..." style="margin-bottom: 0;">
                 <button class="btn" id="chat-send" style="width: auto; margin-top: 0; padding: 0 20px;">➤</button>
@@ -817,30 +812,18 @@
         <button class="back-btn" onclick="closeScreens()">← Назад</button>
         <div class="inner-content">
             <div class="screen-hero"><span class="screen-hero-icon">📺</span><h2>Что посмотреть?</h2><p>Полезные видео по психологии.</p></div>
-            
             <div style="text-align: left; display: flex; flex-direction: column; gap: 16px;">
                 <a href="https://www.youtube.com/results?search_query=как+справиться+с+тревогой" target="_blank" class="list-item" style="text-decoration: none; color: inherit; padding: 0; overflow: hidden; display: block;">
                     <div style="height: 140px; background: #e0f2fe; display: flex; align-items: center; justify-content: center; font-size: 40px;">▶️</div>
-                    <div style="padding: 16px;">
-                        <div class="list-item-title">Как справиться с тревогой?</div>
-                        <div class="list-item-sub">Практические советы от психологов</div>
-                    </div>
+                    <div style="padding: 16px;"><div class="list-item-title">Как справиться с тревогой?</div><div class="list-item-sub">Практические советы от психологов</div></div>
                 </a>
-                
                 <a href="https://www.youtube.com/results?search_query=как+поднять+самооценку" target="_blank" class="list-item" style="text-decoration: none; color: inherit; padding: 0; overflow: hidden; display: block;">
                     <div style="height: 140px; background: #f3e8ff; display: flex; align-items: center; justify-content: center; font-size: 40px;">▶️</div>
-                    <div style="padding: 16px;">
-                        <div class="list-item-title">Самооценка и любовь к себе</div>
-                        <div class="list-item-sub">Как перестать себя критиковать</div>
-                    </div>
+                    <div style="padding: 16px;"><div class="list-item-title">Самооценка и любовь к себе</div><div class="list-item-sub">Как перестать себя критиковать</div></div>
                 </a>
-
                 <a href="https://www.youtube.com/results?search_query=эмоциональное+выгорание" target="_blank" class="list-item" style="text-decoration: none; color: inherit; padding: 0; overflow: hidden; display: block;">
                     <div style="height: 140px; background: #dcfce7; display: flex; align-items: center; justify-content: center; font-size: 40px;">▶️</div>
-                    <div style="padding: 16px;">
-                        <div class="list-item-title">Эмоциональное выгорание</div>
-                        <div class="list-item-sub">Что делать, когда нет сил</div>
-                    </div>
+                    <div style="padding: 16px;"><div class="list-item-title">Эмоциональное выгорание</div><div class="list-item-sub">Что делать, когда нет сил</div></div>
                 </a>
             </div>
             <p style="font-size: 12px; color: var(--text-sec); margin-top: 24px;">* Ссылки ведут на поиск YouTube по этой теме.</p>
@@ -856,19 +839,15 @@
         <canvas id="zen-canvas" style="width: 100%; height: 100%; display: block;"></canvas>
     </div>
 
-    <!-- Обновленный Профиль (с Экспортом и Импортом) -->
     <div id="screen-profile" class="inner-screen">
         <button class="back-btn" onclick="closeScreens()">← Назад</button>
         <div class="inner-content">
             <div class="screen-hero"><span class="screen-hero-icon">👤</span><h2>Профиль</h2></div>
-            
             <div style="background: var(--card); padding: 24px; border-radius: 24px; margin-top: 8px; box-shadow: var(--shadow); border: 1px solid var(--card-border);">
                 <p style="font-size: 18px; font-weight: 800; margin: 0;">Привет, <span id="profile-name">друг</span> 👋</p>
                 <p style="font-size: 14px; color: var(--text-sec); margin-top: 6px; font-weight: 500;">Статус: <span id="profile-status" style="font-weight: 800; color: var(--text-sec);">Бесплатный</span></p>
                 <p style="font-size: 14px; color: var(--text-sec); margin-top: 4px; font-weight: 500;" id="profile-phone"></p>
             </div>
-
-            <!-- Блок Экспорта/Импорта -->
             <div style="background: var(--card); padding: 20px; border-radius: 24px; margin-top: 16px; text-align: left; box-shadow: var(--shadow); border: 1px solid var(--card-border);">
                 <p style="font-size: 15px; color: var(--text-sec); margin: 0 0 12px; font-weight: 600;">Мои данные</p>
                 <p style="font-size: 12px; color: var(--text-sec); margin-bottom: 12px; line-height: 1.4;">Сохрани свои записи и настройки в файл, чтобы не потерять их при смене устройства.</p>
@@ -876,7 +855,6 @@
                 <input type="file" id="import-file" accept=".json" style="display: none;">
                 <button class="btn btn-secondary" id="import-data-btn" style="margin-top: 8px;">📤 Загрузить из файла</button>
             </div>
-
             <div style="background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%); padding: 24px; border-radius: 24px; margin-top: 16px; text-align: left; color: white; box-shadow: 0 10px 30px rgba(255,140,0,0.3);">
                 <p style="font-size: 18px; font-weight: 800; margin: 0 0 6px;">Остров Premium</p>
                 <p style="font-size: 14px; margin: 0 0 16px; opacity: 0.9; font-weight: 500; line-height: 1.4;">Безлимитные практики, все медитации, умный помощник и глубокая статистика.</p>
@@ -899,7 +877,7 @@
         </div>
     </div>
 
-    <!-- Модалки и уведомления -->
+    <!-- ================= МОДАЛКИ И УВЕДОМЛЕНИЯ ================= -->
     <div id="mood-modal" class="modal-overlay">
         <div class="modal-card">
             <button class="modal-close" data-close="mood-modal" aria-label="Закрыть">×</button>
@@ -969,10 +947,8 @@
 
         // ===== АВТОСОХРАНЕНИЕ =====
         function setupAutosave(inputId, storeKey) {
-            const el = document.getElementById(inputId);
-            if (!el) return;
-            const saved = store.get('draft_' + storeKey, '');
-            if (saved) el.value = saved;
+            const el = document.getElementById(inputId); if (!el) return;
+            const saved = store.get('draft_' + storeKey, ''); if (saved) el.value = saved;
             el.addEventListener('input', function() { store.set('draft_' + storeKey, this.value); });
         }
         ['diary-input','grat-input','cbt-thought','cbt-emotion','cbt-for','cbt-against','cbt-friend','dream-input','dream-tag','letter-input','reminder-text','audio-transcript','safety-phone','safety-phrases'].forEach(id => {
@@ -984,7 +960,6 @@
             const phone = store.get('user_phone', '');
             const phoneEl = document.getElementById('profile-phone');
             if (phoneEl) phoneEl.innerText = phone ? `Тел: ${phone}` : 'Гость (только базовые практики)';
-            
             const isRegistered = !!phone;
             document.querySelectorAll('[data-auth="true"]').forEach(tile => {
                 if (!isRegistered) {
@@ -997,23 +972,16 @@
                     }
                 } else {
                     tile.style.opacity = '1';
-                    const lock = tile.querySelector('.tile-lock-auth');
-                    if (lock) lock.remove();
+                    const lock = tile.querySelector('.tile-lock-auth'); if (lock) lock.remove();
                 }
             });
         }
-
         document.getElementById('reg-submit')?.addEventListener('click', function() {
             const name = document.getElementById('reg-name').value.trim();
             const phone = document.getElementById('reg-phone').value.trim();
             if (!name || !phone) { alert('Пожалуйста, заполните имя и телефон'); return; }
-            store.set('user_name', name);
-            store.set('user_phone', phone);
-            store.set('name', name);
-            applyName();
-            updateAuthUI();
-            closeScreens();
-            showToast('Регистрация успешна! Практики открыты.');
+            store.set('user_name', name); store.set('user_phone', phone); store.set('name', name);
+            applyName(); updateAuthUI(); closeScreens(); showToast('Регистрация успешна! Практики открыты.');
         });
 
         // ===== ЭКСПОРТ / ИМПОРТ =====
@@ -1021,128 +989,73 @@
             const data = {};
             for (let i = 0; i < localStorage.length; i++) {
                 const key = localStorage.key(i);
-                if (key.startsWith('ostrov_')) {
-                    data[key] = localStorage.getItem(key);
-                }
+                if (key.startsWith('ostrov_')) data[key] = localStorage.getItem(key);
             }
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `ostrov_backup_${todayKey()}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
-            showToast('Данные скачаны!');
+            const a = document.createElement('a'); a.href = url; a.download = `ostrov_backup_${todayKey()}.json`; a.click();
+            URL.revokeObjectURL(url); showToast('Данные скачаны!');
         });
-
-        document.getElementById('import-data-btn')?.addEventListener('click', function() {
-            document.getElementById('import-file').click();
-        });
-
+        document.getElementById('import-data-btn')?.addEventListener('click', function() { document.getElementById('import-file').click(); });
         document.getElementById('import-file')?.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
+            const file = e.target.files[0]; if (!file) return;
             const reader = new FileReader();
             reader.onload = function(event) {
                 try {
-                    const data = JSON.parse(event.target.result);
-                    let count = 0;
-                    for (const key in data) {
-                        if (key.startsWith('ostrov_')) {
-                            localStorage.setItem(key, data[key]);
-                            count++;
-                        }
-                    }
-                    alert(`Успешно загружено ${count} записей. Страница перезагрузится.`);
-                    location.reload();
-                } catch (err) {
-                    alert('Ошибка чтения файла. Убедитесь, что это JSON-файл.');
-                }
+                    const data = JSON.parse(event.target.result); let count = 0;
+                    for (const key in data) { if (key.startsWith('ostrov_')) { localStorage.setItem(key, data[key]); count++; } }
+                    alert(`Успешно загружено ${count} записей. Страница перезагрузится.`); location.reload();
+                } catch (err) { alert('Ошибка чтения файла.'); }
             };
             reader.readAsText(file);
         });
 
         // ===== КОРОБОЧКА БЕЗОПАСНОСТИ =====
         function initSafety() {
-            const phone = store.get('safety_phone', '');
-            const phrases = store.get('safety_phrases', '');
-            document.getElementById('safety-phone').value = phone;
-            document.getElementById('safety-phrases').value = phrases;
+            document.getElementById('safety-phone').value = store.get('safety_phone', '');
+            document.getElementById('safety-phrases').value = store.get('safety_phrases', '');
         }
         initSafety();
-
         document.getElementById('safety-save')?.addEventListener('click', function() {
-            const phone = document.getElementById('safety-phone').value.trim();
-            const phrases = document.getElementById('safety-phrases').value.trim();
-            store.set('safety_phone', phone);
-            store.set('safety_phrases', phrases);
-            confirmAction(this);
-            showToast('Кризисный план сохранен');
+            store.set('safety_phone', document.getElementById('safety-phone').value.trim());
+            store.set('safety_phrases', document.getElementById('safety-phrases').value.trim());
+            confirmAction(this); showToast('Кризисный план сохранен');
         });
-
         document.getElementById('safety-call-btn')?.addEventListener('click', function() {
             const phone = document.getElementById('safety-phone').value.trim();
-            if (phone) window.location.href = 'tel:' + phone;
-            else alert('Сначала сохраните номер телефона');
+            if (phone) window.location.href = 'tel:' + phone; else alert('Сначала сохраните номер телефона');
         });
 
         // ===== ТАЙМЕР ПОМОДОРО =====
-        let pomodoroTime = 1500; // 25 минут
-        let pomodoroInterval = null;
-        let pomodoroState = 'work'; // 'work' или 'break'
-
+        let pomodoroTime = 1500, pomodoroInterval = null, pomodoroState = 'work';
         function updatePomodoroUI() {
-            const el = document.getElementById('pomodoro-time');
-            const status = document.getElementById('pomodoro-status');
-            const btn = document.getElementById('pomodoro-btn');
+            const el = document.getElementById('pomodoro-time'); const status = document.getElementById('pomodoro-status'); const btn = document.getElementById('pomodoro-btn');
             if (!el) return;
             el.innerText = `${pad(Math.floor(pomodoroTime / 60))}:${pad(pomodoroTime % 60)}`;
-            
             if (pomodoroInterval) {
                 btn.innerText = 'Пауза';
                 status.innerText = pomodoroState === 'work' ? 'Время работать 🧠' : 'Время отдохнуть ☕';
                 status.style.color = pomodoroState === 'work' ? 'var(--tile-blue-icon)' : 'var(--tile-green-icon)';
-            } else {
-                btn.innerText = 'Продолжить';
-            }
+            } else { btn.innerText = 'Продолжить'; }
         }
-
         document.getElementById('pomodoro-btn')?.addEventListener('click', function() {
-            if (pomodoroInterval) {
-                clearInterval(pomodoroInterval);
-                pomodoroInterval = null;
-                this.innerText = 'Продолжить';
-            } else {
+            if (pomodoroInterval) { clearInterval(pomodoroInterval); pomodoroInterval = null; this.innerText = 'Продолжить'; }
+            else {
                 this.innerText = 'Пауза';
                 pomodoroInterval = setInterval(() => {
-                    pomodoroTime--;
-                    updatePomodoroUI();
-                    
+                    pomodoroTime--; updatePomodoroUI();
                     if (pomodoroTime <= 0) {
-                        clearInterval(pomodoroInterval);
-                        pomodoroInterval = null;
-                        playDing();
-                        if (pomodoroState === 'work') {
-                            pomodoroState = 'break';
-                            pomodoroTime = 300; // 5 минут
-                            alert('Отличная работа! Время отдохнуть 5 минут.');
-                        } else {
-                            pomodoroState = 'work';
-                            pomodoroTime = 1500; // 25 минут
-                            alert('Отдых закончен! Возвращаемся к работе.');
-                        }
+                        clearInterval(pomodoroInterval); pomodoroInterval = null; playDing();
+                        if (pomodoroState === 'work') { pomodoroState = 'break'; pomodoroTime = 300; alert('Отличная работа! Время отдохнуть 5 минут.'); }
+                        else { pomodoroState = 'work'; pomodoroTime = 1500; alert('Отдых закончен! Возвращаемся к работе.'); }
                         updatePomodoroUI();
                     }
                 }, 1000);
             }
             updatePomodoroUI();
         });
-
         document.getElementById('pomodoro-reset')?.addEventListener('click', function() {
-            clearInterval(pomodoroInterval);
-            pomodoroInterval = null;
-            pomodoroState = 'work';
-            pomodoroTime = 1500;
+            clearInterval(pomodoroInterval); pomodoroInterval = null; pomodoroState = 'work'; pomodoroTime = 1500;
             updatePomodoroUI();
             document.getElementById('pomodoro-status').innerText = 'Готов начать?';
             document.getElementById('pomodoro-status').style.color = 'var(--text-sec)';
@@ -1159,7 +1072,7 @@
         function getRemainingToday() { return isPremium ? Infinity : Math.max(0, 3 - getDailyUsage().count); }
         function checkLimit() {
             if (isPremium) return true;
-            if (getDailyUsage().count >= 3) { alert('Бесплатный лимит практик на сегодня исчерпан (3 из 3).\n\nСкоро тут можно будет разблокировать премиум!'); return false; }
+            if (getDailyUsage().count >= 3) { alert('Бесплатный лимит практик на сегодня исчерпан.'); return false; }
             return true;
         }
         function useLimit() { if (isPremium) return; const u = getDailyUsage(); u.count++; store.set('dailyUsage', u); updateLimitUI(); }
@@ -1217,35 +1130,24 @@
             if (!userName) setTimeout(() => { onboarding.style.display = 'flex'; }, 600);
         });
         document.getElementById('onboarding-save').addEventListener('click', function() {
-            const v = document.getElementById('onboarding-name').value.trim();
-            if (!v) return;
+            const v = document.getElementById('onboarding-name').value.trim(); if (!v) return;
             userName = v; store.set('name', v); applyName(); onboarding.style.display = 'none';
         });
         document.getElementById('onboarding-name').addEventListener('keydown', function(e) { if (e.key === 'Enter') document.getElementById('onboarding-save').click(); });
 
         // ===== НАВИГАЦИЯ =====
         window.openScreen = function(name) {
-            const protectedScreens = ['diary', 'habit', 'emotions', 'body', 'wins', 'sleep-tracker', 'sleep-diary', 'wheel-balance', 'safespace', 'affirmations', 'audio-diary', 'badges', 'ai-chat', 'videos', 'pomodoro', 'safety'];
+            const protectedScreens = ['diary','habit','emotions','body','wins','sleep-tracker','sleep-diary','wheel-balance','safespace','affirmations','audio-diary','badges','ai-chat','videos','pomodoro','safety'];
             if (protectedScreens.includes(name) && !store.get('user_phone', null)) {
-                showToast('Пожалуйста, зарегистрируйтесь для доступа');
-                name = 'register';
+                showToast('Пожалуйста, зарегистрируйтесь для доступа'); name = 'register';
             }
-
             document.querySelectorAll('.inner-screen').forEach(s => s.classList.remove('active'));
             const target = document.getElementById(`screen-${name}`);
             if (target) { target.classList.add('active'); target.scrollTop = 0; }
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            
-            if (name === 'favorites') {
-                const nav = document.querySelector('[data-nav="fav"]'); if (nav) nav.classList.add('active');
-                renderFavorites();
-            } else if (name === 'profile') {
-                const nav = document.querySelector('[data-nav="profile"]'); if (nav) nav.classList.add('active');
-                renderProfileCalendar(); renderLetter(); updatePremiumUI(); updateAuthUI();
-            } else if (name !== 'register') {
-                const nav = document.querySelector('[data-nav="home"]'); if (nav) nav.classList.add('active');
-            }
-            
+            if (name === 'favorites') { document.querySelector('[data-nav="fav"]').classList.add('active'); renderFavorites(); }
+            else if (name === 'profile') { document.querySelector('[data-nav="profile"]').classList.add('active'); renderProfileCalendar(); renderLetter(); updatePremiumUI(); updateAuthUI(); }
+            else if (name !== 'register') { document.querySelector('[data-nav="home"]').classList.add('active'); }
             if (name === 'wins') renderWins();
             if (name === 'sleep-tracker') renderSleep();
             if (name === 'reminders') renderReminders();
@@ -1257,10 +1159,7 @@
             if (name === 'ai-chat') { const box = document.getElementById('chat-box'); if (box) box.scrollTop = box.scrollHeight; }
             if (name === 'pomodoro') updatePomodoroUI();
             if (name === 'safety') initSafety();
-            if (name === 'stats') {
-                if (!isPremium) { alert('Статистика доступна только в Premium!'); closeScreens(); return; }
-                renderStats();
-            }
+            if (name === 'stats') { if (!isPremium) { alert('Статистика доступна только в Premium!'); closeScreens(); return; } renderStats(); }
         };
         window.closeScreens = function() {
             document.querySelectorAll('.inner-screen').forEach(s => s.classList.remove('active'));
@@ -1273,12 +1172,9 @@
         function confirmAction(el) {
             if (!el) return;
             if (navigator.vibrate) { try { navigator.vibrate([20, 40, 20]); } catch(e) {} }
-            el.classList.remove('micro-confirm');
-            void el.offsetWidth;
-            el.classList.add('micro-confirm');
+            el.classList.remove('micro-confirm'); void el.offsetWidth; el.classList.add('micro-confirm');
             setTimeout(() => el.classList.remove('micro-confirm'), 950);
         }
-        
         function playDing() {
             try {
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -1286,8 +1182,7 @@
                 osc.type = 'sine'; osc.frequency.value = 880;
                 gain.gain.setValueAtTime(0.1, ctx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
-                osc.connect(gain).connect(ctx.destination);
-                osc.start(); osc.stop(ctx.currentTime + 0.5);
+                osc.connect(gain).connect(ctx.destination); osc.start(); osc.stop(ctx.currentTime + 0.5);
             } catch(e) {}
         }
 
@@ -1303,24 +1198,13 @@
         function updateTreeWidget(animate = false) {
             let streak = store.get('streak', { count: 0, last: null });
             let stageIdx = 0;
-            if (streak.count >= 30) stageIdx = 5;
-            else if (streak.count >= 14) stageIdx = 4;
-            else if (streak.count >= 7) stageIdx = 3;
-            else if (streak.count >= 3) stageIdx = 2;
-            else if (streak.count >= 1) stageIdx = 1;
+            if (streak.count >= 30) stageIdx = 5; else if (streak.count >= 14) stageIdx = 4; else if (streak.count >= 7) stageIdx = 3; else if (streak.count >= 3) stageIdx = 2; else if (streak.count >= 1) stageIdx = 1;
             const stage = TREE_STAGES[stageIdx];
-            const iconEl = document.getElementById('tree-icon');
-            const titleEl = document.getElementById('tree-title');
-            const subEl = document.getElementById('tree-sub');
+            const iconEl = document.getElementById('tree-icon'); const titleEl = document.getElementById('tree-title'); const subEl = document.getElementById('tree-sub');
             if (iconEl) {
-                iconEl.innerText = stage.icon;
-                titleEl.innerText = stage.title;
+                iconEl.innerText = stage.icon; titleEl.innerText = stage.title;
                 subEl.innerText = streak.count > 0 ? `${streak.count} дней заботы подряд` : stage.desc;
-                if (animate) {
-                    iconEl.classList.remove('tree-pop');
-                    void iconEl.offsetWidth;
-                    iconEl.classList.add('tree-pop');
-                }
+                if (animate) { iconEl.classList.remove('tree-pop'); void iconEl.offsetWidth; iconEl.classList.add('tree-pop'); }
             }
         }
         window.showTreeMessage = function() {
@@ -1330,8 +1214,7 @@
                 "Ты заботишься о мире вокруг, не забывай заботиться и о себе 🌱",
                 "Твоё дерево растёт, даже когда ты просто отдыхаешь."
             ];
-            const msg = messages[Math.floor(Math.random() * messages.length)];
-            showToast(msg);
+            showToast(messages[Math.floor(Math.random() * messages.length)]);
         };
 
         // ===== ДОСТИЖЕНИЯ =====
@@ -1346,10 +1229,8 @@
         function unlockBadge(id) {
             let unlocked = store.get('badges', []);
             if (!unlocked.find(b => b.id === id)) {
-                const badge = BADGES_LIST.find(b => b.id === id);
-                if (!badge) return;
-                unlocked.push({ id: id, date: new Date().toISOString() });
-                store.set('badges', unlocked);
+                const badge = BADGES_LIST.find(b => b.id === id); if (!badge) return;
+                unlocked.push({ id: id, date: new Date().toISOString() }); store.set('badges', unlocked);
                 showToast('Новое достижение: ' + badge.title + ' ' + badge.icon);
                 if (navigator.vibrate) navigator.vibrate([50, 50, 50]);
                 renderBadges();
@@ -1360,7 +1241,6 @@
             if (totalPractices >= 1) unlockBadge('first_step');
             if (store.get('streak', { count: 0 }).count >= 3) unlockBadge('streak_3');
             if (store.get('diary', []).length >= 5) unlockBadge('diary_5');
-            
             const actionLog = store.get('action_log', {});
             const breaths = (actionLog['breath'] || 0) + (actionLog['tactical'] || 0) + (actionLog['sleep'] || 0) + (actionLog['energy'] || 0);
             if (breaths >= 10) unlockBadge('breath_10');
@@ -1383,25 +1263,16 @@
             const arr = getDayProgress();
             if (!arr.includes(id)) { arr.push(id); store.set('progress_' + todayKey(), arr); }
             renderProgress();
-            try {
-                const log = store.get('action_log', {});
-                log[id] = (log[id] || 0) + 1;
-                store.set('action_log', log);
-            } catch(e) {}
-            
+            try { const log = store.get('action_log', {}); log[id] = (log[id] || 0) + 1; store.set('action_log', log); } catch(e) {}
             let streak = store.get('streak', { count: 0, last: null });
             const today = todayKey();
             if (streak.last !== today) {
                 const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
-                if (streak.last === yesterday.toISOString().slice(0, 10)) streak.count++;
-                else streak.count = 1;
-                streak.last = today;
-                store.set('streak', streak);
-                updateTreeWidget(true);
+                if (streak.last === yesterday.toISOString().slice(0, 10)) streak.count++; else streak.count = 1;
+                streak.last = today; store.set('streak', streak); updateTreeWidget(true);
                 if (streak.count > 1) showToast(`🔥 Дерево полито! ${streak.count} дней подряд`);
             }
-            const streakEl = document.getElementById('streak-num-inner');
-            if (streakEl) streakEl.innerText = streak.count;
+            const streakEl = document.getElementById('streak-num-inner'); if (streakEl) streakEl.innerText = streak.count;
             checkBadges();
         }
         function renderProgress() {
@@ -1414,80 +1285,46 @@
 
         // ===== АДАПТИВНАЯ ГЛАВНАЯ =====
         const ADAPTIVE_KEY = 'home_mood';
-        const ADAPTIVE_CONFIG = {
-            heavy: { show: 'single', action: 'breath-478' },
-            tired: { show: 'single', action: 'energy' },
-            ok:    { show: 'full' },
-            good:  { show: 'full' }
-        };
+        const ADAPTIVE_CONFIG = { heavy: { show: 'single', action: 'breath-478' }, tired: { show: 'single', action: 'energy' }, ok: { show: 'full' }, good: { show: 'full' } };
         const SINGLE_ACTIONS = {
             'breath-478': { icon: '🌙', title: 'Дыхание 4-7-8', desc: 'Три минуты, чтобы тело выдохнуло', duration: '3 мин', screen: 'sleep' },
-            'energy':     { icon: '⚡', title: 'Дыхание «Энергия»', desc: 'Одна минута, чтобы включиться', duration: '1 мин', screen: 'energy' }
+            'energy': { icon: '⚡', title: 'Дыхание «Энергия»', desc: 'Одна минута, чтобы включиться', duration: '1 мин', screen: 'energy' }
         };
         function renderSingleAction(actionId) {
-            const host = document.getElementById('single-action');
-            const action = SINGLE_ACTIONS[actionId];
+            const host = document.getElementById('single-action'); const action = SINGLE_ACTIONS[actionId];
             if (!host || !action) return;
             host.hidden = false;
-            host.innerHTML = `
-                <div class="single-card">
-                    <div class="single-card-eyebrow">Одно действие на сейчас</div>
-                    <div class="single-card-icon" aria-hidden="true">${action.icon}</div>
-                    <h2 class="single-card-title">${action.title}</h2>
-                    <p class="single-card-desc">${action.desc}</p>
-                    <button class="btn single-card-cta" type="button" data-open="${action.screen}">Начать · ${action.duration}</button>
-                    <button class="single-card-more" type="button" id="show-full-home">Показать всё</button>
-                </div>`;
+            host.innerHTML = `<div class="single-card"><div class="single-card-eyebrow">Одно действие на сейчас</div><div class="single-card-icon" aria-hidden="true">${action.icon}</div><h2 class="single-card-title">${action.title}</h2><p class="single-card-desc">${action.desc}</p><button class="btn single-card-cta" type="button" data-open="${action.screen}">Начать · ${action.duration}</button><button class="single-card-more" type="button" id="show-full-home">Показать всё</button></div>`;
             host.querySelector('[data-open]').addEventListener('click', function() { openScreen(this.dataset.open); });
-            document.getElementById('show-full-home').addEventListener('click', () => {
-                document.getElementById('full-home').hidden = false;
-                host.hidden = true;
-            });
+            document.getElementById('show-full-home').addEventListener('click', () => { document.getElementById('full-home').hidden = false; host.hidden = true; });
         }
         function applyMood(mood) {
-            const root = document.getElementById('adaptive-home');
-            if (!root) return;
-            const config = ADAPTIVE_CONFIG[mood];
-            root.dataset.mood = mood;
-            root.querySelectorAll('.checkin-btn').forEach(btn => {
-                btn.setAttribute('aria-pressed', btn.dataset.mood === mood ? 'true' : 'false');
-            });
-            store.set(ADAPTIVE_KEY, mood);
-            if (!config) return;
-            const single = document.getElementById('single-action');
-            const full = document.getElementById('full-home');
-            if (config.show === 'single') { full.hidden = true; renderSingleAction(config.action); }
-            else { single.hidden = true; full.hidden = false; }
+            const root = document.getElementById('adaptive-home'); if (!root) return;
+            const config = ADAPTIVE_CONFIG[mood]; root.dataset.mood = mood;
+            root.querySelectorAll('.checkin-btn').forEach(btn => { btn.setAttribute('aria-pressed', btn.dataset.mood === mood ? 'true' : 'false'); });
+            store.set(ADAPTIVE_KEY, mood); if (!config) return;
+            const single = document.getElementById('single-action'); const full = document.getElementById('full-home');
+            if (config.show === 'single') { full.hidden = true; renderSingleAction(config.action); } else { single.hidden = true; full.hidden = false; }
         }
-        document.querySelectorAll('.checkin-btn').forEach(btn => {
-            btn.addEventListener('click', () => applyMood(btn.dataset.mood));
-        });
-        const savedMood = store.get(ADAPTIVE_KEY, null);
-        if (savedMood) applyMood(savedMood);
+        document.querySelectorAll('.checkin-btn').forEach(btn => { btn.addEventListener('click', () => applyMood(btn.dataset.mood)); });
+        const savedMood = store.get(ADAPTIVE_KEY, null); if (savedMood) applyMood(savedMood);
 
-        // ===== SOS (БЫСТРАЯ ПОМОЩЬ) =====
-        const quickHelpBtn = document.getElementById('quick-help');
-        if (quickHelpBtn) {
-            quickHelpBtn.addEventListener('click', function() {
-                closeScreens();
-                openScreen('sleep');
-                const sleepBtn = document.getElementById('sleep-btn');
-                if (sleepBtn && sleepBtn.style.display !== 'none' && sleepBtn.innerText === 'Начать') {
-                    sleepBtn.dataset.sos = '1';
-                    setTimeout(() => sleepBtn.click(), 150);
-                }
-            });
-        }
+        // ===== SOS =====
+        document.getElementById('quick-help')?.addEventListener('click', function() {
+            closeScreens(); openScreen('sleep');
+            const sleepBtn = document.getElementById('sleep-btn');
+            if (sleepBtn && sleepBtn.style.display !== 'none' && sleepBtn.innerText === 'Начать') {
+                sleepBtn.dataset.sos = '1'; setTimeout(() => sleepBtn.click(), 150);
+            }
+        });
 
         // ===== ZEN CANVAS =====
         let zenAnimationId = null;
         function initZenCanvas() {
-            const canvas = document.getElementById('zen-canvas');
-            if (!canvas) return;
+            const canvas = document.getElementById('zen-canvas'); if (!canvas) return;
             const ctx = canvas.getContext('2d');
             function resize() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; }
-            window.addEventListener('resize', resize);
-            resize();
+            window.addEventListener('resize', resize); resize();
             let particles = [];
             function spawnParticle(x, y) {
                 const colors = ['#38bdf8', '#c084fc', '#fb7185', '#6ee7b7'];
@@ -1497,131 +1334,68 @@
             canvas.addEventListener('touchmove', (e) => { e.preventDefault(); const t = e.touches[0]; const rect = canvas.getBoundingClientRect(); spawnParticle(t.clientX - rect.left, t.clientY - rect.top); }, {passive: false});
             canvas.addEventListener('touchstart', (e) => { e.preventDefault(); const t = e.touches[0]; const rect = canvas.getBoundingClientRect(); spawnParticle(t.clientX - rect.left, t.clientY - rect.top); }, {passive: false});
             function draw() {
-                ctx.fillStyle = 'rgba(10, 10, 10, 0.1)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = 'rgba(10, 10, 10, 0.1)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
                 for (let i = particles.length - 1; i >= 0; i--) {
-                    let p = particles[i];
-                    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    let p = particles[i]; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
                     ctx.fillStyle = p.color; ctx.globalAlpha = p.alpha; ctx.fill();
-                    p.r += p.speed; p.alpha -= 0.015;
-                    if (p.alpha <= 0) particles.splice(i, 1);
+                    p.r += p.speed; p.alpha -= 0.015; if (p.alpha <= 0) particles.splice(i, 1);
                 }
-                ctx.globalAlpha = 1;
-                zenAnimationId = requestAnimationFrame(draw);
+                ctx.globalAlpha = 1; zenAnimationId = requestAnimationFrame(draw);
             }
             draw();
         }
 
         // ===== ВОПРОСЫ ДЛЯ ДНЕВНИКА =====
         const diaryPrompts = [
-            "Что сегодня заставило меня улыбнуться?",
-            "Какая мысль меня беспокоит больше всего прямо сейчас?",
-            "Что бы я сказал(а) себе 5 лет назад?",
-            "За что я могу похвалить себя сегодня?",
-            "Какие три вещи находятся в моей зоне контроля?",
-            "Что я чувствую прямо сейчас, в эту секунду?",
-            "Кто меня поддерживает, даже если мы редко общаемся?",
-            "Какую маленькую радость я могу себе позволить сегодня?"
+            "Что сегодня заставило меня улыбнуться?", "Какая мысль меня беспокоит больше всего прямо сейчас?", "Что бы я сказал(а) себе 5 лет назад?", "За что я могу похвалить себя сегодня?", "Какие три вещи находятся в моей зоне контроля?", "Что я чувствую прямо сейчас, в эту секунду?", "Кто меня поддерживает, даже если мы редко общаемся?", "Какую маленькую радость я могу себе позволить сегодня?"
         ];
-        const promptBtn = document.getElementById('diary-prompt-btn');
-        if (promptBtn) {
-            promptBtn.addEventListener('click', function() {
-                const input = document.getElementById('diary-input');
-                const randomPrompt = diaryPrompts[Math.floor(Math.random() * diaryPrompts.length)];
-                input.value = randomPrompt + "\n\n";
-                input.focus();
-                input.setSelectionRange(input.value.length, input.value.length);
-            });
-        }
+        document.getElementById('diary-prompt-btn')?.addEventListener('click', function() {
+            const input = document.getElementById('diary-input'); const randomPrompt = diaryPrompts[Math.floor(Math.random() * diaryPrompts.length)];
+            input.value = randomPrompt + "\n\n"; input.focus(); input.setSelectionRange(input.value.length, input.value.length);
+        });
 
         // ===== ИИ-СОБЕСЕДНИК =====
-        const chatInput = document.getElementById('chat-input');
-        const chatSend = document.getElementById('chat-send');
-        const chatBox = document.getElementById('chat-box');
-
+        const chatInput = document.getElementById('chat-input'); const chatSend = document.getElementById('chat-send'); const chatBox = document.getElementById('chat-box');
         function addChatMessage(text, isUser) {
             if (!chatBox) return;
-            const div = document.createElement('div');
-            div.className = 'list-item';
-            div.style.cssText = isUser 
-                ? 'background: var(--bg); border: 1px solid var(--card-border); border-radius: 16px 16px 4px 16px; max-width: 85%; align-self: flex-end; text-align: right; margin-bottom: 0;' 
-                : 'background: var(--tile-blue); border: none; border-radius: 16px 16px 16px 4px; max-width: 85%; align-self: flex-start; margin-bottom: 0;';
-            div.innerText = text;
-            chatBox.appendChild(div);
-            chatBox.scrollTop = chatBox.scrollHeight;
+            const div = document.createElement('div'); div.className = 'list-item';
+            div.style.cssText = isUser ? 'background: var(--bg); border: 1px solid var(--card-border); border-radius: 16px 16px 4px 16px; max-width: 85%; align-self: flex-end; text-align: right; margin-bottom: 0;' : 'background: var(--tile-blue); border: none; border-radius: 16px 16px 16px 4px; max-width: 85%; align-self: flex-start; margin-bottom: 0;';
+            div.innerText = text; chatBox.appendChild(div); chatBox.scrollTop = chatBox.scrollHeight;
         }
-
         function getAIReply(msg) {
             const lower = msg.toLowerCase();
-            if (lower.includes('тревог') || lower.includes('страх') || lower.includes('паник')) {
-                return "Я понимаю, тревога — это тяжело. Ты в безопасности. Давай попробуем замедлиться. Может, сделаем дыхание 4-7-8? (Оно есть в разделе Дыхание).";
-            }
-            if (lower.includes('устал') || lower.includes('нет сил') || lower.includes('выгор')) {
-                return "Ты имеешь полное право на отдых. Не вини себя за то, что устал(а). Попробуй сегодня просто полежать 15 минут без телефона. Или послушай шум дождя.";
-            }
-            if (lower.includes('груст') || lower.includes('плохо') || lower.includes('плак')) {
-                return "Мне жаль, что тебе грустно. Позволь себе поплакать, если хочется, это нормально. А когда станет чуть легче, попробуй выписать 3 вещи, за которые ты благодарен(на).";
-            }
-            if (lower.includes('привет') || lower.includes('здравств')) {
-                return "Привет! Рад тебя видеть. Как проходит твой день?";
-            }
-            return "Я слышу тебя. То, что ты чувствуешь — важно. Попробуй выплеснуть эти мысли в Дневник, там тебя никто не осудит. Или сходи в раздел «КПТ», чтобы разобрать мысль по фактам.";
+            if (lower.includes('тревог') || lower.includes('страх') || lower.includes('паник')) return "Я понимаю, тревога — это тяжело. Ты в безопасности. Давай попробуем замедлиться. Может, сделаем дыхание 4-7-8?";
+            if (lower.includes('устал') || lower.includes('нет сил') || lower.includes('выгор')) return "Ты имеешь полное право на отдых. Не вини себя за то, что устал(а). Попробуй сегодня просто полежать 15 минут без телефона.";
+            if (lower.includes('груст') || lower.includes('плохо') || lower.includes('плак')) return "Мне жаль, что тебе грустно. Позволь себе поплакать, если хочется, это нормально. А когда станет чуть легче, попробуй выписать 3 вещи, за которые ты благодарен(на).";
+            if (lower.includes('привет') || lower.includes('здравств')) return "Привет! Рад тебя видеть. Как проходит твой день?";
+            return "Я слышу тебя. То, что ты чувствуешь — важно. Попробуй выплеснуть эти мысли в Дневник, там тебя никто не осудит.";
         }
-
         function sendMessage() {
-            const text = chatInput.value.trim();
-            if (!text) return;
-            addChatMessage(text, true);
-            chatInput.value = '';
+            const text = chatInput.value.trim(); if (!text) return;
+            addChatMessage(text, true); chatInput.value = '';
             setTimeout(() => { addChatMessage(getAIReply(text), false); }, 600);
         }
-
-        if (chatSend && chatInput) {
-            chatSend.addEventListener('click', sendMessage);
-            chatInput.addEventListener('keypress', function(e) { if (e.key === 'Enter') sendMessage(); });
-        }
+        if (chatSend && chatInput) { chatSend.addEventListener('click', sendMessage); chatInput.addEventListener('keypress', function(e) { if (e.key === 'Enter') sendMessage(); }); }
 
         // ===== ГРАФИКИ =====
         let moodChartInstance = null;
         function renderStats() {
-            const ctx = document.getElementById('stats-chart-canvas');
-            if (!ctx || typeof Chart === 'undefined') return;
+            const ctx = document.getElementById('stats-chart-canvas'); if (!ctx || typeof Chart === 'undefined') return;
             const moods = store.get('moods', {}); const labels = []; const data = []; const now = new Date();
-            for (let i = 6; i >= 0; i--) { 
-                const d = new Date(now); d.setDate(now.getDate() - i); 
-                labels.push(['Вс','Пн','Вт','Ср','Чт','Пт','Сб'][d.getDay()]);
-                data.push(moods[d.toISOString().slice(0, 10)] || null);
-            }
+            for (let i = 6; i >= 0; i--) { const d = new Date(now); d.setDate(now.getDate() - i); labels.push(['Вс','Пн','Вт','Ср','Чт','Пт','Сб'][d.getDay()]); data.push(moods[d.toISOString().slice(0, 10)] || null); }
             if (moodChartInstance) moodChartInstance.destroy();
-            Chart.defaults.font.family = "'Manrope', sans-serif";
-            Chart.defaults.color = document.documentElement.getAttribute('data-theme') === 'dark' ? '#888' : '#728a9c';
+            Chart.defaults.font.family = "'Manrope', sans-serif"; Chart.defaults.color = document.documentElement.getAttribute('data-theme') === 'dark' ? '#888' : '#728a9c';
             moodChartInstance = new Chart(ctx, {
-                type: 'line',
-                data: { labels: labels, datasets: [{ label: 'Настроение', data: data, borderColor: '#0284c7', backgroundColor: 'rgba(2, 132, 199, 0.1)', borderWidth: 3, pointBackgroundColor: '#0284c7', pointBorderColor: '#fff', pointBorderWidth: 2, pointRadius: 5, fill: true, tension: 0.4, spanGaps: true }] },
-                options: { 
-                    responsive: true, 
-                    maintainAspectRatio: false, 
-                    plugins: { legend: { display: false } }, 
-                    layout: { padding: { top: 20 } },
-                    scales: { 
-                        y: { 
-                            min: 1, 
-                            max: 5.5,
-                            ticks: { stepSize: 1, callback: v => ({1:'😭',2:'😕',3:'😐',4:'🙂',5:'😄'})[v] || '' } 
-                        }, 
-                        x: { grid: { display: false } } 
-                    } 
-                }
+                type: 'line', data: { labels: labels, datasets: [{ label: 'Настроение', data: data, borderColor: '#0284c7', backgroundColor: 'rgba(2, 132, 199, 0.1)', borderWidth: 3, pointBackgroundColor: '#0284c7', pointBorderColor: '#fff', pointBorderWidth: 2, pointRadius: 5, fill: true, tension: 0.4, spanGaps: true }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, layout: { padding: { top: 20 } }, scales: { y: { min: 1, max: 5.5, ticks: { stepSize: 1, callback: v => ({1:'😭',2:'😕',3:'😐',4:'🙂',5:'😄'})[v] || '' } }, x: { grid: { display: false } } } }
             });
-            const practices = document.getElementById('stats-practices');
-            if (practices) { let total = 0; for (let key in localStorage) { if (key.startsWith('ostrov_progress_')) { try { total += JSON.parse(localStorage[key]).length; } catch(e) {} } } practices.innerText = total; }
+            const practices = document.getElementById('stats-practices'); if (practices) { let total = 0; for (let key in localStorage) { if (key.startsWith('ostrov_progress_')) { try { total += JSON.parse(localStorage[key]).length; } catch(e) {} } } practices.innerText = total; }
             const sleeps = document.getElementById('stats-sleep'); if (sleeps) sleeps.innerText = store.get('sleep', []).filter(s => s.quality >= 4).length;
         }
 
         // ===== ДЫХАНИЕ =====
         async function runBreathing(circleId, textId, btn, phasesArray, cycles, practiceId) {
-            if (btn.disabled) return;
-            const isSOS = btn.dataset.sos === '1';
+            if (btn.disabled) return; const isSOS = btn.dataset.sos === '1';
             if (!isSOS && !checkLimit()) return;
             btn.disabled = true;
             const text = document.getElementById(textId); const circle = document.getElementById(circleId); btn.style.display = 'none';
@@ -1888,8 +1662,7 @@
             btn.addEventListener('click', function() {
                 sleepQuality = parseInt(this.dataset.q);
                 document.querySelectorAll('.sleep-quality').forEach(b => { b.style.background = ''; b.style.color = 'var(--text)'; });
-                this.style.background = 'var(--tile-blue-icon)';
-                this.style.color = 'white';
+                this.style.background = 'var(--tile-blue-icon)'; this.style.color = 'white';
             });
         });
         function renderSleep() {
@@ -1998,21 +1771,17 @@
         let isRecording = false;
         const recordBtn = document.getElementById('record-btn');
         const recordStatus = document.getElementById('record-status');
-
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             recognition = new SpeechRecognition();
-            recognition.lang = 'ru-RU';
-            recognition.continuous = true;
-            recognition.interimResults = true;
+            recognition.lang = 'ru-RU'; recognition.continuous = true; recognition.interimResults = true;
             recognition.onstart = function() { isRecording = true; recordBtn.classList.add('recording'); recordStatus.innerText = "Слушаю... Говори"; };
             recognition.onresult = function(event) {
                 let finalTranscript = '';
                 for (let i = event.resultIndex; i < event.results.length; ++i) { if (event.results[i].isFinal) finalTranscript += event.results[i][0].transcript; }
                 if (finalTranscript) {
                     const ta = document.getElementById('audio-transcript');
-                    ta.value += (ta.value ? ' ' : '') + finalTranscript;
-                    store.set('draft_audio_transcript', ta.value);
+                    ta.value += (ta.value ? ' ' : '') + finalTranscript; store.set('draft_audio_transcript', ta.value);
                 }
             };
             recognition.onerror = function(event) { recordStatus.innerText = "Ошибка: " + event.error; stopRecording(); };
@@ -2027,8 +1796,7 @@
         }
         recordBtn.addEventListener('click', function() {
             if (!recognition) return;
-            if (isRecording) { recognition.stop(); }
-            else { document.getElementById('audio-transcript').value = ''; recognition.start(); }
+            if (isRecording) { recognition.stop(); } else { document.getElementById('audio-transcript').value = ''; recognition.start(); }
         });
         function renderAudioDiary() {
             const el = document.getElementById('audio-list'); if (!el) return;
@@ -2043,100 +1811,53 @@
             confirmAction(this);
         });
 
-        // ===== МИКШЕР ЗВУКОВ (Web Audio API) =====
+        // ===== МИКШЕР ЗВУКОВ =====
         const MusicMixer = (function() {
             let ctx = null, master = null;
             let sources = { rain: null, waves: null, ambient: null };
             let gains = { rain: null, waves: null, ambient: null };
             let isInit = false;
-
             function initAudio() {
                 if (isInit) return;
                 ctx = new (window.AudioContext || window.webkitAudioContext)();
-                master = ctx.createGain();
-                master.gain.value = 1;
-                master.connect(ctx.destination);
-                
+                master = ctx.createGain(); master.gain.value = 1; master.connect(ctx.destination);
                 const bufferSize = ctx.sampleRate * 2;
                 const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
                 const output = noiseBuffer.getChannelData(0);
                 for (let i = 0; i < bufferSize; i++) output[i] = Math.random() * 2 - 1;
-
                 function createNoiseNode(filterType, freq, q) {
                     const src = ctx.createBufferSource(); src.buffer = noiseBuffer; src.loop = true;
                     const filter = ctx.createBiquadFilter(); filter.type = filterType; filter.frequency.value = freq; filter.Q.value = q || 0.7;
                     const gain = ctx.createGain(); gain.gain.value = 0;
-                    src.connect(filter).connect(gain).connect(master); src.start();
-                    return { src, gain };
+                    src.connect(filter).connect(gain).connect(master); src.start(); return { src, gain };
                 }
-
-                // Дождь
-                const rainData = createNoiseNode('lowpass', 1200, 0.6);
-                sources.rain = rainData.src; gains.rain = rainData.gain;
-                
-                // Волны
-                const wavesData = createNoiseNode('lowpass', 500, 0.8);
-                const lfo = ctx.createOscillator(); lfo.type = 'sine'; lfo.frequency.value = 0.12;
-                const lfoGain = ctx.createGain(); lfoGain.gain.value = 0.5;
-                lfo.connect(lfoGain).connect(wavesData.gain.gain);
-                lfo.start();
-                sources.waves = wavesData.src; gains.waves = wavesData.gain;
-
-                // Эмбиент (шум с другим фильтром)
-                const ambientData = createNoiseNode('lowpass', 300, 1.0);
-                sources.ambient = ambientData.src; gains.ambient = ambientData.gain;
-
+                const rainData = createNoiseNode('lowpass', 1200, 0.6); sources.rain = rainData.src; gains.rain = rainData.gain;
+                const wavesData = createNoiseNode('lowpass', 500, 0.8); const lfo = ctx.createOscillator(); lfo.type = 'sine'; lfo.frequency.value = 0.12;
+                const lfoGain = ctx.createGain(); lfoGain.gain.value = 0.5; lfo.connect(lfoGain).connect(wavesData.gain.gain); lfo.start(); sources.waves = wavesData.src; gains.waves = wavesData.gain;
+                const ambientData = createNoiseNode('lowpass', 300, 1.0); sources.ambient = ambientData.src; gains.ambient = ambientData.gain;
                 isInit = true;
             }
-
             function setVolume(type, val) {
-                initAudio();
-                if (ctx.state === 'suspended') ctx.resume();
+                initAudio(); if (ctx.state === 'suspended') ctx.resume();
                 const targetGain = gains[type];
-                if (targetGain) {
-                    // Плавное изменение громкости
-                    targetGain.gain.setTargetAtTime(val / 100, ctx.currentTime, 0.1);
-                }
+                if (targetGain) targetGain.gain.setTargetAtTime(val / 100, ctx.currentTime, 0.1);
             }
-
             return { setVolume };
         })();
-
-        document.getElementById('vol-rain').addEventListener('input', function(e) {
-            document.getElementById('rain-val').innerText = this.value;
-            MusicMixer.setVolume('rain', parseInt(this.value));
-        });
-        document.getElementById('vol-waves').addEventListener('input', function(e) {
-            document.getElementById('waves-val').innerText = this.value;
-            MusicMixer.setVolume('waves', parseInt(this.value));
-        });
-        document.getElementById('vol-ambient').addEventListener('input', function(e) {
-            document.getElementById('ambient-val').innerText = this.value;
-            MusicMixer.setVolume('ambient', parseInt(this.value));
-        });
-
+        document.getElementById('vol-rain').addEventListener('input', function(e) { document.getElementById('rain-val').innerText = this.value; MusicMixer.setVolume('rain', parseInt(this.value)); });
+        document.getElementById('vol-waves').addEventListener('input', function(e) { document.getElementById('waves-val').innerText = this.value; MusicMixer.setVolume('waves', parseInt(this.value)); });
+        document.getElementById('vol-ambient').addEventListener('input', function(e) { document.getElementById('ambient-val').innerText = this.value; MusicMixer.setVolume('ambient', parseInt(this.value)); });
         document.getElementById('music-stop').addEventListener('click', function() {
-            document.getElementById('vol-rain').value = 0; document.getElementById('rain-val').innerText = 0;
-            document.getElementById('vol-waves').value = 0; document.getElementById('waves-val').innerText = 0;
-            document.getElementById('vol-ambient').value = 0; document.getElementById('ambient-val').innerText = 0;
-            MusicMixer.setVolume('rain', 0);
-            MusicMixer.setVolume('waves', 0);
-            MusicMixer.setVolume('ambient', 0);
+            ['rain', 'waves', 'ambient'].forEach(t => {
+                document.getElementById('vol-' + t).value = 0; document.getElementById(t + '-val').innerText = 0; MusicMixer.setVolume(t, 0);
+            });
         });
-
-        const musicBtn = document.getElementById('music-toggle');
-        const menu = document.getElementById('music-menu');
-        musicBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
-        });
+        const musicBtn = document.getElementById('music-toggle'); const menu = document.getElementById('music-menu');
+        musicBtn.addEventListener('click', function(e) { e.stopPropagation(); menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex'; });
         document.addEventListener('click', function(e) { if (!menu.contains(e.target) && e.target !== musicBtn) menu.style.display = 'none'; });
 
         // ===== ИНИЦИАЛИЗАЦИЯ =====
-        updatePremiumUI();
-        updateTreeWidget();
-        checkBadges();
-        updateAuthUI();
+        updatePremiumUI(); updateTreeWidget(); checkBadges(); updateAuthUI();
     });
     </script>
 </body>
